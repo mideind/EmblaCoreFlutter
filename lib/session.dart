@@ -16,6 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-library embla_core;
+part of 'embla_core.dart';
 
-part 'session.dart';
+enum EmblaSessionState { rest, listen, query, answer }
+
+class EmblaSession {
+  // Current state of session object
+  var state = EmblaSessionState.rest;
+
+  // Constructor
+  EmblaSession() {}
+
+  void start() async {
+    state = EmblaSessionState.listen;
+  }
+
+  void stop() async {
+    state = EmblaSessionState.rest;
+  }
+}
