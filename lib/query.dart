@@ -44,7 +44,8 @@ Future<String> _clientVersion() async {
 }
 
 // Send a request to query server
-Future<Response?> _makeRequest(String path, Map<String, dynamic> qargs, [Function? handler]) async {
+Future<Response?> _makePostRequest(String path, Map<String, dynamic> qargs,
+    [Function? handler]) async {
   String apiURL = kDefaultQueryServer + path;
 
   dlog("Sending query POST request to $apiURL: ${qargs.toString()}");
@@ -89,13 +90,17 @@ class QueryService {
       [Function? handler,
       bool test = false,
       bool private = false,
-      double voice_speed = 1.0]) async {
-    // Query args
-    Map<String, String?> qargs = {'q': queries.join('|'), 'voice': '1', 'voice_id': kDefaultVoice};
+      double voiceSpeed = 1.0,
+      String voiceID = kDefaultSpeechSynthesisVoice]) async {
+    // Create query args
+    Map<String, String?> qargs = {
+      'q': queries.join('|'),
+      'voice': '1',
+      'voice_id': kDefaultSpeechSynthesisVoice
+    };
 
     // Never send client information in privacy mode
-    bool privacyMode = private;
-    if (privacyMode) {
+    if (private) {
       qargs['private'] = '1';
     } else {
       qargs['client_type'] = _clientType();
@@ -107,9 +112,9 @@ class QueryService {
       qargs['test'] = '1';
     }
 
-    double speed = voice_speed;
-    qargs['voice_speed'] = speed.toString();
+    qargs['voice_speed'] = voiceSpeed.toString();
 
+    // TODO: Think about how to handle location tracking data
     // bool shareLocation = privacyMode ? false : Prefs().boolForKey('share_location');
     // if (shareLocation) {
     //   List<double> latlon = LocationTracking().location;
@@ -119,27 +124,12 @@ class QueryService {
     //   }
     // }
 
-    await _makeRequest(kQueryAPIPath, qargs, handler);
-  }
-
-  // Send request to query history API
-  // allData boolean param determines whether all device-specific
-  // data or only query history should be deleted server-side
-  static Future<void> clearUserData(bool allData, [Function? handler]) async {
-    Map<String, String?> qargs = {
-      'action': allData ? 'clear_all' : 'clear',
-      'client_id': await _clientID(),
-      'client_type': _clientType(),
-      'client_version': await _clientVersion(),
-      'api_key': readQueryServerKey()
-    };
-
-    await _makeRequest(kQueryHistoryAPIPath, qargs, handler);
+    await _makePostRequest(kQueryAPIPath, qargs, handler);
   }
 
   // Send request to speech synthesis API
   static Future<void> requestSpeechSynthesis(String text,
-      [String voiceID = kDefaultVoice, Function? handler]) async {
+      [String voiceID = kDefaultSpeechSynthesisVoice, Function? handler]) async {
     Map<String, String> qargs = {
       'text': text,
       'voice_id': voiceID,
@@ -147,15 +137,6 @@ class QueryService {
       'api_key': readQueryServerKey(),
     };
 
-    await _makeRequest(kSpeechSynthesisAPIPath, qargs, handler);
-  }
-
-  // Send request to voices API
-  static Future<Map<String, dynamic>?> requestSupportedVoices() async {
-    Response? r = await _makeRequest(kVoiceListAPIPath, {}, null);
-    if (r == null) {
-      return null;
-    }
-    return json.decode(r.body);
+    await _makePostRequest(kSpeechSynthesisAPIPath, qargs, handler);
   }
 }

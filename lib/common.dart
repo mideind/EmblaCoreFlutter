@@ -37,7 +37,7 @@ const String kVoiceListAPIPath = '/voices.api/v1';
 
 // Speech synthesis
 const List<String> kSpeechSynthesisVoices = ["Dóra", "Karl"];
-const String kDefaultVoice = "Dóra";
+const String kDefaultSpeechSynthesisVoice = "Dóra";
 
 // Debug logging
 void dlog(dynamic msg) {
