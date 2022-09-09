@@ -29,7 +29,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
 import './common.dart';
-import './util.dart';
+//import './util.dart';
 
 // Speech recognition config record
 final RecognitionConfig speechRecognitionConfig = RecognitionConfig(
@@ -130,7 +130,7 @@ class SpeechRecognizer {
     ));
 
     // Listen for audio status (duration, decibel) at fixed interval
-    _micRecorder.setSubscriptionDuration(Duration(milliseconds: 50));
+    _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));
     _recordingProgressSubscription = _micRecorder.onProgress.listen((e) {
       dlog(e);
       if (e.decibels == 0.0) {
@@ -169,12 +169,12 @@ class SpeechRecognizer {
     dlog('Stopping speech recognition');
     double seconds = totalAudioDataSize / (2.0 * kAudioSampleRate);
     dlog("Total audio length: $seconds seconds ($totalAudioDataSize bytes)");
-    await _micRecorder?.stopRecorder();
-    await _micRecorder?.closeRecorder();
-    await _recordingDataSubscription?.cancel();
-    await _recordingProgressSubscription?.cancel();
-    await _recordingDataController?.close();
-    await _recognitionStreamSubscription?.cancel();
-    await _recognitionStream?.close();
+    await _micRecorder.stopRecorder();
+    await _micRecorder.closeRecorder();
+    await _recordingDataSubscription.cancel();
+    await _recordingProgressSubscription.cancel();
+    await _recordingDataController.close();
+    await _recognitionStreamSubscription.cancel();
+    await _recognitionStream.close();
   }
 }

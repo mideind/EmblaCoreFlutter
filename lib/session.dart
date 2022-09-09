@@ -25,7 +25,9 @@ class EmblaSession {
   var state = EmblaSessionState.rest;
 
   // Constructor
-  EmblaSession() {}
+  EmblaSession() {
+    // Implement me
+  }
 
   void start() async {
     state = EmblaSessionState.listen;

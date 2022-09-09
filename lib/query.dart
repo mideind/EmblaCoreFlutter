@@ -51,14 +51,9 @@ Future<Response?> _makePostRequest(String path, Map<String, dynamic> qargs,
   dlog("Sending query POST request to $apiURL: ${qargs.toString()}");
   Response? response;
   try {
-    response =
-        await http.post(Uri.parse(apiURL), body: qargs).timeout(kRequestTimeout, onTimeout: () {
-      if (handler != null) {
-        handler(null);
-      }
-      return null;
-    });
+    response = await http.post(Uri.parse(apiURL), body: qargs).timeout(kRequestTimeout);
   } catch (e) {
+    dlog("Exception $e while sending query POST request to $apiURL");
     response = null;
   }
 
@@ -134,7 +129,7 @@ class QueryService {
       'text': text,
       'voice_id': voiceID,
       'format': 'text', // No SSML for now...
-      'api_key': readQueryServerKey(),
+      'api_key': '', // TODO: Add API key
     };
 
     await _makePostRequest(kSpeechSynthesisAPIPath, qargs, handler);
