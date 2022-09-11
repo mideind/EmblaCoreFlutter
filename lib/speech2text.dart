@@ -25,7 +25,7 @@ import 'package:logger/logger.dart' show Level;
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_speech/google_speech.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
 import './common.dart';
@@ -47,11 +47,11 @@ class SpeechRecognizer {
   StreamSubscription _recordingProgressSubscription;
   StreamController _recordingDataController;
 
-  StreamSubscription<List<int>> _recognitionStreamSubscription;
-  BehaviorSubject<List<int>> _recognitionStream;
+  StreamSubscription<List<int>>? _recognitionStreamSubscription;
+  BehaviorSubject<List<int>>? _recognitionStream;
 
   bool isRecognizing = false;
-  double lastSignal = 0.0; // Strength of last audio signal, on a scale of 0.0 to 1.0
+  num lastSignal = 0.0; // Strength of last audio signal, on a scale of 0.0 to 1.0
   int totalAudioDataSize = 0; // Accumulated byte size of audio recording
 
   static final SpeechRecognizer _instance = SpeechRecognizer._internal();
@@ -67,16 +67,17 @@ class SpeechRecognizer {
   // Do we have all we need to recognize speech?
   Future<bool> canRecognizeSpeech() async {
     // Access to microphone?
-    PermissionStatus status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      return false;
-    }
-    // Proper service account for STT server?
-    return (readGoogleServiceAccount() != '');
+    // PermissionStatus status = await Permission.microphone.request();
+    // if (status != PermissionStatus.granted) {
+    //   return false;
+    // }
+    // // Proper service account for STT server?
+    // return (readGoogleServiceAccount() != '');
+    return true;
   }
 
   // Normalize decibel level to a number between 0.0 and 1.0
-  double _normalizedPowerLevelFromDecibels(double decibels) {
+  num _normalizedPowerLevelFromDecibels(double decibels) {
     if (decibels < -60.0 || decibels == 0.0) {
       return 0.0;
     }
@@ -104,7 +105,7 @@ class SpeechRecognizer {
     _recordingDataController = StreamController<Food>();
     _recordingDataSubscription = _recordingDataController.stream.listen((buffer) {
       if (buffer is FoodData) {
-        _recognitionStream?.add(buffer.data);
+        _recognitionStream.add(buffer.data);
         totalAudioDataSize += buffer.data.lengthInBytes;
       }
     });
@@ -150,10 +151,10 @@ class SpeechRecognizer {
     // Start recognizing speech from audio stream
     final serviceAccount = ServiceAccount.fromString(readGoogleServiceAccount());
     final speechToText = SpeechToText.viaServiceAccount(serviceAccount);
-    final Stream responseStream = speechToText.streamingRecognize(
-        StreamingRecognitionConfig(
-            config: speechRecognitionConfig, interimResults: true, singleUtterance: true),
-        _recognitionStream);
+    final recognitionConfig = StreamingRecognitionConfig(
+        config: speechRecognitionConfig, interimResults: true, singleUtterance: true);
+    final Stream responseStream =
+        speechToText.streamingRecognize(recognitionConfig, _recognitionStream);
 
     // Listen for streaming speech recognition server responses
     responseStream.listen(dataHandler,
