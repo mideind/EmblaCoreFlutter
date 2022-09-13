@@ -16,8 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-part of 'embla_core.dart';
+import './common.dart';
 
+// Session state
 enum EmblaSessionState { idle, listen, query, answer, error, done }
 
 class EmblaSession {
@@ -38,7 +39,7 @@ class EmblaSession {
   EmblaSession(
       {queryServer = kDefaultQueryServer,
       voiceID = kDefaultSpeechSynthesisVoice,
-      voiceSpeed = 1.0,
+      voiceSpeed = kDefaultSpeechSynthesisSpeed,
       private = false,
       location,
       googleKey}) {

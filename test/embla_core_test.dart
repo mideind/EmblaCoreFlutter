@@ -23,6 +23,6 @@ import 'package:embla_core/embla_core.dart';
 void main() {
   test("Instantiate session", () {
     EmblaSession session = EmblaSession();
-    expect(session.state == EmblaSessionState.rest, true);
+    expect(session.state == EmblaSessionState.idle, true);
   });
 }

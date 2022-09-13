@@ -89,7 +89,8 @@ class SpeechRecognizer {
   }
 
   // Set things off
-  Future<void> start(Function dataHandler, Function completionHandler, Function errHandler) async {
+  Future<void> start(Function(dynamic) dataHandler, Function()? completionHandler,
+      Function(dynamic) errHandler) async {
     if (isRecognizing == true) {
       dlog('Speech recognition already running!');
       return;
@@ -132,7 +133,7 @@ class SpeechRecognizer {
 
     // Listen for audio status (duration, decibel) at fixed interval
     _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));
-    _recordingProgressSubscription = _micRecorder.onProgress.listen((e) {
+    _recordingProgressSubscription = _micRecorder.onProgress?.listen((e) {
       dlog(e);
       if (e.decibels == 0.0) {
         return;
@@ -168,14 +169,17 @@ class SpeechRecognizer {
     }
     isRecognizing = false;
     dlog('Stopping speech recognition');
+
     double seconds = totalAudioDataSize / (2.0 * kAudioSampleRate);
     dlog("Total audio length: $seconds seconds ($totalAudioDataSize bytes)");
+
+    // Stop everything
     await _micRecorder.stopRecorder();
     await _micRecorder.closeRecorder();
-    await _recordingDataSubscription.cancel();
-    await _recordingProgressSubscription.cancel();
-    await _recordingDataController.close();
-    await _recognitionStreamSubscription.cancel();
-    await _recognitionStream.close();
+    await _recordingDataSubscription?.cancel();
+    await _recordingProgressSubscription?.cancel();
+    await _recordingDataController?.close();
+    await _recognitionStreamSubscription?.cancel();
+    await _recognitionStream?.close();
   }
 }

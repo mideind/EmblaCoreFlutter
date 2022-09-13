@@ -18,4 +18,4 @@
 
 library embla_core;
 
-part 'session.dart';
+export 'package:embla_core/session.dart' show EmblaSession, EmblaSessionState;
