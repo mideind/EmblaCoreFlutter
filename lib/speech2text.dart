@@ -43,9 +43,9 @@ final RecognitionConfig speechRecognitionConfig = RecognitionConfig(
 
 class SpeechRecognizer {
   final FlutterSoundRecorder _micRecorder = FlutterSoundRecorder(logLevel: Level.error);
-  StreamSubscription _recordingDataSubscription;
-  StreamSubscription _recordingProgressSubscription;
-  StreamController _recordingDataController;
+  StreamSubscription? _recordingDataSubscription;
+  StreamSubscription? _recordingProgressSubscription;
+  StreamController? _recordingDataController;
 
   StreamSubscription<List<int>>? _recognitionStreamSubscription;
   BehaviorSubject<List<int>>? _recognitionStream;
