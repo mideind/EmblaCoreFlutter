@@ -125,13 +125,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  flutter_snowboy:
-    dependency: transitive
-    description:
-      name: flutter_snowboy
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0+1"
   flutter_sound:
     dependency: transitive
     description:

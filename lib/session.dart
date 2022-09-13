@@ -18,14 +18,30 @@
 
 part of 'embla_core.dart';
 
-enum EmblaSessionState { rest, listen, query, answer }
+enum EmblaSessionState { idle, listen, query, answer, error, done }
 
 class EmblaSession {
+  // Properties
+  // queryServer, voiceID, voiceSpeed, private, location, googleKey
+
   // Current state of session object
-  var state = EmblaSessionState.rest;
+  var state = EmblaSessionState.idle;
+
+  // Session properties
+  var queryServer = kDefaultQueryServer;
+  var voiceID = kDefaultSpeechSynthesisVoice;
+  var voiceSpeed = kDefaultSpeechSynthesisSpeed;
+  var private = false;
+  var test = false;
 
   // Constructor
-  EmblaSession() {
+  EmblaSession(
+      {queryServer = kDefaultQueryServer,
+      voiceID = kDefaultSpeechSynthesisVoice,
+      voiceSpeed = 1.0,
+      private = false,
+      location,
+      googleKey}) {
     // Implement me
   }
 
@@ -34,6 +50,6 @@ class EmblaSession {
   }
 
   void stop() async {
-    state = EmblaSessionState.rest;
+    state = EmblaSessionState.idle;
   }
 }
