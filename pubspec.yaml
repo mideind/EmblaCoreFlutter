@@ -19,7 +19,7 @@ dependencies:
   rxdart: '>=0.27.3'
   flutter_sound: '>=9.2.13'
   audio_session: '>=0.1.10'
-  flutter_webview_plugin: '>=0.4.0'
+  # flutter_webview_plugin: '>=0.4.0'
 
 dev_dependencies:
   flutter_test:

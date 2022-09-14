@@ -60,13 +60,13 @@ class EmblaSession {
       bool private = false,
       bool test = false,
       // Function? location, // TBD
-      String? apiKey}) {
+      String apiKey = ''}) {
     this.queryServer = queryServer;
     this.voiceID = voiceID;
     this.voiceSpeed = voiceSpeed;
     this.private = private;
     this.test = test;
-    this.apiKey = apiKey ?? '';
+    this.apiKey = apiKey;
   }
 
   void start() async {
