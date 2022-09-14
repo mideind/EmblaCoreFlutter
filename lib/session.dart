@@ -41,15 +41,15 @@ class EmblaSession {
 
   Function? onStartQuerying;
   Function? onStopQuerying;
-  Function? onQueryAnswerReceived;
+  Function(dynamic)? onQueryAnswerReceived;
 
   Function? onStartAnswering;
   Function? onStopAnswering;
 
   Function? onDone;
-  Function? onError;
+  Function(String)? onError;
 
-  // Private session properties
+  // Private session vars
   SpeechRecognizer? _speechRecognizer;
 
   // Constructor
@@ -93,8 +93,7 @@ class EmblaSession {
   }
 
   void cancel() async {
-    _speechRecognizer?.stop();
-    state = EmblaSessionState.done;
+    stop();
   }
 
   void error(String errMsg) {

@@ -108,7 +108,7 @@ class SpeechRecognizer {
     // Create recording stream
     _recordingDataController = StreamController<Food>();
     _recordingDataSubscription = _recordingDataController!.stream.listen((buffer) {
-      if (buffer is FoodData && buffer.data != null) {
+      if (buffer.data != null && buffer is FoodData) {
         _recognitionStream!.add(buffer.data as List<int>);
         totalAudioByteSize += buffer.data!.lengthInBytes;
       }
