@@ -17,40 +17,97 @@
  */
 
 import './common.dart';
+import './speech2text.dart' show SpeechRecognizer;
 
 // Session state
-enum EmblaSessionState { idle, listen, query, answer, error, done }
+enum EmblaSessionState { idle, listening, querying, answering, done }
 
 class EmblaSession {
-  // Properties
-  // queryServer, voiceID, voiceSpeed, private, location, googleKey
-
   // Current state of session object
   var state = EmblaSessionState.idle;
 
-  // Session properties
-  var queryServer = kDefaultQueryServer;
-  var voiceID = kDefaultSpeechSynthesisVoice;
-  var voiceSpeed = kDefaultSpeechSynthesisSpeed;
-  var private = false;
-  var test = false;
+  // Configurable session properties
+  String queryServer = kDefaultQueryServer;
+  String voiceID = kDefaultSpeechSynthesisVoice;
+  double voiceSpeed = kDefaultSpeechSynthesisSpeed;
+  bool private = false;
+  bool test = false;
+  String apiKey = '';
+
+  // Handlers for session events
+  Function? onStartListening;
+  Function? onStopListening;
+  Function(List<String>)? onSpeechTextReceived;
+
+  Function? onStartQuerying;
+  Function? onStopQuerying;
+  Function? onQueryAnswerReceived;
+
+  Function? onStartAnswering;
+  Function? onStopAnswering;
+
+  Function? onDone;
+  Function? onError;
+
+  // Private session properties
+  SpeechRecognizer? _speechRecognizer;
 
   // Constructor
   EmblaSession(
-      {queryServer = kDefaultQueryServer,
-      voiceID = kDefaultSpeechSynthesisVoice,
-      voiceSpeed = kDefaultSpeechSynthesisSpeed,
-      private = false,
-      location,
-      googleKey}) {
-    // Implement me
+      {String queryServer = kDefaultQueryServer,
+      String voiceID = kDefaultSpeechSynthesisVoice,
+      double voiceSpeed = kDefaultSpeechSynthesisSpeed,
+      bool private = false,
+      bool test = false,
+      // Function? location, // TBD
+      String? apiKey}) {
+    this.queryServer = queryServer;
+    this.voiceID = voiceID;
+    this.voiceSpeed = voiceSpeed;
+    this.private = private;
+    this.test = test;
+    this.apiKey = apiKey ?? '';
   }
 
   void start() async {
-    state = EmblaSessionState.listen;
+    state = EmblaSessionState.listening;
+
+    if (onStartListening != null) {
+      onStartListening!();
+    }
+
+    // Make sure there's an API key for the speech recognizer
+    if (apiKey == '') {
+      error("No API key set");
+      return;
+    }
+
+    // Create and start speech recognizer
+    _speechRecognizer = SpeechRecognizer(apiKey);
+    _speechRecognizer?.start((data) {}, () {}, (dynamic) {});
   }
 
   void stop() async {
-    state = EmblaSessionState.idle;
+    _speechRecognizer?.stop();
+    state = EmblaSessionState.done;
+  }
+
+  void cancel() async {
+    _speechRecognizer?.stop();
+    state = EmblaSessionState.done;
+  }
+
+  void error(String errMsg) {
+    dlog(errMsg);
+    stop();
+    state = EmblaSessionState.done;
+
+    if (onError != null) {
+      onError!(errMsg);
+    }
+  }
+
+  bool isActive() {
+    return (state != EmblaSessionState.idle && state != EmblaSessionState.done);
   }
 }
