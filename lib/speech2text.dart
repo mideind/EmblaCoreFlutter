@@ -52,12 +52,15 @@ class SpeechRecognizer {
 
   bool isRecognizing = false;
   num lastSignal = 0.0; // Strength of last audio signal, on a scale of 0.0 to 1.0
-  int totalAudioDataSize = 0; // Accumulated byte size of audio recording
+  int totalAudioByteSize = 0; // Accumulated byte size of audio recording
+
+  String apiKey = '';
 
   static final SpeechRecognizer _instance = SpeechRecognizer._internal();
 
   // Singleton pattern
-  factory SpeechRecognizer() {
+  factory SpeechRecognizer(String key) {
+    _instance.apiKey = key;
     return _instance;
   }
 
@@ -89,15 +92,15 @@ class SpeechRecognizer {
   }
 
   // Set things off
-  Future<void> start(Function(dynamic) dataHandler, Function()? completionHandler,
-      Function(dynamic) errHandler) async {
+  Future<void> start(void Function(dynamic) dataHandler, Function()? completionHandler,
+      Function(dynamic)? errHandler) async {
     if (isRecognizing == true) {
       dlog('Speech recognition already running!');
       return;
     }
     dlog('Starting speech recognition');
     isRecognizing = true;
-    totalAudioDataSize = 0;
+    totalAudioByteSize = 0;
 
     // Stream to be consumed by speech recognizer
     _recognitionStream = BehaviorSubject<List<int>>();
@@ -107,7 +110,7 @@ class SpeechRecognizer {
     _recordingDataSubscription = _recordingDataController!.stream.listen((buffer) {
       if (buffer is FoodData && buffer.data != null) {
         _recognitionStream!.add(buffer.data as List<int>);
-        totalAudioDataSize += buffer.data!.lengthInBytes;
+        totalAudioByteSize += buffer.data!.lengthInBytes;
       }
     });
 
@@ -133,29 +136,30 @@ class SpeechRecognizer {
 
     // Listen for audio status (duration, decibel) at fixed interval
     _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));
-    _recordingProgressSubscription = _micRecorder.onProgress?.listen((e) {
-      dlog(e);
-      if (e.decibels == 0.0) {
+    _recordingProgressSubscription = _micRecorder.onProgress?.listen((RecordingDisposition event) {
+      dlog(event);
+      double decibels = event.decibels!;
+      if (decibels == 0.0) {
         return;
       }
-      double decibels = e.decibels - 70.0; // This number is arbitrary but works
+      decibels = decibels - 70.0; // This number is arbitrary but works
       lastSignal = _normalizedPowerLevelFromDecibels(decibels);
     });
 
     // Start recording audio
     await _micRecorder.startRecorder(
-        toStream: _recordingDataController.sink,
+        toStream: _recordingDataController?.sink as StreamSink<Food>,
         codec: Codec.pcm16,
         numChannels: kAudioNumChannels,
         sampleRate: kAudioSampleRate);
 
     // Start recognizing speech from audio stream
-    final serviceAccount = ServiceAccount.fromString(readGoogleServiceAccount());
+    final serviceAccount = ServiceAccount.fromString(apiKey);
     final speechToText = SpeechToText.viaServiceAccount(serviceAccount);
     final recognitionConfig = StreamingRecognitionConfig(
         config: speechRecognitionConfig, interimResults: true, singleUtterance: true);
     final Stream responseStream =
-        speechToText.streamingRecognize(recognitionConfig, _recognitionStream);
+        speechToText.streamingRecognize(recognitionConfig, _recognitionStream as Stream<List<int>>);
 
     // Listen for streaming speech recognition server responses
     responseStream.listen(dataHandler,
@@ -170,8 +174,8 @@ class SpeechRecognizer {
     isRecognizing = false;
     dlog('Stopping speech recognition');
 
-    double seconds = totalAudioDataSize / (2.0 * kAudioSampleRate);
-    dlog("Total audio length: $seconds seconds ($totalAudioDataSize bytes)");
+    double seconds = totalAudioByteSize / (2.0 * kAudioSampleRate);
+    dlog("Total audio length: $seconds seconds ($totalAudioByteSize bytes)");
 
     // Stop everything
     await _micRecorder.stopRecorder();
