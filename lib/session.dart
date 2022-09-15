@@ -84,7 +84,9 @@ class EmblaSession {
 
     // Create and start speech recognizer
     _speechRecognizer = SpeechRecognizer(apiKey);
-    _speechRecognizer?.start((data) {}, () {}, (dynamic) {});
+    _speechRecognizer?.start((data) {
+      dlog(data);
+    }, () {}, (dynamic) {});
   }
 
   void stop() async {

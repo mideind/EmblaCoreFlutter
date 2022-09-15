@@ -16,9 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:embla_core/embla_core.dart' show EmblaSession;
+
+import './keys.dart' show googleServiceAccount;
 
 void main() {
   runApp(const MyApp());
@@ -69,7 +73,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  EmblaSession session = EmblaSession();
+  EmblaSession session = EmblaSession(apiKey: readGoogleServiceAccount());
 
   void _incrementCounter() {
     setState(() {
@@ -79,7 +83,11 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
-      session.start();
+      if (session.isActive()) {
+        session.stop();
+      } else {
+        session.start();
+      }
     });
   }
 
@@ -134,4 +142,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+String _cachedGoogleServiceAccount = '';
+
+// Read and cache Google API service account config JSON
+String readGoogleServiceAccount() {
+  if (_cachedGoogleServiceAccount == '') {
+    _cachedGoogleServiceAccount = utf8.decode(base64.decode(googleServiceAccount));
+  }
+  return _cachedGoogleServiceAccount;
 }
