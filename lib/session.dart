@@ -16,6 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pbenum.dart'
+    show StreamingRecognizeResponse_SpeechEventType;
+
 import './common.dart';
 import './speech2text.dart' show SpeechRecognizer;
 
@@ -51,6 +54,7 @@ class EmblaSession {
 
   // Private session vars
   SpeechRecognizer? _speechRecognizer;
+  List<String> _transcripts = [];
 
   // Constructor
   EmblaSession(
@@ -70,6 +74,11 @@ class EmblaSession {
   }
 
   void start() async {
+    // Session can only be started in idle state
+    if (state != EmblaSessionState.idle) {
+      throw Exception("Session is not idle!");
+    }
+
     state = EmblaSessionState.listening;
 
     if (onStartListening != null) {
@@ -84,9 +93,62 @@ class EmblaSession {
 
     // Create and start speech recognizer
     _speechRecognizer = SpeechRecognizer(apiKey);
-    _speechRecognizer?.start((data) {
-      dlog(data);
-    }, () {}, (dynamic) {});
+    _speechRecognizer?.start(sttDataHandler, sttCompletionHandler, sttErrorHandler);
+  }
+
+  void sttDataHandler(dynamic data) {
+    dlog("Received data: $data");
+
+    if (state != EmblaSessionState.listening) {
+      dlog('Received speech recognition results after speech recognition ended.');
+      return;
+    }
+
+    // End of utterance event handling
+    // TODO: It's nasty to have to import this enum from google_speech
+    if (data.hasSpeechEventType()) {
+      if (data.speechEventType ==
+          StreamingRecognizeResponse_SpeechEventType.END_OF_SINGLE_UTTERANCE) {
+        dlog('Received END_OF_SINGLE_UTTERANCE speech event.');
+        stopSpeechRecognition();
+      }
+    }
+
+    // Bail on empty result list
+    if (data == null || data.results.length < 1) {
+      dlog('Empty result from speech recognition');
+      return;
+    }
+
+    var text = data.results.map((e) => e.alternatives.first.transcript).join('');
+    dlog('RESULTS--------------');
+    dlog(data.results);
+    var first = data.results[0];
+    if (first.isFinal) {
+      dlog("Final result received: $text");
+      for (var a in first.alternatives) {
+        _transcripts.add(a.transcript.toString());
+      }
+      dlog("Transcripts: $_transcripts");
+      stopSpeechRecognition();
+    }
+  }
+
+  void sttCompletionHandler() {
+    dlog("Completion handler invoked");
+    state = EmblaSessionState.querying;
+    // TODO: Send STT result to query server here
+  }
+
+  void sttErrorHandler(dynamic error) {
+    dlog("Error: $error");
+    stop();
+  }
+
+  void stopSpeechRecognition() {
+    dlog('Stopping speech recognition');
+    _speechRecognizer?.stop();
+    _speechRecognizer = null;
   }
 
   void stop() async {
