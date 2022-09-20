@@ -30,18 +30,32 @@ import './common.dart';
 
 const kRequestTimeout = Duration(seconds: 10); // Seconds
 
-String _clientType() {
-  return "${Platform.operatingSystem}_flutter";
-}
-
-Future<String?> _clientID() async {
-  return await PlatformDeviceId.getDeviceId;
-}
-
-Future<String> _clientVersion() async {
+Future<Map<String, String>> _clientInfo() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  return packageInfo.version;
+  String? deviceID = await PlatformDeviceId.getDeviceId;
+  return {
+    'platform': Platform.operatingSystem.toLowerCase(),
+    'platform_version': Platform.operatingSystemVersion,
+    'device_id': deviceID ?? '',
+    'app_name': packageInfo.appName,
+    'app_version': packageInfo.version,
+    'app_build': packageInfo.buildNumber,
+  };
 }
+
+// Future<String> _clientType() async {
+//   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+//   return "${packageInfo.appName}_${Platform.operatingSystem}_flutter";
+// }
+
+// Future<String?> _clientID() async {
+//   return await PlatformDeviceId.getDeviceId;
+// }
+
+// Future<String> _clientVersion() async {
+//   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+//   return packageInfo.version;
+// }
 
 // Send a request to query server
 Future<Response?> _makePostRequest(String path, Map<String, dynamic> qargs,
@@ -98,9 +112,11 @@ class QueryService {
     if (private) {
       qargs['private'] = '1';
     } else {
-      qargs['client_type'] = _clientType();
-      qargs['client_id'] = await _clientID();
-      qargs['client_version'] = await _clientVersion();
+      Map<String, String> clientInfo = await _clientInfo();
+      // TODO: Client type should include platform and app name
+      qargs['client_type'] = clientInfo['platform'];
+      qargs['client_id'] = clientInfo['device_id'];
+      qargs['client_version'] = clientInfo['app_version'];
     }
 
     if (test == true) {
