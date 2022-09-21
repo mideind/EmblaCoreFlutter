@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Embla Session Demo',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -46,9 +46,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Embla Session Demo'),
     );
   }
 }
@@ -72,23 +72,55 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  EmblaSession session = EmblaSession(apiKey: readGoogleServiceAccount());
+  EmblaSession? session;
+  String msg = '';
+  Icon buttonIcon = const Icon(Icons.play_arrow);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-      if (session.isActive()) {
-        session.stop();
-      } else {
-        session.start();
-      }
-    });
+  void _buttonClick() {
+    if (session != null && session!.isActive()) {
+      // Session is active, so terminate it
+      session!.stop();
+      buttonIcon = const Icon(Icons.play_arrow);
+      return;
+    }
+
+    buttonIcon = const Icon(Icons.stop);
+
+    // Create new session
+    session = EmblaSession(apiKey: readGoogleServiceAccount());
+
+    session!.onStartListening = () {
+      setState(() {
+        msg = 'Hlustandi...';
+      });
+    };
+
+    session!.onSpeechTextReceived = (List<String> transcripts, bool isFinal) {
+      setState(() {
+        msg = transcripts[0];
+      });
+    };
+
+    session!.onQueryAnswerReceived = (dynamic answer) {
+      setState(() {
+        msg = answer['answer'];
+      });
+    };
+
+    session!.onError = (String error) {
+      setState(() {
+        msg = error;
+        buttonIcon = const Icon(Icons.play_arrow);
+      });
+    };
+
+    session!.onDone = () {
+      setState(() {
+        buttonIcon = const Icon(Icons.play_arrow);
+      });
+    };
+
+    session!.start();
   }
 
   @override
@@ -125,20 +157,16 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
             Text(
-              '$_counter',
+              msg,
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: _buttonClick,
+        child: buttonIcon,
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

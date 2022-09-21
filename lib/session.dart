@@ -140,6 +140,9 @@ class EmblaSession {
 
   void sttCompletionHandler() {
     dlog("Completion handler invoked");
+    if (state == EmblaSessionState.done) {
+      return;
+    }
     state = EmblaSessionState.querying;
     answerQuery(_transcripts);
   }
