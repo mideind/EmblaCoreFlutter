@@ -20,6 +20,8 @@ import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pben
     show StreamingRecognizeResponse_SpeechEventType;
 
 import './common.dart';
+import './audio.dart';
+import './query.dart';
 import './speech2text.dart' show SpeechRecognizer;
 
 // Session state
@@ -39,15 +41,12 @@ class EmblaSession {
 
   // Handlers for session events
   Function? onStartListening;
-  Function? onStopListening;
-  Function(List<String>)? onSpeechTextReceived;
+  Function(List<String>, bool)? onSpeechTextReceived;
 
   Function? onStartQuerying;
-  Function? onStopQuerying;
   Function(dynamic)? onQueryAnswerReceived;
 
   Function? onStartAnswering;
-  Function? onStopAnswering;
 
   Function? onDone;
   Function(String)? onError;
@@ -81,10 +80,6 @@ class EmblaSession {
 
     state = EmblaSessionState.listening;
 
-    if (onStartListening != null) {
-      onStartListening!();
-    }
-
     // Make sure there's an API key for the speech recognizer
     if (apiKey == '') {
       error("No API key set");
@@ -94,6 +89,10 @@ class EmblaSession {
     // Create and start speech recognizer
     _speechRecognizer = SpeechRecognizer(apiKey);
     _speechRecognizer?.start(sttDataHandler, sttCompletionHandler, sttErrorHandler);
+
+    if (onStartListening != null) {
+      onStartListening!();
+    }
   }
 
   void sttDataHandler(dynamic data) {
@@ -124,6 +123,11 @@ class EmblaSession {
     dlog('RESULTS--------------');
     dlog(data.results);
     var first = data.results[0];
+
+    if (onSpeechTextReceived != null) {
+      onSpeechTextReceived!([text], first.isFinal);
+    }
+
     if (first.isFinal) {
       dlog("Final result received: $text");
       for (var a in first.alternatives) {
@@ -137,7 +141,7 @@ class EmblaSession {
   void sttCompletionHandler() {
     dlog("Completion handler invoked");
     state = EmblaSessionState.querying;
-    // TODO: Send STT result to query server here
+    answerQuery(_transcripts);
   }
 
   void sttErrorHandler(dynamic error) {
@@ -151,6 +155,75 @@ class EmblaSession {
     _speechRecognizer = null;
   }
 
+  void answerQuery(List<String> alternatives) {
+    dlog("Answering query: ${alternatives.toString()}");
+    // Transition to querying state
+    state = EmblaSessionState.querying;
+
+    if (onStartQuerying != null) {
+      onStartQuerying!();
+    }
+
+    // Send text to query server
+    QueryService.sendQuery(alternatives, handleQueryResponse);
+  }
+
+  // Process response from query server
+  void handleQueryResponse(Map<String, dynamic>? resp) async {
+    if (state != EmblaSessionState.querying) {
+      dlog("Received query answer after session terminated: ${resp.toString()}");
+      return;
+    }
+
+    if (onQueryAnswerReceived != null) {
+      onQueryAnswerReceived!(resp);
+    }
+
+    // Received valid response to query
+    if (resp != null && resp['valid'] == true && resp['error'] == null && resp['answer'] != null) {
+      dlog('Received valid response to query');
+
+      if (resp['audio'] != null) {
+        // We have an audio file to play
+        playAnswer(resp['audio']);
+      } else {
+        // If no audio to play, terminate session
+        stop();
+      }
+    }
+    // Don't know
+    else if (resp != null && resp['error'] != null) {
+    }
+    // Error in server response
+    else {
+      error("Received invalid response from query server: ${resp.toString()}");
+    }
+  }
+
+  void playAnswer(String url) async {
+    dlog('Playing $url');
+    state = EmblaSessionState.answering;
+
+    if (onStartAnswering != null) {
+      onStartAnswering!();
+    }
+
+    await AudioPlayer().playURL(url, (bool err) {
+      if (err == true) {
+        error("Error during audio playback");
+        return;
+      } else {
+        dlog('Playback finished');
+      }
+
+      if (onDone != null) {
+        onDone!();
+      }
+
+      stop();
+    });
+  }
+
   void stop() async {
     _speechRecognizer?.stop();
     state = EmblaSessionState.done;
@@ -161,7 +234,7 @@ class EmblaSession {
   }
 
   void error(String errMsg) {
-    dlog(errMsg);
+    dlog("Error in session: $errMsg");
     stop();
     state = EmblaSessionState.done;
 
