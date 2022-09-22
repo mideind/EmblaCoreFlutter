@@ -19,7 +19,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
 import 'package:embla_core/embla_core.dart' show EmblaSession;
 
 import './keys.dart' show googleServiceAccount;
@@ -48,13 +47,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.red,
       ),
-      home: const MyHomePage(title: 'Embla Session Demo'),
+      home: const SessionPage(title: 'Embla Session Demo'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class SessionPage extends StatefulWidget {
+  const SessionPage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -68,10 +67,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<SessionPage> createState() => _SessionPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _SessionPageState extends State<SessionPage> {
   EmblaSession? session;
   String msg = '';
   Icon buttonIcon = const Icon(Icons.play_arrow);

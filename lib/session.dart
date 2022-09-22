@@ -240,6 +240,9 @@ class EmblaSession {
 
   void cancel() async {
     stop();
+    if (onDone != null) {
+      onDone!();
+    }
   }
 
   void error(String errMsg) {
@@ -254,5 +257,9 @@ class EmblaSession {
 
   bool isActive() {
     return (state != EmblaSessionState.idle && state != EmblaSessionState.done);
+  }
+
+  num audioSignalStrength() {
+    return _speechRecognizer?.lastSignal ?? 0.0;
   }
 }

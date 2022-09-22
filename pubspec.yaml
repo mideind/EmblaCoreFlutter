@@ -1,6 +1,6 @@
 name: embla_core
-description: Embla core library
-version: 0.0.1
+description: Embla Core library
+version: 0.1.0
 homepage:
 
 environment:
@@ -15,11 +15,9 @@ dependencies:
   platform_device_id: '>=1.0.1'
   package_info_plus: '>=1.4.2'
   google_speech: '>=2.1.1'
-  path_provider: '>=2.0.10'
   rxdart: '>=0.27.3'
   flutter_sound: '>=9.2.13'
   audio_session: '>=0.1.10'
-  # flutter_webview_plugin: '>=0.4.0'
 
 dev_dependencies:
   flutter_test:
