@@ -38,6 +38,8 @@ class EmblaSession {
   bool private = false;
   bool test = false;
   String apiKey = '';
+  double? latitude;
+  double? longitude;
 
   // Handlers for session events
   Function? onStartListening;
@@ -53,7 +55,7 @@ class EmblaSession {
 
   // Private session vars
   SpeechRecognizer? _speechRecognizer;
-  List<String> _transcripts = [];
+  final List<String> _transcripts = [];
 
   // Constructor
   EmblaSession(
@@ -62,14 +64,17 @@ class EmblaSession {
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
       bool private = false,
       bool test = false,
-      // Function? location, // TBD
-      String apiKey = ''}) {
+      String apiKey = '',
+      double? latitude,
+      double? longitude}) {
     this.queryServer = queryServer;
     this.voiceID = voiceID;
     this.voiceSpeed = voiceSpeed;
     this.private = private;
     this.test = test;
     this.apiKey = apiKey;
+    this.latitude = latitude;
+    this.longitude = longitude;
   }
 
   void start() async {
@@ -105,12 +110,11 @@ class EmblaSession {
 
     // End of utterance event handling
     // TODO: It's nasty to have to import this enum from google_speech
-    if (data.hasSpeechEventType()) {
-      if (data.speechEventType ==
-          StreamingRecognizeResponse_SpeechEventType.END_OF_SINGLE_UTTERANCE) {
-        dlog('Received END_OF_SINGLE_UTTERANCE speech event.');
-        stopSpeechRecognition();
-      }
+    if (data.hasSpeechEventType() &&
+        data.speechEventType ==
+            StreamingRecognizeResponse_SpeechEventType.END_OF_SINGLE_UTTERANCE) {
+      dlog('Received END_OF_SINGLE_UTTERANCE speech event.');
+      stopSpeechRecognition();
     }
 
     // Bail on empty result list
@@ -123,12 +127,13 @@ class EmblaSession {
     dlog('RESULTS--------------');
     dlog(data.results);
     var first = data.results[0];
+    var isFinal = first.isFinal;
 
     if (onSpeechTextReceived != null) {
-      onSpeechTextReceived!([text], first.isFinal);
+      onSpeechTextReceived!([text], isFinal);
     }
 
-    if (first.isFinal) {
+    if (isFinal) {
       dlog("Final result received: $text");
       for (var a in first.alternatives) {
         _transcripts.add(a.transcript.toString());
@@ -168,7 +173,8 @@ class EmblaSession {
     }
 
     // Send text to query server
-    QueryService.sendQuery(alternatives, handleQueryResponse);
+    QueryService.sendQuery(alternatives, handleQueryResponse, test = test, private = private,
+        voiceSpeed = voiceSpeed, voiceID = voiceID, latitude = latitude, longitude = longitude);
   }
 
   // Process response from query server

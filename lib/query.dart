@@ -100,12 +100,16 @@ class QueryService {
       bool test = false,
       bool private = false,
       double voiceSpeed = 1.0,
-      String voiceID = kDefaultSpeechSynthesisVoice]) async {
+      String voiceID = kDefaultSpeechSynthesisVoice,
+      double? latitude,
+      double? longitude]) async {
+    //
     // Create query args
     Map<String, String?> qargs = {
       'q': queries.join('|'),
       'voice': '1',
-      'voice_id': kDefaultSpeechSynthesisVoice
+      'voice_id': voiceID,
+      'voice_speed': voiceSpeed.toString()
     };
 
     // Never send client information in privacy mode
@@ -125,15 +129,11 @@ class QueryService {
 
     qargs['voice_speed'] = voiceSpeed.toString();
 
-    // TODO: Think about how to handle location tracking data
-    // bool shareLocation = privacyMode ? false : Prefs().boolForKey('share_location');
-    // if (shareLocation) {
-    //   List<double> latlon = LocationTracking().location;
-    //   if (latlon != null) {
-    //     qargs['latitude'] = latlon[0].toString();
-    //     qargs['longitude'] = latlon[1].toString();
-    //   }
-    // }
+    bool shareLocation = (private == true || latitude == null || longitude == null);
+    if (shareLocation) {
+      qargs['latitude'] = latitude.toString();
+      qargs['longitude'] = longitude.toString();
+    }
 
     await _makePostRequest(kQueryAPIPath, qargs, handler);
   }
