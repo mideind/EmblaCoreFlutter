@@ -22,7 +22,8 @@ import 'package:embla_core/embla_core.dart';
 
 void main() {
   test("Instantiated session in idle state", () {
-    EmblaSession session = EmblaSession();
+    var cfg = EmblaConfig();
+    var session = EmblaSession(config: cfg);
     expect(session.state == EmblaSessionState.idle, true);
   });
 }

@@ -38,8 +38,13 @@ class EmblaSession {
   final List<String> _transcripts = [];
 
   // Constructor
-  EmblaSession(EmblaConfig cfg) {
-    config = cfg;
+  EmblaSession({required EmblaConfig config}) {
+    this.config = config;
+  }
+
+  // Static method to preload all required assets
+  static void prep() {
+    AudioPlayer();
   }
 
   void start() async {
@@ -171,6 +176,10 @@ class EmblaSession {
     }
     // Don't know
     else if (resp != null && resp['error'] != null) {
+      AudioPlayer().playDunno(() {
+        dlog('Playback finished');
+        stop();
+      });
     }
     // Error in server response
     else {

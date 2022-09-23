@@ -24,6 +24,9 @@ import 'package:embla_core/embla_core.dart';
 import './keys.dart' show googleServiceAccount;
 
 void main() {
+  // Prepare for session by preloading assets
+  EmblaSession.prep();
+
   runApp(const MyApp());
 }
 
@@ -101,7 +104,9 @@ class _SessionPageState extends State<SessionPage> {
 
     config!.onQueryAnswerReceived = (dynamic answer) {
       setState(() {
-        msg = answer['answer'];
+        if (answer is Map && answer.containsKey('answer')) {
+          msg = answer['answer'];
+        }
       });
     };
 
@@ -119,7 +124,7 @@ class _SessionPageState extends State<SessionPage> {
       });
     };
 
-    session = EmblaSession(config = config);
+    session = EmblaSession(config: config);
     session!.start();
   }
 

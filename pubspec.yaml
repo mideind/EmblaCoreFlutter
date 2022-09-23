@@ -26,13 +26,25 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-# To add assets to your package, add an assets section, like this:
-# assets:
-#   - images/a_dot_burr.jpeg
-#   - images/a_dot_ham.jpeg
-#
-# For details regarding assets in packages, see
-# https://flutter.dev/assets-and-images/#from-packages
-#
-# An image asset can refer to one or more resolution-specific "variants", see
-# https://flutter.dev/assets-and-images/#resolution-aware
+  assets:
+    - assets/audio/dunno06-dora.wav
+    - assets/audio/dunno07-dora.wav
+    - assets/audio/dunno04-karl.wav
+    - assets/audio/dunno05-karl.wav
+    - assets/audio/conn-karl.wav
+    - assets/audio/rec_cancel.wav
+    - assets/audio/err-dora.wav
+    - assets/audio/dunno01-dora.wav
+    - assets/audio/dunno03-karl.wav
+    - assets/audio/dunno02-karl.wav
+    - assets/audio/conn-dora.wav
+    - assets/audio/rec_begin.wav
+    - assets/audio/dunno05-dora.wav
+    - assets/audio/dunno04-dora.wav
+    - assets/audio/dunno07-karl.wav
+    - assets/audio/dunno06-karl.wav
+    - assets/audio/dunno02-dora.wav
+    - assets/audio/dunno03-dora.wav
+    - assets/audio/dunno01-karl.wav
+    - assets/audio/err-karl.wav
+    - assets/audio/rec_confirm.wav

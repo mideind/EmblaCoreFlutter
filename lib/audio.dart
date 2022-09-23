@@ -20,16 +20,53 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:math';
 
 import 'package:logger/logger.dart' show Level;
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 
 import './common.dart';
 
+// List of audio file assets in bundle
+const List<String> audioFiles = [
+  // Voice-independent
+  'rec_begin',
+  'rec_cancel',
+  'rec_confirm',
+  // Voice dependent
+  'conn-dora',
+  'conn-karl',
+  'dunno01-dora',
+  'dunno02-dora',
+  'dunno03-dora',
+  'dunno04-dora',
+  'dunno05-dora',
+  'dunno06-dora',
+  'dunno07-dora',
+  'dunno01-karl',
+  'dunno02-karl',
+  'dunno03-karl',
+  'dunno04-karl',
+  'dunno05-karl',
+  'dunno06-karl',
+  'dunno07-karl',
+  'err-dora',
+  'err-karl',
+];
+
+// These sounds are the same regardless of voice ID settings.
+const List<String> sessionSounds = [
+  'rec_begin',
+  'rec_cancel',
+  'rec_confirm',
+];
+
 // Singleton class that handles all audio playback
 class AudioPlayer {
   FlutterSoundPlayer? player;
+  Map<String, Uint8List>? audioFileCache;
 
   // Constructor
   static final AudioPlayer _instance = AudioPlayer._internal();
@@ -47,8 +84,20 @@ class AudioPlayer {
   // Audio player setup and audio data preloading
   Future<void> _init() async {
     dlog('Initing audio player');
+    _preloadAudioFiles();
     player = FlutterSoundPlayer(logLevel: Level.error);
     await player!.openPlayer();
+  }
+
+  // Load all asset-bundled audio files into memory
+  Future<void> _preloadAudioFiles() async {
+    dlog("Preloading audio assets: ${audioFiles.toString()}");
+    audioFileCache = <String, Uint8List>{};
+    for (String fn in audioFiles) {
+      ByteData bytes = await rootBundle.load("packages/embla_core/assets/audio/$fn.wav");
+      dlog(bytes.lengthInBytes);
+      audioFileCache![fn] = bytes.buffer.asUint8List();
+    }
   }
 
   // Stop playback
@@ -72,7 +121,7 @@ class AudioPlayer {
       } else {
         data = await http.readBytes(Uri.parse(url));
       }
-      dlog("Audio file is ${data.lengthInBytes} bytes");
+      dlog("Audio file is ${data.lengthInBytes} bytes)");
 
       player!.startPlayer(
           fromDataBuffer: data,
@@ -84,5 +133,44 @@ class AudioPlayer {
       dlog('Error downloading remote file: $e');
       completionHandler(true);
     }
+  }
+
+  String? playDunno([Function()? completionHandler]) {
+    int rnd = Random().nextInt(7) + 1;
+    String num = rnd.toString().padLeft(2, '0');
+    String fn = "dunno$num";
+    playSound(fn, completionHandler!);
+    Map<String, String> dunnoStrings = {
+      "dunno01": "Ég get ekki svarað því.",
+      "dunno02": "Ég get því miður ekki svarað því.",
+      "dunno03": "Ég kann ekki svar við því.",
+      "dunno04": "Ég skil ekki þessa fyrirspurn.",
+      "dunno05": "Ég veit það ekki.",
+      "dunno06": "Því miður skildi ég þetta ekki.",
+      "dunno07": "Því miður veit ég það ekki.",
+    };
+    return dunnoStrings[fn];
+  }
+
+  // Play a preloaded wav audio file bundled with the app
+  void playSound(String soundName, [Function()? completionHandler]) {
+    _instance.stop();
+
+    // Different file name depending on voice is set in prefs
+    String fileName = soundName;
+    if (sessionSounds.contains(soundName) == false) {
+      String voiceName = "dora";
+      fileName = "$soundName-$voiceName";
+    }
+
+    dlog("Playing audio file '$fileName.wav'");
+    player!.startPlayer(
+        fromDataBuffer: audioFileCache![fileName],
+        sampleRate: kAudioSampleRate,
+        whenFinished: () {
+          if (completionHandler != null) {
+            completionHandler();
+          }
+        });
   }
 }
