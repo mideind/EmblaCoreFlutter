@@ -24,6 +24,8 @@ import 'package:embla_core/embla_core.dart';
 import './keys.dart' show googleServiceAccount;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Prepare for session by preloading assets
   EmblaSession.prep();
 

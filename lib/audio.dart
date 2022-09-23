@@ -95,7 +95,6 @@ class AudioPlayer {
     audioFileCache = <String, Uint8List>{};
     for (String fn in audioFiles) {
       ByteData bytes = await rootBundle.load("packages/embla_core/assets/audio/$fn.wav");
-      dlog(bytes.lengthInBytes);
       audioFileCache![fn] = bytes.buffer.asUint8List();
     }
   }
