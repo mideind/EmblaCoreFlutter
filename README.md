@@ -7,9 +7,24 @@ an Icelandic-language voice assistant client implemented in Dart/Flutter.
 
 TBD
 
+## Demo
+
+See [`example/lib`](example/lib).
+
 ## API
 
-TBD
+### Create and use session object
+
+```
+import 'package:embla_core/embla_core.dart';
+
+...
+
+var config = EmblaConfig();
+var session = EmblaSession(config=config);
+
+session.start();
+```
 
 ## Development
 

@@ -22,6 +22,7 @@ import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pben
 import './common.dart';
 import './audio.dart';
 import './query.dart';
+import './config.dart' show EmblaConfig;
 import './speech2text.dart' show SpeechRecognizer;
 
 // Session state
@@ -30,51 +31,15 @@ enum EmblaSessionState { idle, listening, querying, answering, done }
 class EmblaSession {
   // Current state of session object
   var state = EmblaSessionState.idle;
-
-  // Configurable session properties
-  String queryServer = kDefaultQueryServer;
-  String voiceID = kDefaultSpeechSynthesisVoice;
-  double voiceSpeed = kDefaultSpeechSynthesisSpeed;
-  bool private = false;
-  bool test = false;
-  String apiKey = '';
-  double? latitude;
-  double? longitude;
-
-  // Handlers for session events
-  Function? onStartListening;
-  Function(List<String>, bool)? onSpeechTextReceived;
-
-  Function? onStartQuerying;
-  Function(dynamic)? onQueryAnswerReceived;
-
-  Function? onStartAnswering;
-
-  Function? onDone;
-  Function(String)? onError;
+  var config = EmblaConfig();
 
   // Private session vars
   SpeechRecognizer? _speechRecognizer;
   final List<String> _transcripts = [];
 
   // Constructor
-  EmblaSession(
-      {String queryServer = kDefaultQueryServer,
-      String voiceID = kDefaultSpeechSynthesisVoice,
-      double voiceSpeed = kDefaultSpeechSynthesisSpeed,
-      bool private = false,
-      bool test = false,
-      String apiKey = '',
-      double? latitude,
-      double? longitude}) {
-    this.queryServer = queryServer;
-    this.voiceID = voiceID;
-    this.voiceSpeed = voiceSpeed;
-    this.private = private;
-    this.test = test;
-    this.apiKey = apiKey;
-    this.latitude = latitude;
-    this.longitude = longitude;
+  EmblaSession(EmblaConfig cfg) {
+    config = cfg;
   }
 
   void start() async {
@@ -86,17 +51,17 @@ class EmblaSession {
     state = EmblaSessionState.listening;
 
     // Make sure there's an API key for the speech recognizer
-    if (apiKey == '') {
+    if (config.apiKey == '') {
       error("No API key set");
       return;
     }
 
     // Create and start speech recognizer
-    _speechRecognizer = SpeechRecognizer(apiKey);
+    _speechRecognizer = SpeechRecognizer(config.apiKey);
     _speechRecognizer?.start(sttDataHandler, sttCompletionHandler, sttErrorHandler);
 
-    if (onStartListening != null) {
-      onStartListening!();
+    if (config.onStartListening != null) {
+      config.onStartListening!();
     }
   }
 
@@ -129,8 +94,8 @@ class EmblaSession {
     var first = data.results[0];
     var isFinal = first.isFinal;
 
-    if (onSpeechTextReceived != null) {
-      onSpeechTextReceived!([text], isFinal);
+    if (config.onSpeechTextReceived != null) {
+      config.onSpeechTextReceived!([text], isFinal);
     }
 
     if (isFinal) {
@@ -153,8 +118,7 @@ class EmblaSession {
   }
 
   void sttErrorHandler(dynamic error) {
-    dlog("Error: $error");
-    stop();
+    error(" Speech to text error: $error");
   }
 
   void stopSpeechRecognition() {
@@ -168,13 +132,18 @@ class EmblaSession {
     // Transition to querying state
     state = EmblaSessionState.querying;
 
-    if (onStartQuerying != null) {
-      onStartQuerying!();
+    if (config.onStartQuerying != null) {
+      config.onStartQuerying!();
     }
 
     // Send text to query server
-    QueryService.sendQuery(alternatives, handleQueryResponse, test = test, private = private,
-        voiceSpeed = voiceSpeed, voiceID = voiceID, latitude = latitude, longitude = longitude);
+    QueryService.sendQuery(alternatives, handleQueryResponse,
+        test: config.test,
+        private: config.private,
+        voiceSpeed: config.voiceSpeed,
+        voiceID: config.voiceID,
+        latitude: config.latitude,
+        longitude: config.longitude);
   }
 
   // Process response from query server
@@ -184,8 +153,8 @@ class EmblaSession {
       return;
     }
 
-    if (onQueryAnswerReceived != null) {
-      onQueryAnswerReceived!(resp);
+    if (config.onQueryAnswerReceived != null) {
+      config.onQueryAnswerReceived!(resp);
     }
 
     // Received valid response to query
@@ -210,11 +179,16 @@ class EmblaSession {
   }
 
   void playAnswer(String url) async {
+    if (state == EmblaSessionState.done) {
+      dlog("Not playing answer since session is done");
+      return;
+    }
+
     dlog('Playing $url');
     state = EmblaSessionState.answering;
 
-    if (onStartAnswering != null) {
-      onStartAnswering!();
+    if (config.onStartAnswering != null) {
+      config.onStartAnswering!();
     }
 
     await AudioPlayer().playURL(url, (bool err) {
@@ -225,8 +199,8 @@ class EmblaSession {
         dlog('Playback finished');
       }
 
-      if (onDone != null) {
-        onDone!();
+      if (config.onDone != null) {
+        config.onDone!();
       }
 
       stop();
@@ -235,23 +209,23 @@ class EmblaSession {
 
   void stop() async {
     _speechRecognizer?.stop();
+    AudioPlayer().stop();
     state = EmblaSessionState.done;
   }
 
   void cancel() async {
     stop();
-    if (onDone != null) {
-      onDone!();
+    if (config.onDone != null) {
+      config.onDone!();
     }
   }
 
   void error(String errMsg) {
     dlog("Error in session: $errMsg");
     stop();
-    state = EmblaSessionState.done;
 
-    if (onError != null) {
-      onError!(errMsg);
+    if (config.onError != null) {
+      config.onError!(errMsg);
     }
   }
 

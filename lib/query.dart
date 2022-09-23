@@ -95,14 +95,13 @@ Future<Response?> _makePostRequest(String path, Map<String, dynamic> qargs,
 // Wrapper class around communication with query server
 class QueryService {
   // Send request to query server API
-  static Future<void> sendQuery(List<String> queries,
-      [Function? handler,
-      bool test = false,
+  static Future<void> sendQuery(List<String> queries, Function? handler,
+      {bool test = false,
       bool private = false,
       double voiceSpeed = 1.0,
       String voiceID = kDefaultSpeechSynthesisVoice,
       double? latitude,
-      double? longitude]) async {
+      double? longitude}) async {
     //
     // Create query args
     Map<String, String?> qargs = {
