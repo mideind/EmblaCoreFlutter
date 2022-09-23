@@ -39,15 +39,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Embla Session Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.red,
       ),
       home: const SessionPage(title: 'Embla Session Demo'),
@@ -57,15 +48,6 @@ class MyApp extends StatelessWidget {
 
 class SessionPage extends StatefulWidget {
   const SessionPage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -89,20 +71,20 @@ class _SessionPageState extends State<SessionPage> {
     // Create new config
     var config = EmblaConfig(apiKey: readGoogleServiceAccount());
 
-    config!.onStartListening = () {
+    config.onStartListening = () {
       setState(() {
         buttonIcon = const Icon(Icons.stop);
         msg = 'Hlustandi...';
       });
     };
 
-    config!.onSpeechTextReceived = (List<String> transcripts, bool isFinal) {
+    config.onSpeechTextReceived = (List<String> transcripts, bool isFinal) {
       setState(() {
         msg = transcripts[0];
       });
     };
 
-    config!.onQueryAnswerReceived = (dynamic answer) {
+    config.onQueryAnswerReceived = (dynamic answer) {
       setState(() {
         if (answer is Map && answer.containsKey('answer')) {
           msg = answer['answer'];
@@ -110,21 +92,21 @@ class _SessionPageState extends State<SessionPage> {
       });
     };
 
-    config!.onError = (String error) {
+    config.onError = (String error) {
       setState(() {
         msg = error;
         buttonIcon = const Icon(Icons.play_arrow);
       });
     };
 
-    config!.onDone = () {
+    config.onDone = () {
       setState(() {
         buttonIcon = const Icon(Icons.play_arrow);
         msg = '';
       });
     };
 
-    session = EmblaSession(config: config);
+    session = EmblaSession(config);
     session!.start();
   }
 

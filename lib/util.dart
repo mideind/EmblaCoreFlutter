@@ -18,10 +18,6 @@
 
 // Various utility functions and custom class extensions
 
-import 'dart:convert';
-
-import 'package:flutter/material.dart' show Color;
-
 // String extensions
 extension StringExtension on String {
   // Does string end w. standard punctuation?

@@ -38,8 +38,8 @@ class EmblaSession {
   final List<String> _transcripts = [];
 
   // Constructor
-  EmblaSession({required EmblaConfig config}) {
-    this.config = config;
+  EmblaSession(EmblaConfig cfg) {
+    config = cfg;
   }
 
   // Static method to preload all required assets
@@ -170,7 +170,7 @@ class EmblaSession {
         // We have an audio file to play
         playAnswer(resp['audio']);
       } else {
-        // If no audio to play, terminate session
+        dlog('No audio to play, terminating session');
         stop();
       }
     }
@@ -208,10 +208,6 @@ class EmblaSession {
         dlog('Playback finished');
       }
 
-      if (config.onDone != null) {
-        config.onDone!();
-      }
-
       stop();
     });
   }
@@ -220,13 +216,14 @@ class EmblaSession {
     _speechRecognizer?.stop();
     AudioPlayer().stop();
     state = EmblaSessionState.done;
+
+    if (config.onDone != null) {
+      config.onDone!();
+    }
   }
 
   void cancel() async {
     stop();
-    if (config.onDone != null) {
-      config.onDone!();
-    }
   }
 
   void error(String errMsg) {
