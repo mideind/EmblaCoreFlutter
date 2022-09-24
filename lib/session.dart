@@ -176,6 +176,10 @@ class EmblaSession {
     }
     // Don't know
     else if (resp != null && resp['error'] != null) {
+      if (config.onStartAnswering != null) {
+        config.onStartAnswering!();
+      }
+
       AudioPlayer().playDunno(() {
         dlog('Playback finished');
         stop();

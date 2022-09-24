@@ -23,15 +23,26 @@
 import './common.dart';
 
 class EmblaConfig {
-  // Configurable session properties
+  // Query server URL
   String queryServer = kDefaultQueryServer;
+
+  // Speech-to-text API key
+  String apiKey = '';
+
+  // Voice synthesis properties
   String voiceID = kDefaultSpeechSynthesisVoice;
   double voiceSpeed = kDefaultSpeechSynthesisSpeed;
-  bool private = false;
+
+  bool private = false; // Don't send client info to server
   bool test = false;
-  String apiKey = '';
+
+  // User's GPS coordinates (optional)
   double? latitude;
   double? longitude;
+
+  // Whether to play session sounds
+  // TODO: Implement this
+  bool audio = true;
 
   // Handlers for session events
   Function? onStartListening;
