@@ -1,11 +1,13 @@
 # EmblaCore
 
-This is the repository for EmblaCore, the core session functionality in Embla,
-an Icelandic-language voice assistant client implemented in Dart/Flutter.
+This is the repository for EmblaCore, a library containing the core session functionality
+in Embla, an Icelandic-language voice assistant client implemented in Dart/Flutter.
 
 ## Installation
 
-TBD
+```bash
+flutter pub get
+```
 
 ## Demo
 
@@ -15,7 +17,7 @@ See [`example/lib`](example/lib).
 
 ### Create and use session object
 
-```
+```dart
 import 'package:embla_core/embla_core.dart';
 
 ...
