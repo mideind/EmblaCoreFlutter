@@ -128,8 +128,8 @@ class QueryService {
 
     qargs['voice_speed'] = voiceSpeed.toString();
 
-    bool shareLocation = (private == true || latitude == null || longitude == null);
-    if (shareLocation) {
+    bool doNotShareLocation = (private == true || latitude == null || longitude == null);
+    if (doNotShareLocation == false) {
       qargs['latitude'] = latitude.toString();
       qargs['longitude'] = longitude.toString();
     }
