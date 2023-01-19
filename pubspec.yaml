@@ -4,7 +4,7 @@ version: 0.1.0
 homepage:
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=2.17.0"
 
 dependencies:
@@ -28,24 +28,42 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/audio/dunno06-dora.wav
-    - assets/audio/dunno07-dora.wav
-    - assets/audio/dunno04-karl.wav
-    - assets/audio/dunno05-karl.wav
-    - assets/audio/conn-karl.wav
-    - assets/audio/rec_cancel.wav
-    - assets/audio/err-dora.wav
-    - assets/audio/dunno01-dora.wav
-    - assets/audio/dunno03-karl.wav
-    - assets/audio/dunno02-karl.wav
+    - assets/audio/dunno01-gunnar.wav
     - assets/audio/conn-dora.wav
-    - assets/audio/rec_begin.wav
-    - assets/audio/dunno05-dora.wav
-    - assets/audio/dunno04-dora.wav
-    - assets/audio/dunno07-karl.wav
-    - assets/audio/dunno06-karl.wav
-    - assets/audio/dunno02-dora.wav
-    - assets/audio/dunno03-dora.wav
+    - assets/audio/conn-gudrun.wav
+    - assets/audio/conn-gunnar.wav
+    - assets/audio/conn-karl.wav
+    - assets/audio/dunno01-dora.wav
+    - assets/audio/dunno01-gudrun.wav
     - assets/audio/dunno01-karl.wav
+    - assets/audio/dunno02-dora.wav
+    - assets/audio/dunno02-gudrun.wav
+    - assets/audio/dunno02-gunnar.wav
+    - assets/audio/dunno02-karl.wav
+    - assets/audio/dunno03-dora.wav
+    - assets/audio/dunno03-gudrun.wav
+    - assets/audio/dunno03-gunnar.wav
+    - assets/audio/dunno03-karl.wav
+    - assets/audio/dunno04-dora.wav
+    - assets/audio/dunno04-gudrun.wav
+    - assets/audio/dunno04-gunnar.wav
+    - assets/audio/dunno04-karl.wav
+    - assets/audio/dunno05-dora.wav
+    - assets/audio/dunno05-gudrun.wav
+    - assets/audio/dunno05-gunnar.wav
+    - assets/audio/dunno05-karl.wav
+    - assets/audio/dunno06-dora.wav
+    - assets/audio/dunno06-gudrun.wav
+    - assets/audio/dunno06-gunnar.wav
+    - assets/audio/dunno06-karl.wav
+    - assets/audio/dunno07-dora.wav
+    - assets/audio/dunno07-gudrun.wav
+    - assets/audio/dunno07-gunnar.wav
+    - assets/audio/dunno07-karl.wav
+    - assets/audio/err-dora.wav
+    - assets/audio/err-gudrun.wav
+    - assets/audio/err-gunnar.wav
     - assets/audio/err-karl.wav
+    - assets/audio/rec_begin.wav
+    - assets/audio/rec_cancel.wav
     - assets/audio/rec_confirm.wav

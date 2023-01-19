@@ -38,6 +38,8 @@ const List<String> audioFiles = [
   // Voice dependent
   'conn-dora',
   'conn-karl',
+  'conn-gudrun',
+  'conn-gunnar',
   'dunno01-dora',
   'dunno02-dora',
   'dunno03-dora',
@@ -52,8 +54,24 @@ const List<String> audioFiles = [
   'dunno05-karl',
   'dunno06-karl',
   'dunno07-karl',
+  'dunno01-gudrun',
+  'dunno02-gudrun',
+  'dunno03-gudrun',
+  'dunno04-gudrun',
+  'dunno05-gudrun',
+  'dunno06-gudrun',
+  'dunno07-gudrun',
+  'dunno01-gunnar',
+  'dunno02-gunnar',
+  'dunno03-gunnar',
+  'dunno04-gunnar',
+  'dunno05-gunnar',
+  'dunno06-gunnar',
+  'dunno07-gunnar',
   'err-dora',
   'err-karl',
+  'err-gudrun',
+  'err-gunnar',
 ];
 
 // These sounds are the same regardless of voice ID settings.
