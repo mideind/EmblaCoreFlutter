@@ -1,5 +1,5 @@
 /*
- * This file is part of the Embla Core Flutter package
+ * This file is part of the EmblaCore Flutter package
  * Copyright (c) 2023 Miðeind ehf. <mideind@mideind.is>
  * Original author: Sveinbjorn Thordarson
  *

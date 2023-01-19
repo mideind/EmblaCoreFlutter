@@ -19,6 +19,9 @@
 import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pbenum.dart'
     show StreamingRecognizeResponse_SpeechEventType;
 
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
+
 import './common.dart';
 import './audio.dart';
 import './query.dart';
