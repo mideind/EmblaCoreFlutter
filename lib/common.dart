@@ -28,6 +28,7 @@ const int kAudioSampleRate = 16000;
 const int kAudioNumChannels = 1;
 
 // Server communication
+const String kDefaultServer = 'http://brandur.mideind.is:8080';
 const String kDefaultQueryServer = 'https://greynir.is';
 
 // Speech synthesis

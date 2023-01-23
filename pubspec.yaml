@@ -1,7 +1,8 @@
 name: embla_core
-description: Embla Core library
+description: EmblaCore library
 version: 0.1.0
-homepage:
+publish_to: 'none'
+homepage: https://github.com/mideind/embla_core
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -10,12 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: '>=0.13.4'
   logger: '>=1.1.0'
   platform_device_id: '>=1.0.1'
   package_info_plus: '>=1.4.2'
-  google_speech: '>=2.1.1'
-  rxdart: '>=0.27.3'
   flutter_sound: '>=9.2.13'
   audio_session: '>=0.1.10'
   web_socket_channel: '>=2.1.0'
