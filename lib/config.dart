@@ -26,15 +26,12 @@ class EmblaConfig {
   // Query server URL
   String queryServer = kDefaultQueryServer;
 
-  // Speech-to-text API key
-  String apiKey = '';
-
   // Voice synthesis properties
   String voiceID = kDefaultSpeechSynthesisVoice;
   double voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
   bool private = false; // Don't send client info to server
-  bool test = false;
+  bool test = false; // This is a test query (not logged, uses dummy location data)
 
   // User's GPS coordinates (optional)
   double? latitude;
@@ -62,7 +59,6 @@ class EmblaConfig {
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
       bool private = false,
       bool test = false,
-      String apiKey = '',
       double? latitude,
       double? longitude}) {
     this.queryServer = queryServer;
@@ -70,7 +66,6 @@ class EmblaConfig {
     this.voiceSpeed = voiceSpeed;
     this.private = private;
     this.test = test;
-    this.apiKey = apiKey;
     this.latitude = latitude;
     this.longitude = longitude;
   }

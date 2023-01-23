@@ -21,8 +21,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:embla_core/embla_core.dart';
 
-import './keys.dart' show googleServiceAccount;
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -71,7 +69,7 @@ class _SessionPageState extends State<SessionPage> {
     }
 
     // Create new config
-    var config = EmblaConfig(apiKey: readGoogleServiceAccount());
+    var config = EmblaConfig();
 
     config.onStartListening = () {
       setState(() {
@@ -135,14 +133,4 @@ class _SessionPageState extends State<SessionPage> {
       ),
     );
   }
-}
-
-String _cachedGoogleServiceAccount = '';
-
-// Read and cache Google API service account config JSON
-String readGoogleServiceAccount() {
-  if (_cachedGoogleServiceAccount == '') {
-    _cachedGoogleServiceAccount = utf8.decode(base64.decode(googleServiceAccount));
-  }
-  return _cachedGoogleServiceAccount;
 }

@@ -176,7 +176,7 @@ class AudioPlayer {
     // Different file name depending on voice is set in prefs
     String fileName = soundName;
     if (sessionSounds.contains(soundName) == false) {
-      String voiceName = "dora";
+      String voiceName = "gudrun";
       fileName = "$soundName-$voiceName";
     }
 

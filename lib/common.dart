@@ -22,7 +22,6 @@ import 'package:flutter/foundation.dart' show kReleaseMode;
 
 // Speech recognition settings
 const String kSpeechToTextLanguage = 'is-IS';
-const int kSpeechToTextMaxAlternatives = 10;
 
 // Audio recording settings
 const int kAudioSampleRate = 16000;
@@ -30,10 +29,6 @@ const int kAudioNumChannels = 1;
 
 // Server communication
 const String kDefaultQueryServer = 'https://greynir.is';
-const String kQueryAPIPath = '/query.api/v1';
-const String kQueryHistoryAPIPath = '/query_history.api/v1';
-const String kSpeechSynthesisAPIPath = '/speech.api/v1';
-const String kVoiceListAPIPath = '/voices.api/v1';
 
 // Speech synthesis
 const List<String> kSpeechSynthesisVoices = ["Guðrún", "Gunnar"];
