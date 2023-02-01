@@ -1,8 +1,6 @@
 name: tests
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events
   push:
     branches:
       - '*'
@@ -13,14 +11,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v1
@@ -28,7 +22,7 @@ jobs:
           java-version: '12.x'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.3.5'
+          flutter-version: '3.7.0'
           channel: 'stable'
       - name: Clone local dependency repos
         run: |
@@ -41,7 +35,8 @@ jobs:
       - name: Run tests
         run: |
           flutter test
-          dart analyze lib
+#          flutter test example/test/widget_test.dart
+          dart analyze lib example/lib
       - name: Build APK
         run: |
           cd example; flutter pub get; flutter build apk --release

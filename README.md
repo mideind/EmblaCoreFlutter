@@ -1,3 +1,6 @@
+[![Language](https://img.shields.io/badge/language-dart-lightblue)]()
+[![Build](https://github.com/mideind/embla_core/actions/workflows/tests.yml/badge.svg)]()
+
 # EmblaCore
 
 EmblaCore is a Dart library containing the core session functionality in Embla,
@@ -37,5 +40,7 @@ TBD
 TBD
 
 ## License
+
+Copyright (c) 2023 Miðeind ehf.
 
 TBD
