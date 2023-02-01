@@ -35,7 +35,6 @@ jobs:
       - name: Run tests
         run: |
           flutter test
-#          flutter test example/test/widget_test.dart
           dart analyze lib example/lib
       - name: Build APK
         run: |
