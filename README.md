@@ -3,7 +3,7 @@
 
 # EmblaCore
 
-EmblaCore is a Dart library containing the core session functionality in [Embla]([https](https://github.com/mideind/EmblaFlutterApp),
+EmblaCore is a Dart library containing the core session functionality in [Embla](https://github.com/mideind/EmblaFlutterApp),
 a mobile Icelandic-language voice assistant client implemented in Dart/Flutter.
 
 ## Installation
