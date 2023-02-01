@@ -16,8 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:embla_core/embla_core.dart';
 
@@ -122,7 +120,7 @@ class _SessionPageState extends State<SessionPage> {
           children: <Widget>[
             Text(
               msg,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),

@@ -1,8 +1,7 @@
 name: embla_core
 description: EmblaCore library
-version: 0.1.0
+version: "0.1.0+1"
 publish_to: 'none'
-homepage: https://github.com/mideind/embla_core
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -17,13 +16,13 @@ dependencies:
   flutter_sound: '>=9.2.13'
   audio_session: '>=0.1.10'
   web_socket_channel: '>=2.1.0'
+  http: '>=0.13.4'
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
 
-# The following section is specific to Flutter packages.
 flutter:
   assets:
     - assets/audio/dunno01-gunnar.wav
