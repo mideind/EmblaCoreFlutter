@@ -18,7 +18,7 @@
 
 // Global constants and debug logging
 
-import 'package:flutter/foundation.dart' show kReleaseMode;
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 // Speech recognition settings
 const String kSpeechToTextLanguage = 'is-IS';
@@ -38,7 +38,7 @@ const double kDefaultSpeechSynthesisSpeed = 1.0;
 
 // Debug logging
 void dlog(dynamic msg) {
-  if (kReleaseMode == false) {
+  if (kDebugMode == true) {
     // ignore: avoid_print
     print(msg.toString());
   }

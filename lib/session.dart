@@ -30,6 +30,8 @@ class EmblaSession {
   // Current state of session object
   var state = EmblaSessionState.idle;
   var config = EmblaConfig();
+  final String serverURL = 'ws://brandur.mideind.is:8080';
+  WebSocketChannel? channel;
 
   // Constructor
   EmblaSession(EmblaConfig cfg) {
@@ -52,6 +54,18 @@ class EmblaSession {
     if (config.onStartListening != null) {
       config.onStartListening!();
     }
+
+    openWebSocketConnection();
+  }
+
+  void openWebSocketConnection() {
+    final wsUri = Uri.parse(serverURL);
+    channel = WebSocketChannel.connect(wsUri);
+
+    // channel?.stream.listen((message) {
+    //   channel?.sink.add('received!');
+    //   channel?.sink.close(status.goingAway);
+    // });
   }
 
   void sttDataHandler(dynamic data) {
@@ -74,12 +88,6 @@ class EmblaSession {
   void sttErrorHandler(dynamic error) {
     error(" Speech to text error: $error");
   }
-
-  void stopSpeechRecognition() {
-    dlog('Stopping speech recognition');
-  }
-
-  void answerQuery(List<String> alternatives) {}
 
   void stop() async {
     AudioPlayer().stop();
