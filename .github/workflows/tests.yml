@@ -17,25 +17,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v2
         with:
+          distribution: 'zulu'
           java-version: '12.x'
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.7.0'
           channel: 'stable'
-      - name: Clone local dependency repos
-        run: |
-          git clone https://github.com/mideind/flutter_snowboy ../flutter_snowboy
-          git clone --recurse-submodules -j4 https://github.com/canardoux/flutter_sound ../flutter_sound
       - name: Install dependencies
         run: |
           flutter config --no-analytics
           flutter pub get
       - name: Run tests
         run: |
-          flutter test
           dart analyze lib example/lib
+          flutter test
       - name: Build APK
         run: |
           cd example; flutter pub get; flutter build apk --release
