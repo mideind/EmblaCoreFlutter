@@ -18,7 +18,7 @@
 
 import 'dart:convert' show json;
 
-import './config.dart' show EmblaConfig;
+import './config.dart' show EmblaSessionConfig;
 
 class GreetingsOutputMessage {
   final String type = "greetings";
@@ -40,7 +40,7 @@ class GreetingsOutputMessage {
     data["query_server"] = query_server;
   }
 
-  GreetingsOutputMessage.fromConfig(EmblaConfig config) {
+  GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
     // TODO: Implement me
   }
 

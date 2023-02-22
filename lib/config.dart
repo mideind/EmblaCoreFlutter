@@ -22,7 +22,7 @@
 
 import './common.dart';
 
-class EmblaConfig {
+class EmblaSessionConfig {
   // Query server URL
   String queryServer = kDefaultQueryServer;
 
@@ -46,14 +46,14 @@ class EmblaConfig {
   Function(List<String>, bool)? onSpeechTextReceived;
 
   Function? onStartQuerying;
-  Function(dynamic)? onQueryAnswerReceived;
+  Function(Map<String, dynamic>)? onQueryAnswerReceived;
 
   Function? onStartAnswering;
 
   Function? onDone;
   Function(String)? onError;
 
-  EmblaConfig(
+  EmblaSessionConfig(
       {String queryServer = kDefaultQueryServer,
       String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,

@@ -21,7 +21,7 @@ import 'package:web_socket_channel/status.dart' as status;
 
 import './common.dart';
 import './audio.dart';
-import './config.dart' show EmblaConfig;
+import './config.dart' show EmblaSessionConfig;
 
 // Session state
 enum EmblaSessionState { idle, listening, querying, answering, done }
@@ -29,12 +29,12 @@ enum EmblaSessionState { idle, listening, querying, answering, done }
 class EmblaSession {
   // Current state of session object
   var state = EmblaSessionState.idle;
-  var config = EmblaConfig();
+  var config = EmblaSessionConfig();
   final String serverURL = 'ws://brandur.mideind.is:8080';
   WebSocketChannel? channel;
 
   // Constructor
-  EmblaSession(EmblaConfig cfg) {
+  EmblaSession(EmblaSessionConfig cfg) {
     config = cfg;
   }
 
