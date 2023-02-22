@@ -61,7 +61,7 @@ class _SessionPageState extends State<SessionPage> {
   void _buttonClick() {
     if (session != null && session!.isActive()) {
       // Session is active, so terminate it
-      session!.cancel();
+      session!.stop();
       buttonIcon = const Icon(Icons.play_arrow);
       return;
     }

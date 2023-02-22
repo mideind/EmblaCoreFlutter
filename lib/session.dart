@@ -41,6 +41,8 @@ class EmblaSession {
     config = cfg;
   }
 
+  // PUBLIC METHODS
+
   // Static method to preload all required assets
   static void prep() {
     AudioPlayer();
@@ -58,14 +60,42 @@ class EmblaSession {
     openWebSocketConnection();
   }
 
+  void stop() async {
+    AudioPlayer().stop();
+
+    channel?.sink.close(status.goingAway);
+
+    state = EmblaSessionState.done;
+
+    if (config.onDone != null) {
+      config.onDone!();
+    }
+  }
+
+  bool isActive() {
+    return (state != EmblaSessionState.idle && state != EmblaSessionState.done);
+  }
+
+  // PRIVATE METHODS
+
+  void error(String errMsg) {
+    dlog("Error in session: $errMsg");
+    stop();
+    // Invoke error handler
+    if (config.onError != null) {
+      config.onError!(errMsg);
+    }
+  }
+
   // Open WebSocket connection to server
   void openWebSocketConnection() {
     try {
       final wsUri = Uri.parse(serverURL + "/socket");
       channel = WebSocketChannel.connect(wsUri);
       // Start listening for messages from server
-      channel?.stream.listen(webSocketMessageReceived);
+      channel?.stream.listen(socketMessageReceived);
       // Send greetings message
+      dlog("Sending initial greetings message");
       var msg = GreetingsOutputMessage().toJSON();
       channel?.sink.add(msg);
     } catch (e) {
@@ -74,7 +104,7 @@ class EmblaSession {
     }
   }
 
-  void webSocketMessageReceived(dynamic data) {
+  void socketMessageReceived(dynamic data) {
     dlog("Received data: $data");
     try {
       final msg = jsonDecode(data);
@@ -82,30 +112,25 @@ class EmblaSession {
 
       switch (type) {
         case "greetings":
-          {
-            handleGreetingsMessage(msg);
-          }
+          handleGreetingsMessage(msg);
           break;
 
         case "asr_result":
-          {
-            handleASRResultMessage(msg);
-          }
+          handleASRResultMessage(msg);
           break;
 
         case "query_result":
-          {
-            handleQueryResultMessage(msg);
-          }
+          handleQueryResultMessage(msg);
           break;
 
+        case "error":
+          throw ("${msg["message"]}");
+
         default:
-          {
-            throw ("Server error: ${msg["error"]}");
-          }
+          throw ("Invalid message type: $type");
       }
     } catch (e) {
-      error("Error parsing message: $e");
+      error("Error handling message: $e");
       return;
     }
   }
@@ -123,36 +148,8 @@ class EmblaSession {
     dlog("Query result message received");
   }
 
+// Open microphone and start streaming audio to server
   void startListening() {
     state = EmblaSessionState.listening;
-  }
-
-  void stop() async {
-    AudioPlayer().stop();
-
-    channel?.sink.close(status.goingAway);
-
-    state = EmblaSessionState.done;
-
-    if (config.onDone != null) {
-      config.onDone!();
-    }
-  }
-
-  void cancel() async {
-    stop();
-  }
-
-  void error(String errMsg) {
-    dlog("Error in EmblaSession: $errMsg");
-    stop();
-
-    if (config.onError != null) {
-      config.onError!(errMsg);
-    }
-  }
-
-  bool isActive() {
-    return (state != EmblaSessionState.idle && state != EmblaSessionState.done);
   }
 }
