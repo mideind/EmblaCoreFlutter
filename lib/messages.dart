@@ -26,12 +26,12 @@ class GreetingsOutputMessage {
   Map<String, dynamic> data = {};
 
   GreetingsOutputMessage(
-      {String? client_id,
-      String? client_type,
-      String? client_version,
+      {String client_id = "",
+      String client_type = "",
+      String client_version = "",
       String language = "is-IS",
       String engine = "azure",
-      String? query_server = "greynir.is"}) {
+      String? query_server = "https://greynir.is"}) {
     data["client_id"] = client_id;
     data["client_type"] = client_type;
     data["client_version"] = client_version;

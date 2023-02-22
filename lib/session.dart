@@ -16,21 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'dart:convert';
+
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
 import './common.dart';
 import './audio.dart';
 import './config.dart' show EmblaSessionConfig;
+import './messages.dart' show GreetingsOutputMessage;
 
 // Session state
-enum EmblaSessionState { idle, listening, querying, answering, done }
+enum EmblaSessionState { idle, starting, listening, answering, done }
 
 class EmblaSession {
   // Current state of session object
   var state = EmblaSessionState.idle;
   var config = EmblaSessionConfig();
-  final String serverURL = 'ws://brandur.mideind.is:8080';
+  final String serverURL = kDefaultServer;
   WebSocketChannel? channel;
 
   // Constructor
@@ -43,54 +46,92 @@ class EmblaSession {
     AudioPlayer();
   }
 
+  // Start session
   void start() async {
     // Session can only be started in idle state
     if (state != EmblaSessionState.idle) {
       throw Exception("Session is not idle!");
     }
 
-    state = EmblaSessionState.listening;
-
-    if (config.onStartListening != null) {
-      config.onStartListening!();
-    }
+    state = EmblaSessionState.starting;
 
     openWebSocketConnection();
   }
 
+  // Open WebSocket connection to server
   void openWebSocketConnection() {
-    final wsUri = Uri.parse(serverURL);
-    channel = WebSocketChannel.connect(wsUri);
-
-    // channel?.stream.listen((message) {
-    //   channel?.sink.add('received!');
-    //   channel?.sink.close(status.goingAway);
-    // });
+    try {
+      final wsUri = Uri.parse(serverURL + "/socket");
+      channel = WebSocketChannel.connect(wsUri);
+      // Start listening for messages from server
+      channel?.stream.listen(webSocketMessageReceived);
+      // Send greetings message
+      var msg = GreetingsOutputMessage().toJSON();
+      channel?.sink.add(msg);
+    } catch (e) {
+      error("Error connecting to server: $e");
+      return;
+    }
   }
 
-  void sttDataHandler(dynamic data) {
+  void webSocketMessageReceived(dynamic data) {
     dlog("Received data: $data");
+    try {
+      final msg = jsonDecode(data);
+      final String type = msg["type"];
 
-    if (state != EmblaSessionState.listening) {
-      dlog('Received speech recognition results after speech recognition ended.');
+      switch (type) {
+        case "greetings":
+          {
+            handleGreetingsMessage(msg);
+          }
+          break;
+
+        case "asr_result":
+          {
+            handleASRResultMessage(msg);
+          }
+          break;
+
+        case "query_result":
+          {
+            handleQueryResultMessage(msg);
+          }
+          break;
+
+        default:
+          {
+            throw ("Server error: ${msg["error"]}");
+          }
+      }
+    } catch (e) {
+      error("Error parsing message: $e");
       return;
     }
   }
 
-  void sttCompletionHandler() {
-    dlog("Completion handler invoked");
-    if (state == EmblaSessionState.done) {
-      return;
-    }
-    state = EmblaSessionState.querying;
+  void handleGreetingsMessage(Map<String, dynamic> msg) {
+    dlog("Greetings message received");
+    startListening();
   }
 
-  void sttErrorHandler(dynamic error) {
-    error(" Speech to text error: $error");
+  void handleASRResultMessage(Map<String, dynamic> msg) {
+    dlog("ASR result message received");
+  }
+
+  void handleQueryResultMessage(Map<String, dynamic> msg) {
+    dlog("Query result message received");
+  }
+
+  void startListening() {
+    state = EmblaSessionState.listening;
   }
 
   void stop() async {
     AudioPlayer().stop();
+
+    channel?.sink.close(status.goingAway);
+
     state = EmblaSessionState.done;
 
     if (config.onDone != null) {
@@ -103,7 +144,7 @@ class EmblaSession {
   }
 
   void error(String errMsg) {
-    dlog("Error in session: $errMsg");
+    dlog("Error in EmblaSession: $errMsg");
     stop();
 
     if (config.onError != null) {
