@@ -90,7 +90,7 @@ class EmblaSession {
   // Open WebSocket connection to server
   void openWebSocketConnection() {
     try {
-      final wsUri = Uri.parse(serverURL + "/socket");
+      final wsUri = Uri.parse("{$serverURL}/socket");
       channel = WebSocketChannel.connect(wsUri);
       // Start listening for messages from server
       channel?.stream.listen(socketMessageReceived);
