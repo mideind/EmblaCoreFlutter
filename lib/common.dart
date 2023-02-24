@@ -25,6 +25,7 @@ const String kSpeechToTextLanguage = 'is-IS';
 
 // Audio recording settings
 const int kAudioSampleRate = 16000;
+const int kAudioBitRate = 16;
 const int kAudioNumChannels = 1;
 
 // Server communication

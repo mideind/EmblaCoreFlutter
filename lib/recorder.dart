@@ -36,13 +36,23 @@ class EmblaAudioRecorder {
   bool isRecording = false;
   double lastSignal = 0.0; // Strength of last audio signal, on a scale of 0.0 to 1.0
   int totalAudioDataSize = 0; // Accumulated byte size of audio recording
+  double totalAudioDuration = 0.0; // Accumulated duration of audio recording
 
-  // TODO: Implement singleton pattern?
+  // Singleton pattern
+  EmblaAudioRecorder._internal();
+  static final EmblaAudioRecorder _instance = EmblaAudioRecorder._internal();
+  factory EmblaAudioRecorder() {
+    return _instance;
+  }
 
   // Do we have permissions to record audio?
   Future<bool> hasPermissions() async {
     // TBD: Check for microphone permission
     return true;
+  }
+
+  double duration() {
+    return totalAudioDuration;
   }
 
   // Normalize decibel level to a number between 0.0 and 1.0
@@ -71,12 +81,14 @@ class EmblaAudioRecorder {
     _recordingDataController = StreamController<Food>();
     _recordingDataSubscription = _recordingDataController?.stream.listen((buffer) {
       if (buffer is FoodData && buffer.data != null) {
-        // TODO: This is where we should send the audio data to server
         var data = buffer.data as Uint8List;
-        // dataHandler(data)
-        totalAudioDataSize += buffer.data!.lengthInBytes;
+        totalAudioDataSize += data.lengthInBytes;
+        totalAudioDuration = totalAudioDataSize / (kAudioBitRate / 8) * kAudioSampleRate;
+        dataHandler(data); // invoke callback
       } else {
-        dlog('Got null data in recording stream: $buffer');
+        var errMsg = 'Got null data in recording stream: $buffer';
+        dlog(errMsg);
+        errHandler(errMsg);
       }
     });
 
@@ -120,15 +132,14 @@ class EmblaAudioRecorder {
         sampleRate: kAudioSampleRate);
   }
 
-  // Teardown
+  // Stop recording and clean up
   Future<void> stop() async {
     if (isRecording == false) {
       return;
     }
     isRecording = false;
     dlog('Stopping audio recording');
-    final double seconds = totalAudioDataSize / (2.0 * kAudioSampleRate);
-    dlog("Total audio length: $seconds seconds ($totalAudioDataSize bytes)");
+    dlog("Total audio length: $totalAudioDuration seconds ($totalAudioDataSize bytes)");
     await _micRecorder.stopRecorder();
     await _micRecorder.closeRecorder();
     await _recordingDataSubscription?.cancel();
