@@ -23,6 +23,7 @@
 
 import './common.dart';
 
+/// EmblaSession configuration object
 class EmblaSessionConfig {
   // Query server URL
   String queryServer = kDefaultQueryServer;

@@ -64,25 +64,22 @@ const List<String> sessionSounds = [
   'rec_confirm',
 ];
 
-// Singleton class that handles all audio playback
+/// Singleton class that handles all audio playback
 class AudioPlayer {
   FlutterSoundPlayer? player;
   Map<String, Uint8List>? audioFileCache;
-
-  // Constructor
-  static final AudioPlayer _instance = AudioPlayer._internal();
 
   // Singleton pattern
   factory AudioPlayer() {
     return _instance;
   }
-
-  // Initialization
   AudioPlayer._internal() {
+    // Initialization, which only happens once
     _init();
   }
+  static final AudioPlayer _instance = AudioPlayer._internal();
 
-  // Audio player setup and audio data preloading
+  /// Audio player setup and audio data preloading
   Future<void> _init() async {
     dlog('Initing audio player');
     _preloadAudioFiles();
@@ -90,9 +87,9 @@ class AudioPlayer {
     await player!.openPlayer();
   }
 
-  // Load all asset-bundled audio files into memory
+  /// Load all asset-bundled audio files into memory
   Future<void> _preloadAudioFiles() async {
-    dlog("Preloading audio assets: ${audioFiles.toString()}");
+    //dlog("Preloading audio assets: ${audioFiles.toString()}");
     audioFileCache = <String, Uint8List>{};
     for (String fn in audioFiles) {
       ByteData bytes = await rootBundle.load("packages/embla_core/assets/audio/$fn.wav");
@@ -100,13 +97,13 @@ class AudioPlayer {
     }
   }
 
-  // Stop playback
+  /// Stop all playback
   void stop() {
     dlog('Stopping audio playback');
     player?.stopPlayer();
   }
 
-  // Play remote audio file
+  /// Play remote audio file
   Future<void> playURL(String url, Function(bool) completionHandler) async {
     //_instance.stop();
 
@@ -116,6 +113,7 @@ class AudioPlayer {
       Uri uri = Uri.parse(url);
 
       if (uri.scheme == 'data') {
+        // We support data URIs
         UriData dataURI = UriData.fromUri(uri);
         data = dataURI.contentAsBytes();
       } else {
@@ -135,6 +133,7 @@ class AudioPlayer {
     }
   }
 
+  /// Play a random "don't know" response
   String? playDunno([Function()? completionHandler]) {
     int rnd = Random().nextInt(7) + 1;
     String num = rnd.toString().padLeft(2, '0');
@@ -152,7 +151,7 @@ class AudioPlayer {
     return dunnoStrings[fn];
   }
 
-  // Play a preloaded wav audio file bundled with the app
+  /// Play a preloaded audio file bundled with the app
   void playSound(String soundName, [Function()? completionHandler]) {
     _instance.stop();
 

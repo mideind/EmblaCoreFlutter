@@ -30,6 +30,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 
 import './common.dart';
 
+/// Audio recording wrapper class
 class EmblaAudioRecorder {
   final FlutterSoundRecorder _micRecorder = FlutterSoundRecorder(logLevel: Level.error);
   StreamSubscription? _recordingDataSubscription;
@@ -41,21 +42,27 @@ class EmblaAudioRecorder {
   int totalAudioDataSize = 0; // Accumulated byte size of audio recording
   double totalAudioDuration = 0.0; // Accumulated duration of audio recording
 
-  // Singleton pattern
+  /// Singleton pattern
   EmblaAudioRecorder._internal();
   static final EmblaAudioRecorder _instance = EmblaAudioRecorder._internal();
   factory EmblaAudioRecorder() {
     return _instance;
   }
 
-  // Do we have permissions to record audio?
-  Future<bool> hasPermissions() async {
-    // TODO: Check for microphone permission
-    return true;
-  }
-
+  /// Returns the duration of the recorded audio in seconds
   double duration() {
     return totalAudioDuration;
+  }
+
+  /// Returns the size of the recorded audio in bytes
+  int audioSize() {
+    return totalAudioDataSize;
+  }
+
+  // Do we have permissions to record audio?
+  Future<bool> _hasPermissions() async {
+    // TODO: Check for microphone permission
+    return true;
   }
 
   // Normalize decibel level to a number between 0.0 and 1.0
@@ -70,7 +77,7 @@ class EmblaAudioRecorder {
         1.0 / 2.0) as double;
   }
 
-  // Start recording audio from microphone
+  /// Start recording audio from microphone
   Future<void> start(void Function(Uint8List) dataHandler, Function errHandler) async {
     if (isRecording == true) {
       var errMsg = 'EmblaRecorder already recording';
@@ -136,7 +143,7 @@ class EmblaAudioRecorder {
         sampleRate: kAudioSampleRate);
   }
 
-  // Stop recording and clean up
+  /// Stop recording and clean up
   Future<void> stop() async {
     if (isRecording == false) {
       return;

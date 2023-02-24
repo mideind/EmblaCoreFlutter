@@ -48,12 +48,12 @@ class EmblaSession {
 
   // PUBLIC METHODS
 
-  // Static method to preload all required assets
+  /// Static method to preload all required assets
   static void prep() {
     AudioPlayer();
   }
 
-  // Start session
+  /// Start session
   void start() async {
     // Session can only be started in idle state
     if (state != EmblaSessionState.idle) {
@@ -65,6 +65,7 @@ class EmblaSession {
     openWebSocketConnection();
   }
 
+  /// Stop session
   void stop() async {
     AudioPlayer().stop();
 
@@ -77,6 +78,7 @@ class EmblaSession {
     }
   }
 
+  /// Returns true if session is active
   bool isActive() {
     return (state != EmblaSessionState.idle && state != EmblaSessionState.done);
   }
