@@ -16,6 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// JSON messages sent to and received from the Embla server
+
 import 'dart:convert' show json;
 
 import './config.dart' show EmblaSessionConfig;

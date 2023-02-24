@@ -16,13 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Main session object
+
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
 import './common.dart';
 import './audio.dart';
+import './recorder.dart';
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
 
@@ -137,19 +141,25 @@ class EmblaSession {
 
   void handleGreetingsMessage(Map<String, dynamic> msg) {
     dlog("Greetings message received");
+    // TODO: Raise error if not in starting state
     startListening();
   }
 
   void handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
+    // TODO: Raise error if not in listening state
   }
 
   void handleQueryResultMessage(Map<String, dynamic> msg) {
     dlog("Query result message received");
+    // TODO: Raise error if not in answering state
   }
 
 // Open microphone and start streaming audio to server
   void startListening() {
     state = EmblaSessionState.listening;
+    EmblaAudioRecorder().start((Uint8List data) {}, (String errMsg) {
+      error(errMsg);
+    });
   }
 }

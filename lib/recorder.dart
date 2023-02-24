@@ -16,6 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Audio recording wrapper class
+
 import 'dart:async';
 import 'dart:math' show pow;
 
@@ -47,7 +49,7 @@ class EmblaAudioRecorder {
 
   // Do we have permissions to record audio?
   Future<bool> hasPermissions() async {
-    // TBD: Check for microphone permission
+    // TODO: Check for microphone permission
     return true;
   }
 
@@ -70,12 +72,13 @@ class EmblaAudioRecorder {
   // Start recording audio from microphone
   Future<void> start(void Function(Uint8List) dataHandler, Function errHandler) async {
     if (isRecording == true) {
-      dlog('EmblaRecorder already recording');
+      var errMsg = 'EmblaRecorder already recording';
+      dlog(errMsg);
+      errHandler(errMsg);
       return;
     }
     dlog('Starting recording');
     isRecording = true;
-    totalAudioDataSize = 0;
 
     // Create recording stream
     _recordingDataController = StreamController<Food>();
@@ -114,7 +117,7 @@ class EmblaAudioRecorder {
     ));
 
     // Listen for audio status (duration, decibel) at fixed interval
-    _micRecorder.setSubscriptionDuration(Duration(milliseconds: 50));
+    _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));
     _recordingProgressSubscription = _micRecorder.onProgress?.listen((e) {
       if (e.decibels == 0.0) {
         return;
@@ -137,7 +140,12 @@ class EmblaAudioRecorder {
     if (isRecording == false) {
       return;
     }
+
     isRecording = false;
+    lastSignal = 0.0;
+    totalAudioDataSize = 0;
+    totalAudioDuration = 0.0;
+
     dlog('Stopping audio recording');
     dlog("Total audio length: $totalAudioDuration seconds ($totalAudioDataSize bytes)");
     await _micRecorder.stopRecorder();

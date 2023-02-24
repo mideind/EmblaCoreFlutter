@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Audio playback
+// Audio playback handling
 
 import 'dart:async';
 import 'dart:typed_data';
