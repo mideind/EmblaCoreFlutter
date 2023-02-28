@@ -27,7 +27,7 @@ import 'package:web_socket_channel/status.dart' as status;
 
 import './common.dart';
 import './audio.dart';
-import './recorder.dart';
+import './recorder.dart' show EmblaAudioRecorder;
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
 
@@ -158,10 +158,12 @@ class EmblaSession {
     // TODO: Raise error if not in answering state
   }
 
-// Open microphone and start streaming audio to server
+  // Open microphone and start streaming audio to server
   void startListening() {
     state = EmblaSessionState.listening;
-    EmblaAudioRecorder().start((Uint8List data) {}, (String errMsg) {
+    EmblaAudioRecorder().start((Uint8List data) {
+      channel?.sink.add(data);
+    }, (String errMsg) {
       error(errMsg);
     });
   }
