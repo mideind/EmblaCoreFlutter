@@ -31,6 +31,7 @@ const int kAudioNumChannels = 1;
 
 // Server communication
 const String kDefaultServer = 'ws://brandur.mideind.is:8080';
+const String kDefaultSocketEndpoint = '/socket';
 const String kDefaultQueryServer = 'https://greynir.is';
 
 // Speech synthesis

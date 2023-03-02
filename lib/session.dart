@@ -67,7 +67,7 @@ class EmblaSession {
 
   /// Stop session
   void stop() async {
-    AudioPlayer().stop();
+    EmblaAudioRecorder().stop();
 
     channel?.sink.close(status.goingAway);
 
@@ -97,7 +97,7 @@ class EmblaSession {
   // Open WebSocket connection to server
   void openWebSocketConnection() {
     try {
-      final wsUri = Uri.parse("{$serverURL}/socket");
+      final wsUri = Uri.parse("$serverURL$kDefaultSocketEndpoint");
       channel = WebSocketChannel.connect(wsUri);
       // Start listening for messages from server
       channel?.stream.listen(socketMessageReceived);
@@ -144,18 +144,33 @@ class EmblaSession {
 
   void handleGreetingsMessage(Map<String, dynamic> msg) {
     dlog("Greetings message received");
-    // TODO: Raise error if not in starting state
+    if (state != EmblaSessionState.starting) {
+      throw Exception("Session is not starting!");
+    }
     startListening();
+    if (config.onStartListening != null) {
+      config.onStartListening!();
+    }
   }
 
   void handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
-    // TODO: Raise error if not in listening state
+    if (state != EmblaSessionState.listening) {
+      throw Exception("Session is not listening!");
+    }
+    if (config.onSpeechTextReceived != null) {
+      config.onSpeechTextReceived!(msg["text"], msg["is_final"]);
+    }
   }
 
   void handleQueryResultMessage(Map<String, dynamic> msg) {
     dlog("Query result message received");
-    // TODO: Raise error if not in answering state
+    if (state != EmblaSessionState.answering) {
+      throw Exception("Session is not answering query!");
+    }
+    if (config.onQueryAnswerReceived != null) {
+      config.onQueryAnswerReceived!(msg["answer"]);
+    }
   }
 
   // Open microphone and start streaming audio to server
