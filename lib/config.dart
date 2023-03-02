@@ -35,10 +35,6 @@ class EmblaSessionConfig {
   bool private = false; // Don't send client info to server
   bool test = false; // This is a test query (not logged, uses dummy location data)
 
-  // User's GPS coordinates (optional)
-  double? latitude;
-  double? longitude;
-
   // Whether to play session sounds
   // TODO: Implement this
   bool audio = true;
@@ -55,20 +51,18 @@ class EmblaSessionConfig {
   Function? onDone;
   Function(String)? onError;
 
+  Function(List<double>)? getLocation;
+
   EmblaSessionConfig(
       {String queryServer = kDefaultQueryServer,
       String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
       bool private = false,
-      bool test = false,
-      double? latitude,
-      double? longitude}) {
+      bool test = false}) {
     this.queryServer = queryServer;
     this.voiceID = voiceID;
     this.voiceSpeed = voiceSpeed;
     this.private = private;
     this.test = test;
-    this.latitude = latitude;
-    this.longitude = longitude;
   }
 }
