@@ -29,6 +29,7 @@ class EmblaSessionConfig {
   String queryServer = kDefaultQueryServer;
   String language = kSpeechToTextLanguage;
   String? engine;
+  String? apiKey;
 
   // Voice synthesis properties
   String voiceID = kDefaultSpeechSynthesisVoice;

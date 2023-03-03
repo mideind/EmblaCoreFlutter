@@ -127,9 +127,6 @@ class EmblaSession {
       var sub = channel?.stream.listen(socketMessageReceived, onError: (e) {
         error("Error listening on WebSocket connection: $e");
       }, cancelOnError: true);
-      if (sub == null) {
-        throw ("Could not connect to server");
-      }
 
       // Create greetings message
       var greetings = GreetingsOutputMessage.fromConfig(config);

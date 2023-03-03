@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:embla_core/embla_core.dart';
 
 const String kSoftwareTitle = 'EmblaCore Example';
+const String kDefaultPrompt = 'Smelltu á hnappinn til að byrja';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +58,7 @@ class SessionPage extends StatefulWidget {
 
 class _SessionPageState extends State<SessionPage> {
   EmblaSession? session;
-  String msg = '';
+  String msg = kDefaultPrompt;
   Icon playIcon = const Icon(Icons.play_arrow);
   Icon stopIcon = const Icon(Icons.stop);
   Icon buttonIcon = const Icon(Icons.play_arrow);
@@ -66,6 +67,7 @@ class _SessionPageState extends State<SessionPage> {
     session!.stop();
     setState(() {
       buttonIcon = playIcon;
+      msg = kDefaultPrompt;
     });
   }
 
@@ -139,20 +141,16 @@ class _SessionPageState extends State<SessionPage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      msg,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    )
-                  ],
-                )),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
+          child: Column(
+            children: <Widget>[
+              Text(
+                msg,
+                style: Theme.of(context).textTheme.headlineSmall,
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
