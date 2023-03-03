@@ -21,6 +21,7 @@
 
 import 'dart:convert' show json;
 
+import './common.dart' show dlog;
 import './config.dart' show EmblaSessionConfig;
 
 class GreetingsOutputMessage {
@@ -31,7 +32,49 @@ class GreetingsOutputMessage {
   GreetingsOutputMessage();
 
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
-    // TODO: Implement me
+    if (config.engine != null) {
+      data["engine"] = config.engine;
+    }
+
+    // Engine options
+    Map<String, dynamic> engine_opts = {};
+    if (config.language != null) {
+      engine_opts["language"] = config.language;
+    }
+    data["engine_options"] = engine_opts;
+
+    data["private"] = config.private;
+    data["test"] = config.test;
+    data["query"] = true;
+
+    // Query options
+    Map<String, dynamic> query_opts = {};
+    if (config.clientID != null) {
+      query_opts["client_id"] = config.clientID;
+    }
+    if (config.clientType != null) {
+      query_opts["client_type"] = config.clientType;
+    }
+    if (config.clientVersion != null) {
+      query_opts["client_version"] = config.clientVersion;
+    }
+    if (config.voiceID != null) {
+      query_opts["voice"] = config.voiceID;
+    }
+    if (config.voiceSpeed != null) {
+      query_opts["voice_speed"] = config.voiceSpeed;
+    }
+    if (config.getLocation != null) {
+      List<double> loc = config.getLocation!();
+      if (loc.length == 2) {
+        query_opts["latitude"] = loc[0];
+        query_opts["longitude"] = loc[1];
+      } else {
+        dlog("WARNING: Config getLocation() function returned invalid location!");
+      }
+    }
+    query_opts["voice"] = true;
+    data["query_options"] = query_opts;
   }
 
   String toJSON() {
@@ -40,22 +83,24 @@ class GreetingsOutputMessage {
   }
 }
 
+// {type: greetings, msg_id: 0, code: 200, info: {name: Ratatoskur Server, version: 0.1.2, engine: azure, options: {language: is-IS, sample_rate: 16000, bit_rate: 16, channels: 1}}}
+
 class GreetingsResponseMessage {
   String? name;
   String? version;
   String? author;
   String? copyright;
-  String? default_engine;
-  List<String>? supported_engines;
-  Map<String, dynamic>? audio_settings;
+  String? engine;
+  Map<String, dynamic>? engineOptions;
 
-  GreetingsResponseMessage.fromJson(Map<String, dynamic> json) {
-    name = json["name"];
-    version = json["version"];
-    author = json["author"];
-    copyright = json["copyright"];
-    default_engine = json["default_engine"];
-    supported_engines = json["supported_engines"];
-    audio_settings = json["audio_settings"];
+  GreetingsResponseMessage.fromJson(String jsonStr) {
+    var d = json.decode(jsonStr);
+    var info = d["info"];
+    name = info["name"];
+    version = info["version"];
+    author = info["author"];
+    copyright = info["copyright"];
+    engine = info["engine"];
+    engineOptions = info["options"];
   }
 }

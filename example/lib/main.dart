@@ -19,11 +19,14 @@
 import 'package:flutter/material.dart';
 import 'package:embla_core/embla_core.dart';
 
+const String kSoftwareTitle = 'EmblaCore Example';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Prepare for session by preloading assets
-  EmblaSession.prep();
+  // We call this static function to prepare for session
+  // functionality by preloading any required assets.
+  EmblaSession.prepare();
 
   runApp(const MyApp());
 }
@@ -31,15 +34,14 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'EmblaCore Example',
+      title: kSoftwareTitle,
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const SessionPage(title: 'EmblaCore Example'),
+      home: const SessionPage(title: kSoftwareTitle),
     );
   }
 }
@@ -56,22 +58,24 @@ class SessionPage extends StatefulWidget {
 class _SessionPageState extends State<SessionPage> {
   EmblaSession? session;
   String msg = '';
+  Icon playIcon = const Icon(Icons.play_arrow);
+  Icon stopIcon = const Icon(Icons.stop);
   Icon buttonIcon = const Icon(Icons.play_arrow);
 
-  void _buttonClick() {
-    if (session != null && session!.isActive()) {
-      // Session is active, so terminate it
-      session!.stop();
-      buttonIcon = const Icon(Icons.play_arrow);
-      return;
-    }
+  void _stopSession() {
+    session!.stop();
+    setState(() {
+      buttonIcon = playIcon;
+    });
+  }
 
-    // Create new config
+  void _startSession() {
+    // Create new session config
     var config = EmblaSessionConfig();
 
     config.onStartListening = () {
       setState(() {
-        buttonIcon = const Icon(Icons.stop);
+        buttonIcon = stopIcon;
         msg = 'Hlustandi...';
       });
     };
@@ -93,19 +97,39 @@ class _SessionPageState extends State<SessionPage> {
     config.onError = (String error) {
       setState(() {
         msg = error;
-        buttonIcon = const Icon(Icons.play_arrow);
+        buttonIcon = playIcon;
       });
     };
 
     config.onDone = () {
       setState(() {
-        buttonIcon = const Icon(Icons.play_arrow);
+        buttonIcon = playIcon;
         //msg = '';
       });
     };
 
+    config.getLocation = () {
+      // Dummy location data. Replace with real location data
+      // in your app e.g. using the geolocator package.
+      return [64.1466, -21.9426];
+    };
+
+    // Start the session
     session = EmblaSession(config);
     session!.start();
+
+    setState(() {
+      buttonIcon = stopIcon;
+    });
+  }
+
+  void _buttonClick() {
+    if (session != null && session!.isActive()) {
+      // Session is active, so terminate it
+      _stopSession();
+      return;
+    }
+    _startSession();
   }
 
   @override
@@ -118,10 +142,16 @@ class _SessionPageState extends State<SessionPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              msg,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Padding(
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      msg,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    )
+                  ],
+                )),
           ],
         ),
       ),

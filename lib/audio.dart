@@ -119,7 +119,7 @@ class AudioPlayer {
       } else {
         data = await http.readBytes(Uri.parse(url));
       }
-      dlog("Audio file is ${data.lengthInBytes} bytes)");
+      dlog("Audio file is ${data.lengthInBytes} bytes");
 
       player!.startPlayer(
           fromDataBuffer: data,

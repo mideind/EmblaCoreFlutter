@@ -49,13 +49,14 @@ class EmblaSession {
   // PUBLIC METHODS
 
   /// Static method to preload all required assets
-  static void prep() {
+  static void prepare() {
     AudioPlayer();
   }
 
   /// Start session
   void start() async {
     // Session can only be started in idle state
+    // and cannot be restarted once it's done.
     if (state != EmblaSessionState.idle) {
       throw Exception("Session is not idle!");
     }
@@ -115,15 +116,10 @@ class EmblaSession {
       channel?.stream.listen(socketMessageReceived);
 
       // Create greetings message
-      var greetings = GreetingsOutputMessage();
-      if (config.getLocation != null) {
-        List<double> loc = config.getLocation!();
-        greetings.location = loc;
-      }
+      var greetings = GreetingsOutputMessage.fromConfig(config);
 
       // Send message to server
       String json = greetings.toJSON();
-      print(json);
       dlog("Sending initial greetings message: $json");
       channel?.sink.add(json);
     } catch (e) {
@@ -131,8 +127,10 @@ class EmblaSession {
     }
   }
 
+  // Handle incoming WebSocket messages
   void socketMessageReceived(dynamic data) {
-    dlog("Received data: $data");
+    dlog("Received message: $data");
+    // Decode JSON message and handle it according to type
     try {
       final msg = jsonDecode(data);
       final String type = msg["type"];
@@ -162,51 +160,67 @@ class EmblaSession {
     }
   }
 
+  // Once we receive the greetings message from the server,
+  // we can start listening for speech and streaming the audio.
   void handleGreetingsMessage(Map<String, dynamic> msg) {
-    dlog("Greetings message received");
-    print(msg);
+    dlog("Greetings message received. Starting listening");
+
     if (state != EmblaSessionState.starting) {
       throw Exception("Session is not starting!");
     }
+
     startListening();
+
     if (config.onStartListening != null) {
       config.onStartListening!();
     }
   }
 
+  // We have received a speech recognition result from the server.
+  // If it's the final result, we stop the audio recorder and
+  // wait for the query result.
   void handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
-    print(msg);
+
     String transcript = msg["transcript"];
     bool isFinal = msg["is_final"];
+
     if (state != EmblaSessionState.listening) {
       throw Exception("Session is not listening!");
     }
+
     if (config.onSpeechTextReceived != null) {
       config.onSpeechTextReceived!(transcript, isFinal);
     }
+
     if (isFinal) {
       EmblaAudioRecorder().stop();
       state = EmblaSessionState.answering;
     }
   }
 
+  // We have received a query result from the server.
+  // We play the audio and then end the session.
   void handleQueryResultMessage(Map<String, dynamic> msg) {
     dlog("Query result message received");
-    print(msg);
+
     Map<String, dynamic> data = msg["data"];
     if (state != EmblaSessionState.answering) {
       throw Exception("Session is not answering query!");
     }
+
     if (config.onQueryAnswerReceived != null) {
       config.onQueryAnswerReceived!(data);
     }
+
+    // Play remote audio file
     String audioURL = data["audio"];
     AudioPlayer().playURL(audioURL, (err) {
       if (err) {
-        error("Error playing audio");
+        error("Error playing audio at $audioURL");
         return;
       }
+      // End session after audio has finished playing
       stop();
     });
   }

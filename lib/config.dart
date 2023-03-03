@@ -31,8 +31,8 @@ class EmblaSessionConfig {
   String? engine;
 
   // Voice synthesis properties
-  String voiceID = kDefaultSpeechSynthesisVoice;
-  double voiceSpeed = kDefaultSpeechSynthesisSpeed;
+  String? voiceID = kDefaultSpeechSynthesisVoice;
+  double? voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
   // Don't send client info to server
   bool private = false;
@@ -50,30 +50,34 @@ class EmblaSessionConfig {
   // TODO: Implement this
   bool audio = true;
 
-  // Handlers for session events
+  //// Handlers for session events ////
+
+  // Called when the session has received a greeting from the server
   Function? onStartListening;
+
+  // Called when the session has received a speech text from the server
   Function(String, bool)? onSpeechTextReceived;
 
+  // Called when the session has received final speech text from the server
+  // and is about to send the text to the query server
   Function? onStartQuerying;
+
+  // Called when the session has received a query answer from the server
   Function(Map<String, dynamic>)? onQueryAnswerReceived;
 
+  // Called when the session is playing the answer as audio
   Function? onStartAnswering;
 
+  // Called when the session has finished playing the answer as audio
+  // or has been manually stopped
   Function? onDone;
+
+  // Called when the session has encountered an error
   Function(String)? onError;
 
+  // Callback that provides the current location
   List<double> Function()? getLocation;
 
-  EmblaSessionConfig(
-      {String queryServer = kDefaultQueryServer,
-      String voiceID = kDefaultSpeechSynthesisVoice,
-      double voiceSpeed = kDefaultSpeechSynthesisSpeed,
-      bool private = false,
-      bool test = false}) {
-    this.queryServer = queryServer;
-    this.voiceID = voiceID;
-    this.voiceSpeed = voiceSpeed;
-    this.private = private;
-    this.test = test;
-  }
+  /// Default constructor
+  EmblaSessionConfig();
 }

@@ -149,13 +149,14 @@ class EmblaAudioRecorder {
       return;
     }
 
+    dlog('Stopping audio recording');
+    dlog("Total audio length: $totalAudioDuration seconds ($totalAudioDataSize bytes)");
+
     isRecording = false;
     lastSignal = 0.0;
     totalAudioDataSize = 0;
     totalAudioDuration = 0.0;
 
-    dlog('Stopping audio recording');
-    dlog("Total audio length: $totalAudioDuration seconds ($totalAudioDataSize bytes)");
     await _micRecorder.stopRecorder();
     await _micRecorder.closeRecorder();
     await _recordingDataSubscription?.cancel();
