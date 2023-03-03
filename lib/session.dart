@@ -103,6 +103,8 @@ class EmblaSession {
     if (config.onError != null) {
       config.onError!(errMsg);
     }
+
+    AudioPlayer().playSound("err", config.voiceID);
   }
 
   // Open WebSocket connection to server
@@ -211,6 +213,14 @@ class EmblaSession {
 
     if (config.onQueryAnswerReceived != null) {
       config.onQueryAnswerReceived!(data);
+    }
+
+    // The query result did not contain an answer
+    if (data["audio"] == null || data["answer"] == null) {
+      AudioPlayer().playDunno(config.voiceID, () {
+        stop();
+      });
+      return;
     }
 
     // Play remote audio file

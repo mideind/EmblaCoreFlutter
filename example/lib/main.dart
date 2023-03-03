@@ -143,7 +143,7 @@ class _SessionPageState extends State<SessionPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
                 child: Column(
                   children: <Widget>[
                     Text(

@@ -23,6 +23,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:math';
 
+import 'package:embla_core/util.dart';
 import 'package:logger/logger.dart' show Level;
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -104,8 +105,8 @@ class AudioPlayer {
   }
 
   /// Play remote audio file
-  Future<void> playURL(String url, Function(bool) completionHandler) async {
-    //_instance.stop();
+  Future<void> playURL(String url, Function(bool err) completionHandler) async {
+    //stop();
 
     dlog("Playing audio file at URL '$url'");
     try {
@@ -117,6 +118,7 @@ class AudioPlayer {
         UriData dataURI = UriData.fromUri(uri);
         data = dataURI.contentAsBytes();
       } else {
+        // Otherwise, we download the file
         data = await http.readBytes(Uri.parse(url));
       }
       dlog("Audio file is ${data.lengthInBytes} bytes");
@@ -134,11 +136,11 @@ class AudioPlayer {
   }
 
   /// Play a random "don't know" response
-  String? playDunno([Function()? completionHandler]) {
+  String? playDunno(String voiceID, [Function()? completionHandler]) {
     int rnd = Random().nextInt(7) + 1;
     String num = rnd.toString().padLeft(2, '0');
     String fn = "dunno$num";
-    playSound(fn, completionHandler!);
+    playSound(fn, voiceID, completionHandler!);
     Map<String, String> dunnoStrings = {
       "dunno01": "Ég get ekki svarað því.",
       "dunno02": "Ég get því miður ekki svarað því.",
@@ -152,13 +154,13 @@ class AudioPlayer {
   }
 
   /// Play a preloaded audio file bundled with the app
-  void playSound(String soundName, [Function()? completionHandler]) {
-    _instance.stop();
+  void playSound(String soundName, String voiceID, [Function()? completionHandler]) {
+    stop();
 
-    // Different file name depending on voice is set in prefs
+    // Different file name depending on voice
     String fileName = soundName;
     if (sessionSounds.contains(soundName) == false) {
-      String voiceName = "gudrun";
+      String voiceName = voiceID.toLowerCase().asciify();
       fileName = "$soundName-$voiceName";
     }
 

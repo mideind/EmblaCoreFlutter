@@ -26,7 +26,7 @@ import './config.dart' show EmblaSessionConfig;
 
 class GreetingsOutputMessage {
   final String type = "greetings";
-  int msg_id = 0;
+  int messageID = 0;
   Map<String, dynamic> data = {};
 
   GreetingsOutputMessage();
@@ -37,48 +37,48 @@ class GreetingsOutputMessage {
     }
 
     // Engine options
-    Map<String, dynamic> engine_opts = {};
+    Map<String, dynamic> engineOpts = {};
     if (config.language != null) {
-      engine_opts["language"] = config.language;
+      engineOpts["language"] = config.language;
     }
-    data["engine_options"] = engine_opts;
+    data["engine_options"] = engineOpts;
 
     data["private"] = config.private;
     data["test"] = config.test;
     data["query"] = true;
 
     // Query options
-    Map<String, dynamic> query_opts = {};
+    Map<String, dynamic> queryOpts = {};
     if (config.clientID != null) {
-      query_opts["client_id"] = config.clientID;
+      queryOpts["client_id"] = config.clientID;
     }
     if (config.clientType != null) {
-      query_opts["client_type"] = config.clientType;
+      queryOpts["client_type"] = config.clientType;
     }
     if (config.clientVersion != null) {
-      query_opts["client_version"] = config.clientVersion;
+      queryOpts["client_version"] = config.clientVersion;
     }
     if (config.voiceID != null) {
-      query_opts["voice"] = config.voiceID;
+      queryOpts["voice"] = config.voiceID;
     }
     if (config.voiceSpeed != null) {
-      query_opts["voice_speed"] = config.voiceSpeed;
+      queryOpts["voice_speed"] = config.voiceSpeed;
     }
     if (config.getLocation != null) {
       List<double> loc = config.getLocation!();
       if (loc.length == 2) {
-        query_opts["latitude"] = loc[0];
-        query_opts["longitude"] = loc[1];
+        queryOpts["latitude"] = loc[0];
+        queryOpts["longitude"] = loc[1];
       } else {
         dlog("WARNING: Config getLocation() function returned invalid location!");
       }
     }
-    query_opts["voice"] = true;
-    data["query_options"] = query_opts;
+    queryOpts["voice"] = true;
+    data["query_options"] = queryOpts;
   }
 
   String toJSON() {
-    Map<String, dynamic> msg = {"type": type, "msg_id": msg_id, "data": data};
+    Map<String, dynamic> msg = {"type": type, "msg_id": messageID, "data": data};
     return json.encode(msg);
   }
 }

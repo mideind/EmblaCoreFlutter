@@ -59,12 +59,6 @@ class EmblaAudioRecorder {
     return totalAudioDataSize;
   }
 
-  // Do we have permissions to record audio?
-  Future<bool> _hasPermissions() async {
-    // TODO: Check for microphone permission
-    return true;
-  }
-
   // Normalize decibel level to a number between 0.0 and 1.0
   double _normalizedPowerLevelFromDecibels(double decibels) {
     if (decibels < -60.0 || decibels == 0.0) {
@@ -94,7 +88,7 @@ class EmblaAudioRecorder {
       if (buffer is FoodData && buffer.data != null) {
         var data = buffer.data as Uint8List;
         totalAudioDataSize += data.lengthInBytes;
-        totalAudioDuration = totalAudioDataSize / (kAudioBitRate / 8) * kAudioSampleRate;
+        totalAudioDuration = totalAudioDataSize / 32000.0;
         dataHandler(data); // invoke callback
       } else {
         var errMsg = 'Got null data in recording stream: $buffer';

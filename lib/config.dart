@@ -25,21 +25,21 @@ import './common.dart';
 
 /// EmblaSession configuration object
 class EmblaSessionConfig {
-  // Query server URL
-  String queryServer = kDefaultQueryServer;
-  String? language;
+  String? queryServer = kDefaultQueryServer;
+  String? language = kSpeechToTextLanguage;
   String? engine;
 
   // Voice synthesis properties
-  String? voiceID = kDefaultSpeechSynthesisVoice;
+  String voiceID = kDefaultSpeechSynthesisVoice;
   double? voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
   // Don't send client info to server
   bool private = false;
+
   // Marks this as a test query (not logged, server uses dummy location data)
   bool test = false;
 
-  // Client info. Must be set by client app
+  // Client info. Should be set by client app
   String? clientID;
   String? clientType;
   String? clientVersion;
@@ -55,11 +55,11 @@ class EmblaSessionConfig {
   // Called when the session has received a greeting from the server
   Function? onStartListening;
 
-  // Called when the session has received a speech text from the server
+  // Called when the session has received speech text from the server
   Function(String, bool)? onSpeechTextReceived;
 
-  // Called when the session has received final speech text from the server
-  // and is about to send the text to the query server
+  // Called when the session has received *final* speech text from
+  // the server and is waiting for a query answer.
   Function? onStartQuerying;
 
   // Called when the session has received a query answer from the server
@@ -69,15 +69,12 @@ class EmblaSessionConfig {
   Function? onStartAnswering;
 
   // Called when the session has finished playing the answer as audio
-  // or has been manually stopped
+  // or has been manually stopped.
   Function? onDone;
 
   // Called when the session has encountered an error
   Function(String)? onError;
 
-  // Callback that provides the current location
+  // Optional callback that provides the user's current location in WGS84
   List<double> Function()? getLocation;
-
-  /// Default constructor
-  EmblaSessionConfig();
 }
