@@ -41,7 +41,7 @@ class EmblaSession {
   // var serverInfo = GreetingsResponseMessage();
   WebSocketChannel? channel;
 
-  // Constructor
+  /// Constructor
   EmblaSession(EmblaSessionConfig cfg) {
     config = cfg;
   }
@@ -54,7 +54,7 @@ class EmblaSession {
   }
 
   /// Start session
-  void start() async {
+  void start() {
     // Session can only be started in idle state
     // and cannot be restarted once it's done.
     if (state != EmblaSessionState.idle) {
@@ -67,7 +67,8 @@ class EmblaSession {
   }
 
   /// Stop session
-  void stop() async {
+  void stop() {
+    dlog("Stopping session...");
     _stop();
 
     // Set state to done
@@ -82,6 +83,11 @@ class EmblaSession {
   /// Returns true if session is active
   bool isActive() {
     return (state != EmblaSessionState.idle && state != EmblaSessionState.done);
+  }
+
+  /// Returns current state of session
+  EmblaSessionState currentState() {
+    return state;
   }
 
   // PRIVATE METHODS
@@ -99,6 +105,9 @@ class EmblaSession {
     dlog("Error in session: $errMsg");
     _stop();
 
+    // Set state to done
+    state = EmblaSessionState.done;
+
     // Invoke error handler
     if (config.onError != null) {
       config.onError!(errMsg);
@@ -115,7 +124,12 @@ class EmblaSession {
       channel = WebSocketChannel.connect(wsUri);
 
       // Start listening for messages
-      channel?.stream.listen(socketMessageReceived);
+      var sub = channel?.stream.listen(socketMessageReceived, onError: (e) {
+        error("Error listening on WebSocket connection: $e");
+      }, cancelOnError: true);
+      if (sub == null) {
+        throw ("Could not connect to server");
+      }
 
       // Create greetings message
       var greetings = GreetingsOutputMessage.fromConfig(config);
@@ -163,15 +177,13 @@ class EmblaSession {
   }
 
   // Once we receive the greetings message from the server,
-  // we can start listening for speech and streaming the audio.
+  // we can start listening for speech and stream the audio.
   void handleGreetingsMessage(Map<String, dynamic> msg) {
     dlog("Greetings message received. Starting listening");
 
     if (state != EmblaSessionState.starting) {
       throw Exception("Session is not starting!");
     }
-
-    // serverInfo = GreetingsResponseMessage.fromJSON(msg);
 
     startListening();
 
