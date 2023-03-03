@@ -35,11 +35,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Embla Session Demo',
+      title: 'EmblaCore Example',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const SessionPage(title: 'Embla Session Demo'),
+      home: const SessionPage(title: 'EmblaCore Example'),
     );
   }
 }
@@ -76,9 +76,9 @@ class _SessionPageState extends State<SessionPage> {
       });
     };
 
-    config.onSpeechTextReceived = (List<String> transcripts, bool isFinal) {
+    config.onSpeechTextReceived = (String transcript, bool isFinal) {
       setState(() {
-        msg = transcripts[0];
+        msg = transcript;
       });
     };
 
@@ -100,7 +100,7 @@ class _SessionPageState extends State<SessionPage> {
     config.onDone = () {
       setState(() {
         buttonIcon = const Icon(Icons.play_arrow);
-        msg = '';
+        //msg = '';
       });
     };
 

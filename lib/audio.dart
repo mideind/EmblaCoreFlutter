@@ -107,7 +107,7 @@ class AudioPlayer {
   Future<void> playURL(String url, Function(bool) completionHandler) async {
     //_instance.stop();
 
-    dlog("Playing audio file URL '${url.substring(0, 200)}'");
+    dlog("Playing audio file at URL '$url'");
     try {
       Uint8List data;
       Uri uri = Uri.parse(url);

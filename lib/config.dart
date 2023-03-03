@@ -27,13 +27,24 @@ import './common.dart';
 class EmblaSessionConfig {
   // Query server URL
   String queryServer = kDefaultQueryServer;
+  String? language;
+  String? engine;
 
   // Voice synthesis properties
   String voiceID = kDefaultSpeechSynthesisVoice;
   double voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
-  bool private = false; // Don't send client info to server
-  bool test = false; // This is a test query (not logged, uses dummy location data)
+  // Don't send client info to server
+  bool private = false;
+  // Marks this as a test query (not logged, server uses dummy location data)
+  bool test = false;
+
+  // Client info. Must be set by client app
+  String? clientID;
+  String? clientType;
+  String? clientVersion;
+  double? latitude;
+  double? longitude;
 
   // Whether to play session sounds
   // TODO: Implement this
@@ -41,7 +52,7 @@ class EmblaSessionConfig {
 
   // Handlers for session events
   Function? onStartListening;
-  Function(List<String>, bool)? onSpeechTextReceived;
+  Function(String, bool)? onSpeechTextReceived;
 
   Function? onStartQuerying;
   Function(Map<String, dynamic>)? onQueryAnswerReceived;
@@ -51,7 +62,7 @@ class EmblaSessionConfig {
   Function? onDone;
   Function(String)? onError;
 
-  Function(List<double>)? getLocation;
+  List<double> Function()? getLocation;
 
   EmblaSessionConfig(
       {String queryServer = kDefaultQueryServer,

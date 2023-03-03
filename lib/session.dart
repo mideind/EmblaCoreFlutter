@@ -26,7 +26,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
 import './common.dart';
-import './audio.dart';
+import './audio.dart' show AudioPlayer;
 import './recorder.dart' show EmblaAudioRecorder;
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
@@ -67,12 +67,12 @@ class EmblaSession {
 
   /// Stop session
   void stop() async {
-    EmblaAudioRecorder().stop();
+    _stop();
 
-    channel?.sink.close(status.goingAway);
-
+    // Set state to done
     state = EmblaSessionState.done;
 
+    // Invoke done handler
     if (config.onDone != null) {
       config.onDone!();
     }
@@ -85,9 +85,19 @@ class EmblaSession {
 
   // PRIVATE METHODS
 
+  void _stop() {
+    // Terminate all audio recording and playback
+    EmblaAudioRecorder().stop();
+    AudioPlayer().stop();
+    // Close WebSocket connection
+    channel?.sink.close(status.goingAway);
+  }
+
+  // Terminate session with error message
   void error(String errMsg) {
     dlog("Error in session: $errMsg");
-    stop();
+    _stop();
+
     // Invoke error handler
     if (config.onError != null) {
       config.onError!(errMsg);
@@ -97,17 +107,27 @@ class EmblaSession {
   // Open WebSocket connection to server
   void openWebSocketConnection() {
     try {
+      // Connect to server
       final wsUri = Uri.parse("$serverURL$kDefaultSocketEndpoint");
       channel = WebSocketChannel.connect(wsUri);
-      // Start listening for messages from server
+
+      // Start listening for messages
       channel?.stream.listen(socketMessageReceived);
-      // Send greetings message
-      dlog("Sending initial greetings message");
-      var msg = GreetingsOutputMessage().toJSON();
-      channel?.sink.add(msg);
+
+      // Create greetings message
+      var greetings = GreetingsOutputMessage();
+      if (config.getLocation != null) {
+        List<double> loc = config.getLocation!();
+        greetings.location = loc;
+      }
+
+      // Send message to server
+      String json = greetings.toJSON();
+      print(json);
+      dlog("Sending initial greetings message: $json");
+      channel?.sink.add(json);
     } catch (e) {
       error("Error connecting to server: $e");
-      return;
     }
   }
 
@@ -144,6 +164,7 @@ class EmblaSession {
 
   void handleGreetingsMessage(Map<String, dynamic> msg) {
     dlog("Greetings message received");
+    print(msg);
     if (state != EmblaSessionState.starting) {
       throw Exception("Session is not starting!");
     }
@@ -155,22 +176,39 @@ class EmblaSession {
 
   void handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
+    print(msg);
+    String transcript = msg["transcript"];
+    bool isFinal = msg["is_final"];
     if (state != EmblaSessionState.listening) {
       throw Exception("Session is not listening!");
     }
     if (config.onSpeechTextReceived != null) {
-      config.onSpeechTextReceived!(msg["text"], msg["is_final"]);
+      config.onSpeechTextReceived!(transcript, isFinal);
+    }
+    if (isFinal) {
+      EmblaAudioRecorder().stop();
+      state = EmblaSessionState.answering;
     }
   }
 
   void handleQueryResultMessage(Map<String, dynamic> msg) {
     dlog("Query result message received");
+    print(msg);
+    Map<String, dynamic> data = msg["data"];
     if (state != EmblaSessionState.answering) {
       throw Exception("Session is not answering query!");
     }
     if (config.onQueryAnswerReceived != null) {
-      config.onQueryAnswerReceived!(msg["answer"]);
+      config.onQueryAnswerReceived!(data);
     }
+    String audioURL = data["audio"];
+    AudioPlayer().playURL(audioURL, (err) {
+      if (err) {
+        error("Error playing audio");
+        return;
+      }
+      stop();
+    });
   }
 
   // Open microphone and start streaming audio to server
