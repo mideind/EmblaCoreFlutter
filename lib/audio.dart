@@ -25,7 +25,7 @@ import 'dart:math';
 
 import 'package:embla_core/util.dart';
 import 'package:logger/logger.dart' show Level;
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:flutter_sound/flutter_sound.dart' show FlutterSoundPlayer, Codec;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 

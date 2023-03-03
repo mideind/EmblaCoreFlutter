@@ -25,13 +25,14 @@ import './common.dart';
 
 /// EmblaSession configuration object
 class EmblaSessionConfig {
-  String? queryServer = kDefaultQueryServer;
-  String? language = kSpeechToTextLanguage;
+  String serverURL = kDefaultServer;
+  String queryServer = kDefaultQueryServer;
+  String language = kSpeechToTextLanguage;
   String? engine;
 
   // Voice synthesis properties
   String voiceID = kDefaultSpeechSynthesisVoice;
-  double? voiceSpeed = kDefaultSpeechSynthesisSpeed;
+  double voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
   // Don't send client info to server
   bool private = false;

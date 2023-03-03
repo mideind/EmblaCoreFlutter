@@ -32,39 +32,33 @@ class GreetingsOutputMessage {
   GreetingsOutputMessage();
 
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
+    // Engine options
     if (config.engine != null) {
       data["engine"] = config.engine;
     }
-
-    // Engine options
     Map<String, dynamic> engineOpts = {};
     if (config.language != null) {
       engineOpts["language"] = config.language;
     }
     data["engine_options"] = engineOpts;
 
+    // Other options
     data["private"] = config.private;
     data["test"] = config.test;
     data["query"] = true;
 
-    // Query options
+    // Query options, which includes client details
     Map<String, dynamic> queryOpts = {};
-    if (config.clientID != null) {
+    if (config.clientID != null && config.private == false) {
       queryOpts["client_id"] = config.clientID;
     }
-    if (config.clientType != null) {
+    if (config.clientType != null && config.private == false) {
       queryOpts["client_type"] = config.clientType;
     }
-    if (config.clientVersion != null) {
+    if (config.clientVersion != null && config.private == false) {
       queryOpts["client_version"] = config.clientVersion;
     }
-    if (config.voiceID != null) {
-      queryOpts["voice"] = config.voiceID;
-    }
-    if (config.voiceSpeed != null) {
-      queryOpts["voice_speed"] = config.voiceSpeed;
-    }
-    if (config.getLocation != null) {
+    if (config.getLocation != null && config.private == false) {
       List<double> loc = config.getLocation!();
       if (loc.length == 2) {
         queryOpts["latitude"] = loc[0];
@@ -74,6 +68,9 @@ class GreetingsOutputMessage {
       }
     }
     queryOpts["voice"] = true;
+    queryOpts["voice_id"] = config.voiceID;
+    queryOpts["voice_speed"] = config.voiceSpeed;
+
     data["query_options"] = queryOpts;
   }
 
@@ -83,24 +80,24 @@ class GreetingsOutputMessage {
   }
 }
 
-// {type: greetings, msg_id: 0, code: 200, info: {name: Ratatoskur Server, version: 0.1.2, engine: azure, options: {language: is-IS, sample_rate: 16000, bit_rate: 16, channels: 1}}}
+// class GreetingsResponseMessage {
+//   String? name;
+//   String? version;
+//   String? author;
+//   String? copyright;
+//   String? engine;
+//   Map<String, dynamic>? engineOptions;
 
-class GreetingsResponseMessage {
-  String? name;
-  String? version;
-  String? author;
-  String? copyright;
-  String? engine;
-  Map<String, dynamic>? engineOptions;
+//   GreetingsResponseMessage();
 
-  GreetingsResponseMessage.fromJson(String jsonStr) {
-    var d = json.decode(jsonStr);
-    var info = d["info"];
-    name = info["name"];
-    version = info["version"];
-    author = info["author"];
-    copyright = info["copyright"];
-    engine = info["engine"];
-    engineOptions = info["options"];
-  }
-}
+//   GreetingsResponseMessage.fromMap(String jsonStr) {
+//     var d = json.decode(jsonStr);
+//     var info = d["info"];
+//     name = info["name"];
+//     version = info["version"];
+//     author = info["author"];
+//     copyright = info["copyright"];
+//     engine = info["engine"];
+//     engineOptions = info["options"];
+//   }
+// }

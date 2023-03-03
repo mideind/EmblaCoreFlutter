@@ -59,6 +59,11 @@ class EmblaAudioRecorder {
     return totalAudioDataSize;
   }
 
+  /// Returns the strength of the last audio signal
+  double signalStrength() {
+    return lastSignal;
+  }
+
   // Normalize decibel level to a number between 0.0 and 1.0
   double _normalizedPowerLevelFromDecibels(double decibels) {
     if (decibels < -60.0 || decibels == 0.0) {

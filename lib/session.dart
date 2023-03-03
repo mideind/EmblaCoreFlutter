@@ -38,7 +38,7 @@ class EmblaSession {
   // Current state of session object
   var state = EmblaSessionState.idle;
   var config = EmblaSessionConfig();
-  final String serverURL = kDefaultServer;
+  // var serverInfo = GreetingsResponseMessage();
   WebSocketChannel? channel;
 
   // Constructor
@@ -111,7 +111,7 @@ class EmblaSession {
   void openWebSocketConnection() {
     try {
       // Connect to server
-      final wsUri = Uri.parse("$serverURL$kDefaultSocketEndpoint");
+      final wsUri = Uri.parse("${config.serverURL}$kDefaultSocketEndpoint");
       channel = WebSocketChannel.connect(wsUri);
 
       // Start listening for messages
@@ -129,7 +129,7 @@ class EmblaSession {
     }
   }
 
-  // Handle incoming WebSocket messages
+  // Handle all incoming WebSocket messages
   void socketMessageReceived(dynamic data) {
     dlog("Received message: $data");
     // Decode JSON message and handle it according to type
@@ -171,6 +171,8 @@ class EmblaSession {
       throw Exception("Session is not starting!");
     }
 
+    // serverInfo = GreetingsResponseMessage.fromJSON(msg);
+
     startListening();
 
     if (config.onStartListening != null) {
@@ -184,12 +186,12 @@ class EmblaSession {
   void handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
 
-    String transcript = msg["transcript"];
-    bool isFinal = msg["is_final"];
-
     if (state != EmblaSessionState.listening) {
       throw Exception("Session is not listening!");
     }
+
+    String transcript = msg["transcript"];
+    bool isFinal = msg["is_final"];
 
     if (config.onSpeechTextReceived != null) {
       config.onSpeechTextReceived!(transcript, isFinal);
@@ -206,21 +208,27 @@ class EmblaSession {
   void handleQueryResultMessage(Map<String, dynamic> msg) {
     dlog("Query result message received");
 
-    Map<String, dynamic> data = msg["data"];
     if (state != EmblaSessionState.answering) {
       throw Exception("Session is not answering query!");
     }
 
-    if (config.onQueryAnswerReceived != null) {
-      config.onQueryAnswerReceived!(data);
-    }
+    Map<String, dynamic> data = msg["data"];
 
     // The query result did not contain an answer
     if (data["audio"] == null || data["answer"] == null) {
-      AudioPlayer().playDunno(config.voiceID, () {
+      String? dunnoMsg = AudioPlayer().playDunno(config.voiceID, () {
         stop();
       });
+
+      if (config.onQueryAnswerReceived != null) {
+        data["message"] = dunnoMsg;
+        config.onQueryAnswerReceived!(data);
+      }
       return;
+    }
+
+    if (config.onQueryAnswerReceived != null) {
+      config.onQueryAnswerReceived!(data);
     }
 
     // Play remote audio file
@@ -235,7 +243,7 @@ class EmblaSession {
     });
   }
 
-  // Open microphone and start streaming audio to server
+  // Start recording via microphone and streaming audio to server
   void startListening() {
     state = EmblaSessionState.listening;
     EmblaAudioRecorder().start((Uint8List data) {

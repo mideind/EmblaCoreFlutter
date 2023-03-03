@@ -35,7 +35,6 @@ const String kDefaultSocketEndpoint = '/socket';
 const String kDefaultQueryServer = 'https://greynir.is';
 
 // Speech synthesis
-const List<String> kSpeechSynthesisVoices = ["Guðrún", "Gunnar"];
 const String kDefaultSpeechSynthesisVoice = "Guðrún";
 const double kDefaultSpeechSynthesisSpeed = 1.0;
 

@@ -21,37 +21,6 @@
 
 /// String extensions
 extension StringExtension on String {
-  /// Does string end w. standard punctuation?
-  bool isPunctuationTerminated() {
-    if (length == 0) {
-      return false;
-    }
-    List<String> punctuation = ['.', '?', '!', '."', '.“', ".'"];
-    for (String p in punctuation) {
-      if (endsWith(p)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /// Return period-terminated string if not already ending w. punctuation
-  String periodTerminated() {
-    if (isPunctuationTerminated() == false) {
-      return "$this.";
-    }
-    return this;
-  }
-
-  /// Return string with first character capitalized.
-  /// Why is this never part of any standard library?
-  String sentenceCapitalized() {
-    if (length == 0) {
-      return this;
-    }
-    return "${this[0].toUpperCase()}${substring(1)}";
-  }
-
   /// Convert Icelandic characters to their ASCII equivalent.
   String asciify() {
     Map<String, String> icechar2ascii = {
