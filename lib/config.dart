@@ -37,9 +37,6 @@ class EmblaSessionConfig {
   // Don't send client info to server
   bool private = false;
 
-  // Marks this as a test query (not logged, server uses dummy location data)
-  bool test = false;
-
   // Client info. Should be set by client app
   String? clientID;
   String? clientType;

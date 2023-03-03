@@ -59,7 +59,7 @@ class EmblaAudioRecorder {
     return totalAudioDataSize;
   }
 
-  /// Returns the strength of the last audio signal
+  /// Returns the signal strength of the last recorded audio samples
   double signalStrength() {
     return lastSignal;
   }

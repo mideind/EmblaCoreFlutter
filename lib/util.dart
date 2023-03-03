@@ -47,8 +47,6 @@ extension StringExtension on String {
     };
 
     String s = this;
-
-    // Substitute all Icelandic chars for their ASCII equivalents
     icechar2ascii.forEach((k, v) {
       s = s.replaceAll(k, v);
     });

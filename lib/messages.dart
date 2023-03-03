@@ -29,25 +29,22 @@ class GreetingsOutputMessage {
   int messageID = 0;
   Map<String, dynamic> data = {};
 
-  GreetingsOutputMessage();
-
+  /// Create a greetings message from a config object
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
     // Engine options
     if (config.engine != null) {
       data["engine"] = config.engine;
     }
     Map<String, dynamic> engineOpts = {};
-    if (config.language != null) {
-      engineOpts["language"] = config.language;
-    }
+    engineOpts["language"] = config.language;
     data["engine_options"] = engineOpts;
 
     // Other options
     data["private"] = config.private;
-    data["test"] = config.test;
     data["query"] = true;
 
-    // Query options, which includes client details
+    // Query options, which includes client details.
+    // Those are only sent if the session is not private.
     Map<String, dynamic> queryOpts = {};
     if (config.clientID != null && config.private == false) {
       queryOpts["client_id"] = config.clientID;
@@ -74,30 +71,9 @@ class GreetingsOutputMessage {
     data["query_options"] = queryOpts;
   }
 
+  /// Convert this message object to a JSON representation
   String toJSON() {
     Map<String, dynamic> msg = {"type": type, "msg_id": messageID, "data": data};
     return json.encode(msg);
   }
 }
-
-// class GreetingsResponseMessage {
-//   String? name;
-//   String? version;
-//   String? author;
-//   String? copyright;
-//   String? engine;
-//   Map<String, dynamic>? engineOptions;
-
-//   GreetingsResponseMessage();
-
-//   GreetingsResponseMessage.fromMap(String jsonStr) {
-//     var d = json.decode(jsonStr);
-//     var info = d["info"];
-//     name = info["name"];
-//     version = info["version"];
-//     author = info["author"];
-//     copyright = info["copyright"];
-//     engine = info["engine"];
-//     engineOptions = info["options"];
-//   }
-// }
