@@ -37,10 +37,10 @@ class EmblaAudioRecorder {
   StreamSubscription? _recordingProgressSubscription;
   StreamController? _recordingDataController;
 
-  bool isRecording = false;
-  double lastSignal = 0.0; // Strength of last audio signal, on a scale of 0.0 to 1.0
-  int totalAudioDataSize = 0; // Accumulated byte size of audio recording
-  double totalAudioDuration = 0.0; // Accumulated duration of audio recording
+  bool _isRecording = false;
+  double _lastSignal = 0.0; // Strength of last audio signal, on a scale of 0.0 to 1.0
+  int _totalAudioDataSize = 0; // Accumulated byte size of audio recording
+  double _totalAudioDuration = 0.0; // Accumulated duration of audio recording
 
   /// Singleton pattern
   EmblaAudioRecorder._internal();
@@ -51,49 +51,41 @@ class EmblaAudioRecorder {
 
   /// Returns the duration of the recorded audio in seconds
   double duration() {
-    return totalAudioDuration;
+    return _totalAudioDuration;
   }
 
   /// Returns the size of the recorded audio in bytes
   int audioSize() {
-    return totalAudioDataSize;
+    return _totalAudioDataSize;
   }
 
   /// Returns the signal strength of the last recorded audio samples
   double signalStrength() {
-    return lastSignal;
+    return _lastSignal;
   }
 
-  // Normalize decibel level to a number between 0.0 and 1.0
-  double _normalizedPowerLevelFromDecibels(double decibels) {
-    if (decibels < -60.0 || decibels == 0.0) {
-      return 0.0;
-    }
-    const double exp = 0.05;
-    return pow(
-        (pow(10.0, exp * decibels) - pow(10.0, exp * -60.0)) *
-            (1.0 / (1.0 - pow(10.0, exp * -60.0))),
-        1.0 / 2.0) as double;
+  bool isRecording() {
+    return _isRecording;
   }
 
   /// Start recording audio from microphone
   Future<void> start(void Function(Uint8List) dataHandler, Function errHandler) async {
-    if (isRecording == true) {
-      var errMsg = 'EmblaRecorder already recording';
+    if (_isRecording == true) {
+      var errMsg = 'EmblaRecorder already recording!';
       dlog(errMsg);
       errHandler(errMsg);
       return;
     }
     dlog('Starting recording');
-    isRecording = true;
+    _isRecording = true;
 
     // Create recording stream
     _recordingDataController = StreamController<Food>();
     _recordingDataSubscription = _recordingDataController?.stream.listen((buffer) {
       if (buffer is FoodData && buffer.data != null) {
         var data = buffer.data as Uint8List;
-        totalAudioDataSize += data.lengthInBytes;
-        totalAudioDuration = totalAudioDataSize / 32000.0;
+        _totalAudioDataSize += data.lengthInBytes;
+        _totalAudioDuration = _totalAudioDataSize / 32000.0;
         dataHandler(data); // invoke callback
       } else {
         var errMsg = 'Got null data in recording stream: $buffer';
@@ -131,7 +123,7 @@ class EmblaAudioRecorder {
       }
       dlog(e);
       double decibels = e.decibels! - 70.0; // This number is arbitrary but works
-      lastSignal = _normalizedPowerLevelFromDecibels(decibels);
+      _lastSignal = _normalizedPowerLevelFromDecibels(decibels);
     });
 
     // Start recording audio
@@ -144,22 +136,34 @@ class EmblaAudioRecorder {
 
   /// Stop recording and clean up
   Future<void> stop() async {
-    if (isRecording == false) {
+    if (_isRecording == false) {
       return;
     }
 
     dlog('Stopping audio recording');
-    dlog("Total audio length: $totalAudioDuration seconds ($totalAudioDataSize bytes)");
+    dlog("Total audio length: $_totalAudioDuration seconds ($_totalAudioDataSize bytes)");
 
-    isRecording = false;
-    lastSignal = 0.0;
-    totalAudioDataSize = 0;
-    totalAudioDuration = 0.0;
+    _isRecording = false;
+    _lastSignal = 0.0;
+    _totalAudioDataSize = 0;
+    _totalAudioDuration = 0.0;
 
     await _micRecorder.stopRecorder();
     await _micRecorder.closeRecorder();
     await _recordingDataSubscription?.cancel();
     await _recordingProgressSubscription?.cancel();
     await _recordingDataController?.close();
+  }
+
+  // Normalize decibel level to a number between 0.0 and 1.0
+  double _normalizedPowerLevelFromDecibels(double decibels) {
+    if (decibels < -60.0 || decibels == 0.0) {
+      return 0.0;
+    }
+    const double exp = 0.05;
+    return pow(
+        (pow(10.0, exp * decibels) - pow(10.0, exp * -60.0)) *
+            (1.0 / (1.0 - pow(10.0, exp * -60.0))),
+        1.0 / 2.0) as double;
   }
 }
