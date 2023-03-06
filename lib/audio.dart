@@ -22,10 +22,10 @@
 import 'dart:typed_data';
 import 'dart:math' show Random;
 
-import 'package:logger/logger.dart' show Level;
-import 'package:flutter_sound/flutter_sound.dart' show FlutterSoundPlayer, Codec;
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart' show Level;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_sound/flutter_sound.dart' show FlutterSoundPlayer, Codec;
 
 import './util.dart';
 import './common.dart';

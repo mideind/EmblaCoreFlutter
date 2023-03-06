@@ -124,7 +124,7 @@ class EmblaSession {
       channel = WebSocketChannel.connect(wsUri);
 
       // Start listening for messages
-      var sub = channel?.stream.listen(socketMessageReceived, onError: (e) {
+      channel?.stream.listen(socketMessageReceived, onError: (e) {
         error("Error listening on WebSocket connection: $e");
       }, cancelOnError: true);
 

@@ -25,10 +25,20 @@ import './common.dart';
 
 /// EmblaSession configuration object
 class EmblaSessionConfig {
+  // Ratatoskur server URL
   String serverURL = kDefaultServer;
-  String queryServer = kDefaultQueryServer;
+
+  // Query server URL
+  String queryServer = kDefaultQueryAPI;
+
+  // Speech-to-text language (e.g. "is-IS")
+  // Currently ignored as only is-IS is supported.
   String language = kSpeechToTextLanguage;
+
+  // Override default engine
   String? engine;
+
+  // Ratatoskur API key
   String? apiKey;
 
   // Voice synthesis properties
@@ -39,11 +49,17 @@ class EmblaSessionConfig {
   bool private = false;
 
   // Client info. Should be set by client app
+  // Ideally, a unique app-specific client ID should
+  // be provided via e.g. the platform_device_id package.
   String? clientID;
+
+  // Client type string (e.g. "ios", "android")
+  // Third-party clients should use their own name here.
   String? clientType;
+
+  // Client version string (e.g. "1.0.0")
+  // Can be fetched via e.g. the package_info_plus package.
   String? clientVersion;
-  double? latitude;
-  double? longitude;
 
   // Whether to play session sounds
   // TODO: Implement this
@@ -74,6 +90,7 @@ class EmblaSessionConfig {
   // Called when the session has encountered an error
   Function(String)? onError;
 
-  // Optional callback that provides the user's current location in WGS84
+  // Optional callback that provides the user's current location as
+  // WGS84 coordinates (latitude, longitude).
   List<double> Function()? getLocation;
 }

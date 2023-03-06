@@ -46,24 +46,27 @@ class GreetingsOutputMessage {
     // Query options, which includes client details.
     // Those are only sent if the session is not private.
     Map<String, dynamic> queryOpts = {};
-    if (config.clientID != null && config.private == false) {
-      queryOpts["client_id"] = config.clientID;
-    }
-    if (config.clientType != null && config.private == false) {
-      queryOpts["client_type"] = config.clientType;
-    }
-    if (config.clientVersion != null && config.private == false) {
-      queryOpts["client_version"] = config.clientVersion;
-    }
-    if (config.getLocation != null && config.private == false) {
-      List<double> loc = config.getLocation!();
-      if (loc.length == 2) {
-        queryOpts["latitude"] = loc[0];
-        queryOpts["longitude"] = loc[1];
-      } else {
-        dlog("WARNING: Config getLocation() function returned invalid location!");
+    if (config.private == false) {
+      if (config.clientID != null) {
+        queryOpts["client_id"] = config.clientID;
+      }
+      if (config.clientType != null) {
+        queryOpts["client_type"] = config.clientType;
+      }
+      if (config.clientVersion != null) {
+        queryOpts["client_version"] = config.clientVersion;
+      }
+      if (config.getLocation != null) {
+        List<double> loc = config.getLocation!();
+        if (loc.length == 2) {
+          queryOpts["latitude"] = loc[0];
+          queryOpts["longitude"] = loc[1];
+        } else {
+          dlog("WARNING: Config getLocation() function returned invalid location!");
+        }
       }
     }
+
     queryOpts["voice"] = true;
     queryOpts["voice_id"] = config.voiceID;
     queryOpts["voice_speed"] = config.voiceSpeed;
