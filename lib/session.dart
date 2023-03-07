@@ -112,7 +112,7 @@ class EmblaSession {
       config.onError!(errMsg);
     }
 
-    AudioPlayer().playSound("err", config.voiceID);
+    AudioPlayer().playSound("err", config.voiceID, null, config.voiceSpeed);
   }
 
   // Open WebSocket connection to server
@@ -234,12 +234,12 @@ class EmblaSession {
     if (data["audio"] == null || data["answer"] == null) {
       String? dunnoMsg = AudioPlayer().playDunno(config.voiceID, () {
         stop();
-      });
+      }, config.voiceSpeed);
 
       if (config.onQueryAnswerReceived != null) {
         // This is a bit of a hack, but we need to pass
-        // the dunno message text to the handler so that it
-        // can be displayed in the UI.
+        // the dunno message text to the callback function
+        // so that it can be displayed in the UI.
         data["message"] = dunnoMsg;
         config.onQueryAnswerReceived!(data);
       }

@@ -66,8 +66,8 @@ const List<String> sessionSounds = [
 
 /// Singleton class that handles all audio playback
 class AudioPlayer {
-  FlutterSoundPlayer? player;
-  Map<String, Uint8List>? audioFileCache;
+  final FlutterSoundPlayer player = FlutterSoundPlayer(logLevel: Level.error);
+  final Map<String, Uint8List> audioFileCache = <String, Uint8List>{};
 
   // Singleton pattern
   factory AudioPlayer() {
@@ -82,25 +82,23 @@ class AudioPlayer {
   /// Audio player setup and audio data preloading
   Future<void> _init() async {
     dlog('Initing audio player');
-    _preloadAudioFiles();
-    player = FlutterSoundPlayer(logLevel: Level.error);
-    await player!.openPlayer();
+    await _preloadAudioFiles();
+    await player.openPlayer();
   }
 
   /// Load all asset-bundled audio files into memory
   Future<void> _preloadAudioFiles() async {
     dlog("Preloading audio assets (${audioFiles.length} files)");
-    audioFileCache = <String, Uint8List>{};
     for (String fn in audioFiles) {
       ByteData bytes = await rootBundle.load("packages/embla_core/assets/audio/$fn.wav");
-      audioFileCache![fn] = bytes.buffer.asUint8List();
+      audioFileCache[fn] = bytes.buffer.asUint8List();
     }
   }
 
   /// Stop all playback
   void stop() {
     dlog('Stopping audio playback');
-    player?.stopPlayer();
+    player.stopPlayer();
   }
 
   /// Play remote audio file
@@ -122,7 +120,8 @@ class AudioPlayer {
       }
       dlog("Audio file is ${data.lengthInBytes} bytes");
 
-      player!.startPlayer(
+      player.setSpeed(1.0);
+      player.startPlayer(
           fromDataBuffer: data,
           codec: Codec.mp3,
           whenFinished: () {
@@ -135,11 +134,13 @@ class AudioPlayer {
   }
 
   /// Play a random "don't know" response
-  String? playDunno(String voiceID, [Function()? completionHandler]) {
+  String? playDunno(String voiceID, [Function()? completionHandler, double playbackSpeed = 1.0]) {
     int rnd = Random().nextInt(7) + 1;
     String num = rnd.toString().padLeft(2, '0');
     String fn = "dunno$num";
-    playSound(fn, voiceID, completionHandler!);
+
+    playSound(fn, voiceID, completionHandler!, playbackSpeed);
+
     Map<String, String> dunnoStrings = {
       "dunno01": "Ég get ekki svarað því.",
       "dunno02": "Ég get því miður ekki svarað því.",
@@ -153,7 +154,8 @@ class AudioPlayer {
   }
 
   /// Play a preloaded audio file bundled with the app
-  void playSound(String soundName, String voiceID, [Function()? completionHandler]) {
+  void playSound(String soundName, String voiceID,
+      [Function()? completionHandler, double playbackSpeed = 1.0]) {
     stop();
 
     // Different file name depending on voice
@@ -163,9 +165,16 @@ class AudioPlayer {
       fileName = "$soundName-$voiceName";
     }
 
+    // Make sure the file is in the cache
+    if (audioFileCache.containsKey(fileName) == false) {
+      dlog("Audio file '$fileName' not found in cache!");
+      return;
+    }
+
     dlog("Playing audio file '$fileName.wav'");
-    player!.startPlayer(
-        fromDataBuffer: audioFileCache![fileName],
+    player.setSpeed(playbackSpeed);
+    player.startPlayer(
+        fromDataBuffer: audioFileCache[fileName],
         sampleRate: kAudioSampleRate,
         whenFinished: () {
           if (completionHandler != null) {
