@@ -161,10 +161,10 @@ class EmblaSession {
           break;
 
         case "error":
-          throw ("${msg["message"]}");
+          throw Exception("${msg["message"]}");
 
         default:
-          throw ("Invalid message type: $type");
+          throw Exception("Invalid message type: $type");
       }
     } catch (e) {
       error("Error handling message: $e");
@@ -189,7 +189,7 @@ class EmblaSession {
   }
 
   // We have received a speech recognition result from the server.
-  // If it's the final result, we stop the audio recorder and
+  // If it's the final result, we stop recording audio and
   // wait for the query result.
   void handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
@@ -201,13 +201,13 @@ class EmblaSession {
     String transcript = msg["transcript"];
     bool isFinal = msg["is_final"];
 
-    if (config.onSpeechTextReceived != null) {
-      config.onSpeechTextReceived!(transcript, isFinal);
-    }
-
     if (isFinal) {
       EmblaAudioRecorder().stop();
       state = EmblaSessionState.answering;
+    }
+
+    if (config.onSpeechTextReceived != null) {
+      config.onSpeechTextReceived!(transcript, isFinal);
     }
   }
 

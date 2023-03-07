@@ -89,7 +89,7 @@ class AudioPlayer {
 
   /// Load all asset-bundled audio files into memory
   Future<void> _preloadAudioFiles() async {
-    //dlog("Preloading audio assets: ${audioFiles.toString()}");
+    dlog("Preloading audio assets (${audioFiles.length} files)");
     audioFileCache = <String, Uint8List>{};
     for (String fn in audioFiles) {
       ByteData bytes = await rootBundle.load("packages/embla_core/assets/audio/$fn.wav");
