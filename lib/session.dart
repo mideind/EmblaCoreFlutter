@@ -38,7 +38,6 @@ class EmblaSession {
   // Current state of session object
   var state = EmblaSessionState.idle;
   var config = EmblaSessionConfig();
-  // var serverInfo = GreetingsResponseMessage();
   WebSocketChannel? channel;
 
   /// Constructor
@@ -230,6 +229,9 @@ class EmblaSession {
       });
 
       if (config.onQueryAnswerReceived != null) {
+        // This is a bit of a hack, but we need to pass
+        // the dunno message text to the handler so that it
+        // can be displayed in the UI.
         data["message"] = dunnoMsg;
         config.onQueryAnswerReceived!(data);
       }

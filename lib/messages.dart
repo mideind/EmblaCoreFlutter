@@ -41,7 +41,7 @@ class GreetingsOutputMessage {
 
     // Other options
     data["private"] = config.private;
-    data["query"] = true;
+    data["query"] = config.query;
 
     // Query options, which includes client details.
     // Those are only sent if the session is not private.

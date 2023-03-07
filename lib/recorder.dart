@@ -123,7 +123,7 @@ class EmblaAudioRecorder {
       }
       dlog(e);
       double decibels = e.decibels! - 70.0; // This number is arbitrary but works
-      _lastSignal = _normalizedPowerLevelFromDecibels(decibels);
+      _lastSignal = _normalizedSignalStrengthFromDecibels(decibels);
     });
 
     // Start recording audio
@@ -156,7 +156,7 @@ class EmblaAudioRecorder {
   }
 
   // Normalize decibel level to a number between 0.0 and 1.0
-  double _normalizedPowerLevelFromDecibels(double decibels) {
+  double _normalizedSignalStrengthFromDecibels(double decibels) {
     if (decibels < -60.0 || decibels == 0.0) {
       return 0.0;
     }

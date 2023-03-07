@@ -61,6 +61,10 @@ class EmblaSessionConfig {
   // Can be fetched via e.g. the package_info_plus package.
   String? clientVersion;
 
+  // Whether to send ASR text to the query server and forward
+  // the query response to the client.
+  bool query = true;
+
   // Whether to play session sounds
   // TODO: Implement this
   bool audio = true;
