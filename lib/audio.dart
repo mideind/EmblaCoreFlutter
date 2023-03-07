@@ -153,9 +153,23 @@ class AudioPlayer {
     return dunnoStrings[fn];
   }
 
+  void playSessionStart() {
+    playSound('rec_begin');
+  }
+
+  void playSessionConfirm() {
+    playSound('rec_confirm');
+  }
+
+  void playSessionCancel() {
+    playSound('rec_cancel');
+  }
+
   /// Play a preloaded audio file bundled with the app
-  void playSound(String soundName, String voiceID,
-      [Function()? completionHandler, double playbackSpeed = 1.0]) {
+  void playSound(String soundName,
+      [String voiceID = kDefaultSpeechSynthesisVoice,
+      Function()? completionHandler,
+      double playbackSpeed = 1.0]) {
     stop();
 
     // Different file name depending on voice

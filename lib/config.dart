@@ -19,14 +19,15 @@
 
 // Embla configuration object
 
-// ignore_for_file: prefer_initializing_formals
-
 import './common.dart';
 
 /// EmblaSession configuration object
 class EmblaSessionConfig {
   // Ratatoskur server URL
   String serverURL = kDefaultServer;
+
+  // Ratatoskur API key
+  String? apiKey;
 
   // Query server URL
   String queryServer = kDefaultQueryAPI;
@@ -37,9 +38,6 @@ class EmblaSessionConfig {
 
   // Override default engine
   String? engine;
-
-  // Ratatoskur API key
-  String? apiKey;
 
   // Voice synthesis settings
   String voiceID = kDefaultSpeechSynthesisVoice;
@@ -54,15 +52,16 @@ class EmblaSessionConfig {
   String? clientID;
 
   // Client type string (e.g. "ios", "android")
-  // Third-party clients should use their own name here.
+  // Third-party clients should use their own name
+  // here, e.g. myappname_ios, myappname_android.
   String? clientType;
 
   // Client version string (e.g. "1.0.0")
   // Can be fetched via e.g. the package_info_plus package.
   String? clientVersion;
 
-  // Whether to send ASR text to the query server and forward
-  // the query response to the client.
+  // Whether to send ASR text to the query server and
+  // forward the query response to the client.
   bool query = true;
 
   // Whether to play session sounds
@@ -87,11 +86,11 @@ class EmblaSessionConfig {
   // Called when the session is playing the answer as audio
   Function? onStartAnswering;
 
-  // Called when the session has finished playing the answer as audio
-  // or has been manually stopped.
+  // Called when the session has finished playing the audio answer
+  // or has been manually ended.
   Function? onDone;
 
-  // Called when the session has encountered an error
+  // Called when the session has encountered an error and ended.
   Function(String)? onError;
 
   // Optional callback that provides the user's current location as
