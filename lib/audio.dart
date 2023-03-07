@@ -101,11 +101,18 @@ class AudioPlayer {
     player.stopPlayer();
   }
 
-  /// Play remote audio file
+  /// Play remote audio file at URL
+  /// @param url URL of audio file
+  /// @param completionHandler Completion handler
   Future<void> playURL(String url, Function(bool err) completionHandler) async {
     //stop();
+    // If the URL is too long (maybe a Data URI?), truncate it for logging
+    String displayURL = url;
+    if (url.length > 300) {
+      displayURL = "${url.substring(0, 300)}...";
+    }
 
-    dlog("Playing audio file at URL '$url'");
+    dlog("Playing audio file at URL '$displayURL'");
     try {
       Uint8List data;
       Uri uri = Uri.parse(url);
@@ -133,7 +140,10 @@ class AudioPlayer {
     }
   }
 
-  /// Play a random "don't know" response
+  /// Play a random "don't know" audio recording.
+  /// @param voiceID Voice ID to use
+  /// @param completionHandler Completion handler
+  /// @param playbackSpeed Playback speed
   String? playDunno(String voiceID, [Function()? completionHandler, double playbackSpeed = 1.0]) {
     int rnd = Random().nextInt(7) + 1;
     String num = rnd.toString().padLeft(2, '0');
@@ -166,15 +176,20 @@ class AudioPlayer {
   }
 
   /// Play a preloaded audio file bundled with the app
+  /// @param soundName Name of the audio file to play
+  /// @param voiceID Voice ID to use for the audio file (only applies to voice-dependent files)
+  /// @param completionHandler Completion handler to call when playback is finished
+  /// @param playbackSpeed Playback speed (1.0 = normal speed)
   void playSound(String soundName,
       [String voiceID = kDefaultSpeechSynthesisVoice,
       Function()? completionHandler,
       double playbackSpeed = 1.0]) {
     stop();
 
-    // Different file name depending on voice
+    // Different filename depending on voice
     String fileName = soundName;
     if (sessionSounds.contains(soundName) == false) {
+      // Guðrún --> gudrun, Gunnar --> gunnar, etc.
       String voiceName = voiceID.toLowerCase().asciify();
       fileName = "$soundName-$voiceName";
     }
