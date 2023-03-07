@@ -31,18 +31,18 @@ const kRequestTimeout = Duration(seconds: 10); // Seconds
 class EmblaSpeechSynthesizer {
   /// Send request to speech synthesis API
   Future<void> synthesize(String text, String apiKey,
-      [String voiceID = kDefaultSpeechSynthesisVoice,
+      [Function(Map?)? handler,
+      String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
-      Function(Map?)? handler]) async {
+      String apiURL = kDefaultSpeechSynthesisAPI]) async {
     Map<String, String> qargs = {
       'text': text,
       'api_key': apiKey,
       'voice_id': voiceID,
       'voice_speed': voiceSpeed.toString(),
-      //'format': 'text',
     };
 
-    await _makeRequest(kDefaultSpeechSynthesisAPI, qargs, handler);
+    await _makeRequest(apiURL, qargs, handler);
   }
 
   Future<Response?> _makeRequest(String apiURL, Map<String, dynamic> qargs,
