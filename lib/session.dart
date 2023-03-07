@@ -203,11 +203,19 @@ class EmblaSession {
 
     if (isFinal) {
       EmblaAudioRecorder().stop();
-      state = EmblaSessionState.answering;
+      if (config.query) {
+        state = EmblaSessionState.answering;
+      }
     }
 
     if (config.onSpeechTextReceived != null) {
       config.onSpeechTextReceived!(transcript, isFinal);
+    }
+
+    // If this is the final ASR result and config has
+    // disabled querying, we end the session.
+    if (isFinal && config.query == false) {
+      stop();
     }
   }
 
