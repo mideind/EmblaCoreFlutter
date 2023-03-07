@@ -41,11 +41,11 @@ class EmblaSessionConfig {
   // Ratatoskur API key
   String? apiKey;
 
-  // Voice synthesis properties
+  // Voice synthesis settings
   String voiceID = kDefaultSpeechSynthesisVoice;
   double voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
-  // Don't send client info to server
+  // We don't send client info to server in private mode
   bool private = false;
 
   // Client info. Should be set by client app

@@ -1,9 +1,5 @@
 # TODO for EmblaCore
 
-* Ratatoskur API
-* Def. of functionality
-* Documentation of APIs
-* License?
+* Documentation of API
 * Testing
 * Versioning
-

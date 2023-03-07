@@ -29,7 +29,7 @@ class GreetingsOutputMessage {
   int messageID = 0;
   Map<String, dynamic> data = {};
 
-  /// Create a greetings message from a config object
+  /// Create a greetings message from a session config object
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
     // Engine options
     if (config.engine != null) {
