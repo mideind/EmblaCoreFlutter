@@ -11,8 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   logger: '>=1.1.0'
-  platform_device_id: '>=1.0.1'
-  package_info_plus: '>=1.4.2'
   flutter_sound: '>=9.2.13'
   audio_session: '>=0.1.10'
   web_socket_channel: '>=2.1.0'

@@ -57,7 +57,7 @@ const List<String> audioFiles = [
   'dunno07-gunnar',
 ];
 
-// These sounds are the same regardless of voice ID settings.
+// These sounds are the same regardless of voice ID settings
 const List<String> sessionSounds = [
   'rec_begin',
   'rec_cancel',
