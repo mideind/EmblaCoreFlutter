@@ -21,4 +21,5 @@ library embla_core;
 
 export 'package:embla_core/session.dart' show EmblaSession, EmblaSessionState;
 export 'package:embla_core/config.dart' show EmblaSessionConfig;
+export 'package:embla_core/speech.dart' show EmblaSpeechSynthesizer;
 export 'package:embla_core/audio.dart' show AudioPlayer;

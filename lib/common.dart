@@ -33,6 +33,7 @@ const int kAudioNumChannels = 1;
 const String kDefaultServer = 'ws://brandur.mideind.is:8080';
 const String kDefaultSocketEndpoint = '/socket';
 const String kDefaultQueryAPI = 'https://greynir.is/query.api';
+const String kDefaultSpeechSynthesisAPI = 'https://greynir.is/speech.api';
 
 // Speech synthesis
 const String kDefaultSpeechSynthesisVoice = "Guðrún";
