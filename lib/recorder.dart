@@ -18,6 +18,9 @@
  */
 
 // Audio recording wrapper class
+// This code assumes that microphone access has already been granted.
+// Clients are responsible for requesting microphone access before
+// instantiating this class.
 
 import 'dart:async';
 import 'dart:math' show pow;
@@ -37,7 +40,7 @@ class EmblaAudioRecorder {
   StreamSubscription? _recordingProgressSubscription;
   StreamController? _recordingDataController;
 
-  bool _isRecording = false;
+  bool _isRecording = false; // Are we currently recording?
   double _lastSignal = 0.0; // Strength of last audio signal, on a scale of 0.0 to 1.0
   int _totalAudioDataSize = 0; // Accumulated byte size of audio recording
   double _totalAudioDuration = 0.0; // Accumulated duration of audio recording
@@ -59,7 +62,7 @@ class EmblaAudioRecorder {
     return _totalAudioDataSize;
   }
 
-  /// Returns the signal strength of the last recorded audio samples
+  /// Returns the signal strength of the last recorded audio samples (0.0 to 1.0)
   double signalStrength() {
     return _lastSignal;
   }

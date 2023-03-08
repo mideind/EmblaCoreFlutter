@@ -24,6 +24,7 @@ import 'dart:convert' show json;
 import './common.dart' show dlog;
 import './config.dart' show EmblaSessionConfig;
 
+/// Class representing a "greetings" JSON message sent to the server
 class GreetingsOutputMessage {
   final String type = "greetings";
   int messageID = 0;

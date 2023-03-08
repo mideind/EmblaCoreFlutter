@@ -1,5 +1,5 @@
 name: embla_core
-description: EmblaCore library
+description: EmblaCore - a library containing Embla session functionality
 version: "0.1.0+1"
 publish_to: 'none'
 
