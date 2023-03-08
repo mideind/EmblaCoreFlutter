@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// JSON messages sent to and received from the Embla server
+// JSON messages sent to and received from the Ratatoskur server
 
 import 'dart:convert' show json;
 
@@ -68,6 +68,7 @@ class GreetingsOutputMessage {
       }
     }
 
+    // Voice synthesis
     queryOpts["voice"] = true;
     queryOpts["voice_id"] = config.voiceID;
     queryOpts["voice_speed"] = config.voiceSpeed;

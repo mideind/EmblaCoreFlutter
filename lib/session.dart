@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Main session object
+// Main session object encapsulating Embla's core functionality
 
 import 'dart:convert';
 
@@ -40,7 +40,7 @@ class EmblaSession {
   var config = EmblaSessionConfig();
   WebSocketChannel? channel;
 
-  /// Constructor
+  /// Constructor, should always be called with a session config object
   EmblaSession(EmblaSessionConfig cfg) {
     config = cfg;
   }
@@ -128,7 +128,7 @@ class EmblaSession {
       }, cancelOnError: true);
 
       // Create greetings message
-      var greetings = GreetingsOutputMessage.fromConfig(config);
+      final greetings = GreetingsOutputMessage.fromConfig(config);
 
       // Send message to server
       String json = greetings.toJSON();

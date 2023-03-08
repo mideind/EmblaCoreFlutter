@@ -46,7 +46,7 @@ class EmblaSessionConfig {
   // We don't send client info to server in private mode
   bool private = false;
 
-  // Client info. Should be set by client app
+  // Client info. Should be set by client app.
   // Ideally, a unique app-specific client ID should
   // be provided via e.g. the platform_device_id package.
   String? clientID;
@@ -56,12 +56,12 @@ class EmblaSessionConfig {
   // here, e.g. myappname_ios, myappname_android.
   String? clientType;
 
-  // Client version string (e.g. "1.0.0")
+  // Client version string (e.g. "1.3.1")
   // Can be fetched via e.g. the package_info_plus package.
   String? clientVersion;
 
-  // Whether to send ASR text to the query server and
-  // forward the query response to the client.
+  // Whether Ratatoskur should send ASR text to the query server
+  // and subsequently forward the query response to the client.
   bool query = true;
 
   // Whether to play session sounds

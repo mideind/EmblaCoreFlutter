@@ -36,12 +36,12 @@ const String kDefaultQueryAPI = 'https://greynir.is/query.api';
 const String kDefaultSpeechSynthesisAPI = 'https://greynir.is/speech.api';
 
 // Speech synthesis
+const double kDefaultSpeechSynthesisSpeed = 1.0;
 const String kDefaultSpeechSynthesisVoice = "Guðrún";
 const List<String> kSupportedSpeechSynthesisVoices = [
   "Guðrún",
   "Gunnar",
 ];
-const double kDefaultSpeechSynthesisSpeed = 1.0;
 
 // Debug logging
 void dlog(dynamic msg) {

@@ -73,7 +73,7 @@ class _SessionPageState extends State<SessionPage> {
 
   void _startSession() {
     // Create new session config
-    var config = EmblaSessionConfig();
+    final config = EmblaSessionConfig();
 
     config.onStartListening = () {
       setState(() {

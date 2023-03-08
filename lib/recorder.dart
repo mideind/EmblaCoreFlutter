@@ -18,6 +18,7 @@
  */
 
 // Audio recording wrapper class
+//
 // This code assumes that microphone access has already been granted.
 // Clients are responsible for requesting microphone access before
 // instantiating this class.
@@ -74,7 +75,7 @@ class EmblaAudioRecorder {
   /// Start recording audio from microphone
   Future<void> start(void Function(Uint8List) dataHandler, Function errHandler) async {
     if (_isRecording == true) {
-      var errMsg = 'EmblaRecorder already recording!';
+      const errMsg = 'EmblaRecorder already recording!';
       dlog(errMsg);
       errHandler(errMsg);
       return;
@@ -86,12 +87,12 @@ class EmblaAudioRecorder {
     _recordingDataController = StreamController<Food>();
     _recordingDataSubscription = _recordingDataController?.stream.listen((buffer) {
       if (buffer is FoodData && buffer.data != null) {
-        var data = buffer.data as Uint8List;
+        final data = buffer.data as Uint8List;
         _totalAudioDataSize += data.lengthInBytes;
         _totalAudioDuration = _totalAudioDataSize / 32000.0;
         dataHandler(data); // invoke callback
       } else {
-        var errMsg = 'Got null data in recording stream: $buffer';
+        final errMsg = 'Got null data in recording stream: $buffer';
         dlog(errMsg);
         errHandler(errMsg);
       }
