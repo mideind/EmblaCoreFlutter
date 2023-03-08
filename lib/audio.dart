@@ -67,7 +67,7 @@ const List<String> sessionSounds = [
 /// Singleton class that handles all audio playback
 class AudioPlayer {
   final FlutterSoundPlayer player = FlutterSoundPlayer(logLevel: Level.error);
-  final Map<String, Uint8List> audioFileCache = <String, Uint8List>{};
+  final Map<String, Uint8List> _audioFileCache = <String, Uint8List>{};
 
   // Singleton pattern
   factory AudioPlayer() {
@@ -79,19 +79,19 @@ class AudioPlayer {
   }
   static final AudioPlayer _instance = AudioPlayer._internal();
 
-  /// Audio player setup and audio data preloading
+  // Audio player setup and audio data preloading
   Future<void> _init() async {
     dlog('Initing audio player');
     await _preloadAudioFiles();
     await player.openPlayer();
   }
 
-  /// Load all asset-bundled audio files into memory
+  // Load all asset-bundled audio files into memory
   Future<void> _preloadAudioFiles() async {
     dlog("Preloading audio assets (${audioFiles.length} files)");
     for (String fn in audioFiles) {
       ByteData bytes = await rootBundle.load("packages/embla_core/assets/audio/$fn.wav");
-      audioFileCache[fn] = bytes.buffer.asUint8List();
+      _audioFileCache[fn] = bytes.buffer.asUint8List();
     }
   }
 
@@ -102,6 +102,7 @@ class AudioPlayer {
   }
 
   /// Play remote audio file at URL
+  ///
   /// @param url URL of audio file
   /// @param completionHandler Completion handler
   Future<void> playURL(String url, Function(bool err) completionHandler) async {
@@ -141,6 +142,7 @@ class AudioPlayer {
   }
 
   /// Play a random "don't know" audio recording.
+  ///
   /// @param voiceID Voice ID to use
   /// @param completionHandler Completion handler
   /// @param playbackSpeed Playback speed
@@ -176,6 +178,10 @@ class AudioPlayer {
   }
 
   /// Play a preloaded audio file bundled with the app
+  /// Some of these audio files are voice-dependent, and will be played with the voice ID
+  /// specified, e.g. playSound('conn', 'Gunnar') will play the Gunnar voice version of the
+  /// "conn" audio file, etc.
+  ///
   /// @param soundName Name of the audio file to play
   /// @param voiceID Voice ID to use for the audio file (only applies to voice-dependent files)
   /// @param completionHandler Completion handler to call when playback is finished
@@ -195,7 +201,7 @@ class AudioPlayer {
     }
 
     // Make sure the file is in the cache
-    if (audioFileCache.containsKey(fileName) == false) {
+    if (_audioFileCache.containsKey(fileName) == false) {
       dlog("Audio file '$fileName' not found in cache!");
       return;
     }
@@ -203,7 +209,7 @@ class AudioPlayer {
     dlog("Playing audio file '$fileName.wav'");
     player.setSpeed(playbackSpeed);
     player.startPlayer(
-        fromDataBuffer: audioFileCache[fileName],
+        fromDataBuffer: _audioFileCache[fileName],
         sampleRate: kAudioSampleRate,
         whenFinished: () {
           if (completionHandler != null) {
