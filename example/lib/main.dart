@@ -19,7 +19,7 @@
 import 'package:flutter/material.dart';
 import 'package:embla_core/embla_core.dart';
 
-const String kSoftwareTitle = 'EmblaCore Example';
+const String kSoftwareTitle = 'EmblaCore Demo';
 const String kDefaultPrompt = 'Smelltu á hnappinn til að byrja';
 
 void main() {
