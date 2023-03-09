@@ -107,7 +107,7 @@ class AudioPlayer {
   ///
   /// @param url URL of audio file
   /// @param completionHandler Completion handler invoked when playback is finished
-  Future<void> playURL(String url, Function(bool err) completionHandler) async {
+  Future<void> playURL(String url, [Function(bool err)? completionHandler]) async {
     //stop();
     // If the URL is too long (maybe a Data URI?), truncate it for logging
     String displayURL = url;
@@ -135,11 +135,11 @@ class AudioPlayer {
           fromDataBuffer: data,
           codec: Codec.mp3,
           whenFinished: () {
-            completionHandler(false);
+            completionHandler!(false);
           });
     } catch (e) {
       dlog('Error downloading remote file: $e');
-      completionHandler(true);
+      completionHandler!(true);
     }
   }
 
