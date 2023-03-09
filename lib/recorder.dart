@@ -21,7 +21,8 @@
 //
 // This code assumes that microphone access has already been granted
 // by the user. Clients are responsible for requesting access prior
-// to instantiation.
+// to instantiation and should not use this class if access has not
+// been granted. Caveat emptor.
 
 import 'dart:async';
 import 'dart:math' show pow;
@@ -63,11 +64,13 @@ class EmblaAudioRecorder {
     return _totalAudioDataSize;
   }
 
-  /// Returns the signal strength of the last recorded audio samples (0.0 to 1.0)
+  /// Returns the normalized signal strength of the last
+  /// recorded audio samples (on a scale of 0.0 to 1.0)
   double signalStrength() {
     return _lastSignal;
   }
 
+  /// Returns true if we are currently recording
   bool isRecording() {
     return _isRecording;
   }
@@ -123,7 +126,7 @@ class EmblaAudioRecorder {
     _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));
     _recordingProgressSubscription = _micRecorder.onProgress?.listen((e) {
       if (e.decibels == 0.0) {
-        return;
+        return; // Hack to work around a bug in flutter_sound
       }
       dlog(e);
       double decibels = e.decibels! - 70.0; // This number is arbitrary but works

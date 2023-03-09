@@ -109,7 +109,7 @@ class AudioPlayer {
   /// @param completionHandler Completion handler invoked when playback is finished
   Future<void> playURL(String url, [Function(bool err)? completionHandler]) async {
     //stop();
-    // If the URL is too long (maybe a Data URI?), truncate it for logging
+    // If the URL is too long (maybe a Data URI?), truncate it for logging purposes
     String displayURL = url;
     if (url.length > 300) {
       displayURL = "${url.substring(0, 300)}...";

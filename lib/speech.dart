@@ -47,7 +47,7 @@ class EmblaSpeechSynthesizer {
 
   Future<Response?> _makeRequest(String apiURL, Map<String, dynamic> qargs,
       [Function(Map?)? handler]) async {
-    dlog("Sending query POST request to $apiURL: ${qargs.toString()}");
+    dlog("Sending POST request to $apiURL: ${qargs.toString()}");
     Response? response;
     try {
       response =
