@@ -39,7 +39,7 @@ class EmblaSessionConfig {
   // Override default engine
   String? engine;
 
-  // Voice synthesis settings
+  // Speech synthesis settings
   String voiceID = kDefaultSpeechSynthesisVoice;
   double voiceSpeed = kDefaultSpeechSynthesisSpeed;
 

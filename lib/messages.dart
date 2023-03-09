@@ -26,9 +26,9 @@ import './config.dart' show EmblaSessionConfig;
 
 /// Class representing a "greetings" JSON message sent to the server
 class GreetingsOutputMessage {
-  final String type = "greetings";
+  static const String type = "greetings";
   int messageID = 0;
-  Map<String, dynamic> data = {};
+  final Map<String, dynamic> data = {};
 
   /// Create a greetings message from a session config object
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
@@ -36,7 +36,7 @@ class GreetingsOutputMessage {
     if (config.engine != null) {
       data["engine"] = config.engine;
     }
-    Map<String, dynamic> engineOpts = {};
+    final Map<String, dynamic> engineOpts = {};
     engineOpts["language"] = config.language;
     data["engine_options"] = engineOpts;
 
@@ -46,39 +46,39 @@ class GreetingsOutputMessage {
 
     // Query options, which includes client details.
     // Those are only sent if the session is not private.
-    Map<String, dynamic> queryOpts = {};
+    final Map<String, dynamic> qOpts = {};
     if (config.private == false) {
       if (config.clientID != null) {
-        queryOpts["client_id"] = config.clientID;
+        qOpts["client_id"] = config.clientID;
       }
       if (config.clientType != null) {
-        queryOpts["client_type"] = config.clientType;
+        qOpts["client_type"] = config.clientType;
       }
       if (config.clientVersion != null) {
-        queryOpts["client_version"] = config.clientVersion;
+        qOpts["client_version"] = config.clientVersion;
       }
       if (config.getLocation != null) {
         List<double> loc = config.getLocation!();
         if (loc.length == 2) {
-          queryOpts["latitude"] = loc[0];
-          queryOpts["longitude"] = loc[1];
+          qOpts["latitude"] = loc[0];
+          qOpts["longitude"] = loc[1];
         } else {
           dlog("WARNING: Config getLocation() function returned invalid location!");
         }
       }
     }
 
-    // Voice synthesis
-    queryOpts["voice"] = true;
-    queryOpts["voice_id"] = config.voiceID;
-    queryOpts["voice_speed"] = config.voiceSpeed;
+    // Speech synthesis settings
+    qOpts["voice"] = true;
+    qOpts["voice_id"] = config.voiceID;
+    qOpts["voice_speed"] = config.voiceSpeed;
 
-    data["query_options"] = queryOpts;
+    data["query_options"] = qOpts;
   }
 
   /// Convert this message object to a JSON representation
   String toJSON() {
-    Map<String, dynamic> msg = {"type": type, "msg_id": messageID, "data": data};
+    final Map<String, dynamic> msg = {"type": type, "msg_id": messageID, "data": data};
     return json.encode(msg);
   }
 }

@@ -35,9 +35,8 @@ import './messages.dart' show GreetingsOutputMessage;
 enum EmblaSessionState { idle, starting, listening, answering, done }
 
 class EmblaSession {
-  // Current state of session object
-  var state = EmblaSessionState.idle;
-  var config = EmblaSessionConfig();
+  var state = EmblaSessionState.idle; // Current state of session object
+  var config = EmblaSessionConfig(); // Start with default config
   WebSocketChannel? channel;
 
   /// Constructor, should always be called with a session config object
@@ -131,7 +130,7 @@ class EmblaSession {
       final greetings = GreetingsOutputMessage.fromConfig(config);
 
       // Send message to server
-      String json = greetings.toJSON();
+      final String json = greetings.toJSON();
       dlog("Sending initial greetings message: $json");
       channel?.sink.add(json);
     } catch (e) {
@@ -189,8 +188,8 @@ class EmblaSession {
   }
 
   // We have received a speech recognition result from the server.
-  // If it's the final result, we stop recording audio and
-  // wait for the query result.
+  // If it's the final result, we stop recording audio and wait
+  // for the query server response.
   void handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
 
@@ -198,8 +197,8 @@ class EmblaSession {
       throw Exception("Session is not listening!");
     }
 
-    String transcript = msg["transcript"];
-    bool isFinal = msg["is_final"];
+    final String transcript = msg["transcript"];
+    final bool isFinal = msg["is_final"];
 
     if (isFinal) {
       EmblaAudioRecorder().stop();
@@ -228,7 +227,7 @@ class EmblaSession {
       throw Exception("Session is not answering query!");
     }
 
-    Map<String, dynamic> data = msg["data"];
+    final Map<String, dynamic> data = msg["data"];
 
     // The query result did not contain an answer
     if (data["audio"] == null || data["answer"] == null) {
@@ -251,7 +250,7 @@ class EmblaSession {
     }
 
     // Play remote audio file
-    String audioURL = data["audio"];
+    final String audioURL = data["audio"];
     AudioPlayer().playURL(audioURL, (err) {
       if (err) {
         error("Error playing audio at $audioURL");

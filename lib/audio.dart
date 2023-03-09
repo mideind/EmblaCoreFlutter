@@ -56,6 +56,8 @@ const List<String> audioFiles = [
   'dunno06-gunnar',
   'dunno07-gunnar',
 ];
+const kAudioFilePath = "packages/embla_core/assets/audio/";
+const kAudioFileSuffix = ".wav";
 
 // These sounds are the same regardless of voice ID settings
 const List<String> sessionSounds = [
@@ -73,11 +75,11 @@ class AudioPlayer {
   factory AudioPlayer() {
     return _instance;
   }
-  AudioPlayer._internal() {
+  AudioPlayer._constructor() {
     // Initialization, which only happens once
     _init();
   }
-  static final AudioPlayer _instance = AudioPlayer._internal();
+  static final AudioPlayer _instance = AudioPlayer._constructor();
 
   // Audio player setup and audio data preloading
   Future<void> _init() async {
@@ -90,7 +92,7 @@ class AudioPlayer {
   Future<void> _preloadAudioFiles() async {
     dlog("Preloading audio assets (${audioFiles.length} files)");
     for (String fn in audioFiles) {
-      ByteData bytes = await rootBundle.load("packages/embla_core/assets/audio/$fn.wav");
+      ByteData bytes = await rootBundle.load("$kAudioFilePath$fn.$kAudioFileSuffix");
       _audioFileCache[fn] = bytes.buffer.asUint8List();
     }
   }
@@ -104,7 +106,7 @@ class AudioPlayer {
   /// Play remote audio file at URL
   ///
   /// @param url URL of audio file
-  /// @param completionHandler Completion handler
+  /// @param completionHandler Completion handler invoked when playback is finished
   Future<void> playURL(String url, Function(bool err) completionHandler) async {
     //stop();
     // If the URL is too long (maybe a Data URI?), truncate it for logging
@@ -116,7 +118,7 @@ class AudioPlayer {
     dlog("Playing audio file at URL '$displayURL'");
     try {
       Uint8List data;
-      Uri uri = Uri.parse(url);
+      final Uri uri = Uri.parse(url);
 
       if (uri.scheme == 'data') {
         // We support data URIs
@@ -144,16 +146,16 @@ class AudioPlayer {
   /// Play a random "don't know" audio recording.
   ///
   /// @param voiceID Voice ID to use
-  /// @param completionHandler Completion handler
+  /// @param completionHandler Completion handler invoked when playback is finished
   /// @param playbackSpeed Playback speed
   String? playDunno(String voiceID, [Function()? completionHandler, double playbackSpeed = 1.0]) {
-    int rnd = Random().nextInt(7) + 1;
-    String num = rnd.toString().padLeft(2, '0');
-    String fn = "dunno$num";
+    final int rand = Random().nextInt(7) + 1;
+    final String num = rand.toString().padLeft(2, '0');
+    final String fn = "dunno$num";
 
     playSound(fn, voiceID, completionHandler!, playbackSpeed);
 
-    Map<String, String> dunnoStrings = {
+    const Map<String, String> dunnoStrings = {
       "dunno01": "Ég get ekki svarað því.",
       "dunno02": "Ég get því miður ekki svarað því.",
       "dunno03": "Ég kann ekki svar við því.",
@@ -165,14 +167,17 @@ class AudioPlayer {
     return dunnoStrings[fn];
   }
 
+  /// Play the UI sound for starting a new session
   void playSessionStart() {
     playSound('rec_begin');
   }
 
+  /// Play the UI sound for when an answer is confirmed
   void playSessionConfirm() {
     playSound('rec_confirm');
   }
 
+  /// Play the UI sound for when a session is canceled or fails
   void playSessionCancel() {
     playSound('rec_cancel');
   }
@@ -180,7 +185,7 @@ class AudioPlayer {
   /// Play a preloaded audio file bundled with the app
   /// Some of these audio files are voice-dependent, and will be played with the voice ID
   /// specified, e.g. playSound('conn', 'Gunnar') will play the Gunnar voice version of the
-  /// "conn" audio file, etc.
+  /// "conn" audio recording, etc.
   ///
   /// @param soundName Name of the audio file to play
   /// @param voiceID Voice ID to use for the audio file (only applies to voice-dependent files)
@@ -211,10 +216,6 @@ class AudioPlayer {
     player.startPlayer(
         fromDataBuffer: _audioFileCache[fileName],
         sampleRate: kAudioSampleRate,
-        whenFinished: () {
-          if (completionHandler != null) {
-            completionHandler();
-          }
-        });
+        whenFinished: completionHandler);
   }
 }
