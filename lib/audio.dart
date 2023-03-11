@@ -41,6 +41,8 @@ const List<String> audioFiles = [
   'conn-gunnar',
   'err-gudrun',
   'err-gunnar',
+  'mynameis-gudrun',
+  'mynameis-gunnar',
   'dunno01-gudrun',
   'dunno02-gudrun',
   'dunno03-gudrun',
