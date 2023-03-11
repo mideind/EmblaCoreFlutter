@@ -43,6 +43,8 @@ const List<String> audioFiles = [
   'err-gunnar',
   'mynameis-gudrun',
   'mynameis-gunnar',
+  'voicespeed-gudrun',
+  'voicespeed-gunnar',
   'dunno01-gudrun',
   'dunno02-gudrun',
   'dunno03-gudrun',
