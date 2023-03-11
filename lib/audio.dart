@@ -57,7 +57,7 @@ const List<String> audioFiles = [
   'dunno07-gunnar',
 ];
 const kAudioFilePath = "packages/embla_core/assets/audio/";
-const kAudioFileSuffix = ".wav";
+const kAudioFileSuffix = "wav";
 
 // These sounds are the same regardless of voice ID settings
 const List<String> sessionSounds = [
