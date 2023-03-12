@@ -148,7 +148,8 @@ class EmblaAudioRecorder {
     }
 
     dlog('Stopping audio recording');
-    dlog("Total audio length: $_totalAudioDuration seconds ($_totalAudioDataSize bytes)");
+    dlog(
+        "Total audio length: ${_totalAudioDuration.toStringAsFixed(1)} seconds ($_totalAudioDataSize bytes)");
 
     _isRecording = false;
     _lastSignal = 0.0;

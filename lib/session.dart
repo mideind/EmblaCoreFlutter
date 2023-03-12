@@ -66,7 +66,7 @@ class EmblaSession {
 
   /// Stop session
   void stop() {
-    dlog("Stopping session...");
+    dlog("Ending session...");
     _stop();
 
     // Set state to done
