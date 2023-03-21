@@ -23,14 +23,13 @@ import './common.dart';
 
 /// EmblaSession configuration object
 class EmblaSessionConfig {
-  // Ratatoskur server URL
-  String serverURL = kDefaultServer;
+  // WebSocket URL for the ASR + Query + TTS pipeline
+  String socketURL = kDefaultSocketEndpoint;
+  // URL for receiving a token for WebSocket communication
+  String socketTokenURL = kDefaultTokenEndpoint;
 
   // Ratatoskur API key
   String? apiKey;
-
-  // Query server URL
-  String queryServer = kDefaultQueryAPI;
 
   // Speech-to-text language (e.g. "is-IS")
   // Currently ignored as only is-IS is supported.

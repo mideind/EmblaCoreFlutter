@@ -24,12 +24,25 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
+import 'package:http/http.dart' show Response;
+import 'package:http/http.dart' as http;
 
 import './common.dart';
 import './audio.dart' show AudioPlayer;
 import './recorder.dart' show EmblaAudioRecorder;
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
+
+class _WebSocketToken {
+  late String token;
+  late DateTime expiresAt;
+
+  _WebSocketToken.fromJson(String data) {
+    var parsed = jsonDecode(data);
+    token = parsed['token'];
+    expiresAt = parsed['expires_at'];
+  }
+}
 
 // Session state
 enum EmblaSessionState { idle, starting, listening, answering, done }
@@ -38,6 +51,7 @@ class EmblaSession {
   var state = EmblaSessionState.idle; // Current state of session object
   late EmblaSessionConfig config;
   WebSocketChannel? channel;
+  static _WebSocketToken? _wsToken;
 
   /// Constructor, should always be called with a session config object
   EmblaSession(EmblaSessionConfig cfg) {
@@ -65,6 +79,7 @@ class EmblaSession {
     }
 
     state = EmblaSessionState.starting;
+    _refreshToken(); // Ensure token is valid
 
     openWebSocketConnection();
   }
@@ -123,7 +138,7 @@ class EmblaSession {
   void openWebSocketConnection() {
     try {
       // Connect to server
-      final wsUri = Uri.parse("${config.serverURL}$kDefaultSocketEndpoint");
+      final wsUri = Uri.parse(config.socketURL);
       channel = WebSocketChannel.connect(wsUri);
 
       // Start listening for messages
@@ -132,7 +147,7 @@ class EmblaSession {
       }, cancelOnError: true);
 
       // Create greetings message
-      final greetings = GreetingsOutputMessage.fromConfig(config);
+      final greetings = GreetingsOutputMessage.fromConfig(config, _wsToken!.token);
 
       // Send message to server
       final String json = greetings.toJSON();
@@ -274,5 +289,25 @@ class EmblaSession {
     }, (String errMsg) {
       error(errMsg);
     });
+  }
+
+  // Fetch token for WebSocket communication if needed
+  void _refreshToken() async {
+    if (_wsToken == null || _wsToken!.expiresAt.isBefore(DateTime.now())) {
+      // We either haven't gotten a token yet, or the one we have has expired
+      // Fetch a new one
+      late Response response;
+      try {
+        response = await http.get(Uri.parse(config.socketTokenURL),
+            headers: {"X-API-Key": '1234'} // TODO: Get an api key, store somewhere safe
+            ).timeout(kRequestTimeout, onTimeout: () {
+          throw Error(); // TODO: inform user the session couldn't continue
+        });
+      } catch (e) {
+        dlog("Error while fetching WebSocket token: $e");
+        throw Error(); // TODO: inform user the session couldn't continue
+      }
+      _wsToken = _WebSocketToken.fromJson(response.body);
+    }
   }
 }

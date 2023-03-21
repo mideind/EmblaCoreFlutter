@@ -26,8 +26,6 @@ import 'package:http/http.dart' as http;
 
 import './common.dart';
 
-const kRequestTimeout = Duration(seconds: 10); // Seconds
-
 class EmblaSpeechSynthesizer {
   /// Send request to speech synthesis API
   Future<void> synthesize(String text, String apiKey,
