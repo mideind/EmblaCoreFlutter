@@ -1,5 +1,5 @@
 # TODO for EmblaCore
 
-* Documentation of API
-* Testing
+* Full documentation of API
+* Testing (might be challenging)
 * Versioning

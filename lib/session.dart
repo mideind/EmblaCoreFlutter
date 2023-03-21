@@ -61,7 +61,7 @@ class EmblaSession {
   }
 
   /// Start session
-  void start() async {
+  void start() {
     // Session can only be started in idle state
     // and cannot be restarted once it's done.
     if (state != EmblaSessionState.idle) {
@@ -69,7 +69,8 @@ class EmblaSession {
     }
 
     state = EmblaSessionState.starting;
-    refreshToken(); // Ensure token is valid
+
+    refreshToken(); // Get a new token if required
 
     openWebSocketConnection();
   }
@@ -283,21 +284,23 @@ class EmblaSession {
 
   // Fetch token for WebSocket communication if needed
   Future<void> refreshToken() async {
-    if (wsToken == null || wsToken!.expiresAt.isBefore(DateTime.now())) {
-      // We either haven't gotten a token yet, or the one we have has expired
-      // Fetch a new one
-      late Response response;
-      try {
-        String key = config.apiKey ?? "";
-        response = await http.get(Uri.parse(config.socketTokenURL),
-            headers: {"X-API-Key": key}).timeout(kRequestTimeout, onTimeout: () {
-          error("Timed out while fetching token");
-          return Response("Timed out", 408);
-        });
-      } catch (e) {
-        error("Error while fetching WebSocket token: $e");
-      }
-      wsToken = WebSocketToken.fromJson(response.body);
+    if (wsToken != null && wsToken!.expiresAt.isBefore(DateTime.now())) {
+      // Token is still valid
+      return;
     }
+    // We either haven't gotten a token yet, or the one we
+    // have has expired, so we fetch a new one.
+    late Response response;
+    try {
+      String key = config.apiKey ?? "";
+      response = await http.get(Uri.parse(config.socketTokenURL),
+          headers: {"X-API-Key": key}).timeout(kRequestTimeout, onTimeout: () {
+        error("Timed out while fetching token");
+        return Response("Timed out", 408);
+      });
+    } catch (e) {
+      error("Error while fetching WebSocket token: $e");
+    }
+    wsToken = WebSocketToken.fromJson(response.body);
   }
 }
