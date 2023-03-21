@@ -30,10 +30,15 @@ const int kAudioBitRate = 16;
 const int kAudioNumChannels = 1;
 
 // Server communication
-const String kDefaultServer = 'ws://brandur.mideind.is:8080';
-const String kDefaultSocketEndpoint = '/socket';
+const String kDefaultServer = "brandur.mideind.is:8080";
+const String kDefaultWebSocketSchema = "ws";
+const String kDefaultHTTPSchema = "http";
+const String kDefaultSocketEndpoint = '$kDefaultWebSocketSchema://$kDefaultServer/v1/socket';
+const String kDefaultTokenEndpoint = '$kDefaultHTTPSchema://$kDefaultServer/v1/token';
+const String kDefaultSpeechSynthesisAPI = '$kDefaultHTTPSchema://$kDefaultServer/v1/tts';
 const String kDefaultQueryAPI = 'https://greynir.is/query.api';
-const String kDefaultSpeechSynthesisAPI = 'https://greynir.is/speech.api';
+
+const kRequestTimeout = Duration(seconds: 10); // Seconds
 
 // Speech synthesis
 const double kDefaultSpeechSynthesisSpeed = 1.0;
