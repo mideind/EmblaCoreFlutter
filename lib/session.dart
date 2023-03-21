@@ -32,17 +32,7 @@ import './audio.dart' show AudioPlayer;
 import './recorder.dart' show EmblaAudioRecorder;
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
-
-class _WebSocketToken {
-  late String token;
-  late DateTime expiresAt;
-
-  _WebSocketToken.fromJson(String data) {
-    var parsed = jsonDecode(data);
-    token = parsed['token'];
-    expiresAt = parsed['expires_at'];
-  }
-}
+import './token.dart' show WebSocketToken;
 
 // Session state
 enum EmblaSessionState { idle, starting, listening, answering, done }
@@ -51,7 +41,7 @@ class EmblaSession {
   var state = EmblaSessionState.idle; // Current state of session object
   late EmblaSessionConfig config;
   WebSocketChannel? channel;
-  static _WebSocketToken? _wsToken;
+  static WebSocketToken? wsToken;
 
   /// Constructor, should always be called with a session config object
   EmblaSession(EmblaSessionConfig cfg) {
@@ -71,7 +61,7 @@ class EmblaSession {
   }
 
   /// Start session
-  void start() {
+  void start() async {
     // Session can only be started in idle state
     // and cannot be restarted once it's done.
     if (state != EmblaSessionState.idle) {
@@ -79,7 +69,7 @@ class EmblaSession {
     }
 
     state = EmblaSessionState.starting;
-    _refreshToken(); // Ensure token is valid
+    refreshToken(); // Ensure token is valid
 
     openWebSocketConnection();
   }
@@ -147,7 +137,7 @@ class EmblaSession {
       }, cancelOnError: true);
 
       // Create greetings message
-      final greetings = GreetingsOutputMessage.fromConfig(config, _wsToken!.token);
+      final greetings = GreetingsOutputMessage.fromConfig(config, wsToken!.token);
 
       // Send message to server
       final String json = greetings.toJSON();
@@ -292,22 +282,22 @@ class EmblaSession {
   }
 
   // Fetch token for WebSocket communication if needed
-  void _refreshToken() async {
-    if (_wsToken == null || _wsToken!.expiresAt.isBefore(DateTime.now())) {
+  Future<void> refreshToken() async {
+    if (wsToken == null || wsToken!.expiresAt.isBefore(DateTime.now())) {
       // We either haven't gotten a token yet, or the one we have has expired
       // Fetch a new one
       late Response response;
       try {
+        String key = config.apiKey ?? "";
         response = await http.get(Uri.parse(config.socketTokenURL),
-            headers: {"X-API-Key": '1234'} // TODO: Get an api key, store somewhere safe
-            ).timeout(kRequestTimeout, onTimeout: () {
-          throw Error(); // TODO: inform user the session couldn't continue
+            headers: {"X-API-Key": key}).timeout(kRequestTimeout, onTimeout: () {
+          error("Timed out while fetching token");
+          return Response("Timed out", 408);
         });
       } catch (e) {
-        dlog("Error while fetching WebSocket token: $e");
-        throw Error(); // TODO: inform user the session couldn't continue
+        error("Error while fetching WebSocket token: $e");
       }
-      _wsToken = _WebSocketToken.fromJson(response.body);
+      wsToken = WebSocketToken.fromJson(response.body);
     }
   }
 }

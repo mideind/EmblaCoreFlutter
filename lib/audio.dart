@@ -150,7 +150,7 @@ class AudioPlayer {
   /// Play a random "don't know" audio recording.
   ///
   /// @param voiceID Voice ID to use
-  /// @param completionHandler Completion handler invoked when playback is finished
+  /// @param completionHandler Callback invoked when playback is finished
   /// @param playbackSpeed Playback speed
   String? playDunno(String voiceID, [Function()? completionHandler, double playbackSpeed = 1.0]) {
     final int rand = Random().nextInt(7) + 1;
