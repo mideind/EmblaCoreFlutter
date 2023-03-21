@@ -36,7 +36,7 @@ enum EmblaSessionState { idle, starting, listening, answering, done }
 
 class EmblaSession {
   var state = EmblaSessionState.idle; // Current state of session object
-  var config = EmblaSessionConfig(); // Start with default config
+  late EmblaSessionConfig config;
   WebSocketChannel? channel;
 
   /// Constructor, should always be called with a session config object
@@ -47,8 +47,13 @@ class EmblaSession {
   // PUBLIC METHODS
 
   /// Static method to preload all required assets
+  /// and initialize audio subsystems.
+  /// This is not strictly necessary, but it will
+  /// reduce the delay when starting a session.
   static void prepare() {
+    // Initialize these singletons
     AudioPlayer();
+    EmblaAudioRecorder();
   }
 
   /// Start session
