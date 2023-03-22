@@ -132,7 +132,7 @@ class EmblaSession {
       }, cancelOnError: true);
 
       // Create greetings message
-      final greetings = GreetingsOutputMessage.fromConfig(config, "");
+      final greetings = GreetingsOutputMessage.fromConfig(config);
 
       // Send message to server
       final String json = greetings.toJSON();

@@ -21,11 +21,11 @@ import 'dart:convert';
 
 import './common.dart';
 
-class WebSocketToken {
+class AuthenticationToken {
   late final String tokenString;
   late final DateTime expiresAt;
 
-  WebSocketToken.fromJson(String data) {
+  AuthenticationToken.fromJson(String data) {
     try {
       final parsed = jsonDecode(data);
       tokenString = parsed['token'];
@@ -39,6 +39,6 @@ class WebSocketToken {
 
   @override
   String toString() {
-    return "Token: '$tokenString' (expires at $expiresAt)";
+    return "AuthToken: '$tokenString' (expires at $expiresAt)";
   }
 }

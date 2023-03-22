@@ -85,7 +85,7 @@ class EmblaSessionConfig {
   // TODO: Implement this
   bool audio = true;
 
-  WebSocketToken? _token;
+  AuthenticationToken? _token;
 
   /// WebSocket token for authenticated
   /// communication with the server
@@ -101,17 +101,18 @@ class EmblaSessionConfig {
   Future<void> refreshToken() async {
     if (_token != null &&
         _token!.expiresAt.isAfter(DateTime.now().subtract(const Duration(seconds: 15)))) {
-      dlog("Token is still valid, not fetching a new one");
+      dlog("Token still valid, not fetching a new one");
       return;
     }
     // We either haven't gotten a token yet, or the one we
     // have has expired, so we fetch a new one.
     late final Response response;
+    const timeout = Duration(seconds: 5);
     try {
       String key = apiKey ?? "";
       dlog("Fetching token from $tokenURL (API key: $key)");
-      response = await get(Uri.parse(tokenURL), headers: {"X-API-Key": key})
-          .timeout(kRequestTimeout, onTimeout: () {
+      response = await get(Uri.parse(tokenURL), headers: {"X-API-Key": key}).timeout(timeout,
+          onTimeout: () {
         dlog("Timed out while fetching token");
         return Response("Timed out", 408);
       });
@@ -120,7 +121,7 @@ class EmblaSessionConfig {
       _token = null;
       return;
     }
-    _token = WebSocketToken.fromJson(response.body);
+    _token = AuthenticationToken.fromJson(response.body);
     dlog("Received $_token");
   }
 

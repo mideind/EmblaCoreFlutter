@@ -31,9 +31,7 @@ class GreetingsOutputMessage {
   final Map<String, dynamic> data = {};
 
   /// Create a greetings message from a session config object and a WebSocket token
-  GreetingsOutputMessage.fromConfig(EmblaSessionConfig config, String token) {
-    // WebSocket token
-    // token = token;
+  GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
     // Engine options
     if (config.engine != null) {
       data["engine"] = config.engine;
