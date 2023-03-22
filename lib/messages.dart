@@ -27,13 +27,13 @@ import './config.dart' show EmblaSessionConfig;
 /// Class representing a "greetings" JSON message sent to the server
 class GreetingsOutputMessage {
   static const String type = "greetings";
-  late String token;
+  String token = "";
   final Map<String, dynamic> data = {};
 
   /// Create a greetings message from a session config object and a WebSocket token
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config, String token) {
     // WebSocket token
-    token = token;
+    // token = token;
     // Engine options
     if (config.engine != null) {
       data["engine"] = config.engine;
@@ -76,6 +76,9 @@ class GreetingsOutputMessage {
     qOpts["voice_speed"] = config.voiceSpeed;
 
     data["query_options"] = qOpts;
+
+    // Token
+    token = config.token ?? "";
   }
 
   /// Convert this message object to a JSON representation

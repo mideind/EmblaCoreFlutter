@@ -58,6 +58,7 @@ class SessionPage extends StatefulWidget {
 
 class _SessionPageState extends State<SessionPage> {
   EmblaSession? session;
+  EmblaSessionConfig? config;
   String msg = kDefaultPrompt;
   Icon playIcon = const Icon(Icons.play_arrow);
   Icon stopIcon = const Icon(Icons.stop);
@@ -71,24 +72,28 @@ class _SessionPageState extends State<SessionPage> {
     });
   }
 
-  void _startSession() {
-    // Create new session config
-    final config = EmblaSessionConfig();
+  void _createConfigIfNeeded() {
+    if (config != null) {
+      return;
+    }
 
-    config.onStartListening = () {
+    // Create new session config
+    config = EmblaSessionConfig();
+
+    config?.onStartListening = () {
       setState(() {
         buttonIcon = stopIcon;
         msg = 'Hlustandi...';
       });
     };
 
-    config.onSpeechTextReceived = (String transcript, bool isFinal) {
+    config?.onSpeechTextReceived = (String transcript, bool isFinal) {
       setState(() {
         msg = transcript;
       });
     };
 
-    config.onQueryAnswerReceived = (dynamic answer) {
+    config?.onQueryAnswerReceived = (dynamic answer) {
       setState(() {
         if (answer is Map && answer.containsKey('answer')) {
           msg = answer['answer'];
@@ -96,28 +101,32 @@ class _SessionPageState extends State<SessionPage> {
       });
     };
 
-    config.onError = (String error) {
+    config?.onError = (String error) {
       setState(() {
         msg = error;
         buttonIcon = playIcon;
       });
     };
 
-    config.onDone = () {
+    config?.onDone = () {
       setState(() {
         buttonIcon = playIcon;
         //msg = '';
       });
     };
 
-    config.getLocation = () {
+    config?.getLocation = () {
       // Dummy location data. Replace with real location data
       // in your app e.g. using the geolocator package.
       return [64.1466, -21.9426];
     };
+  }
+
+  void _startSession() {
+    _createConfigIfNeeded();
 
     // Start the session
-    session = EmblaSession(config);
+    session = EmblaSession(config!);
     session!.start();
 
     setState(() {

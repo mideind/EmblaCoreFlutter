@@ -32,7 +32,7 @@ class EmblaSpeechSynthesizer {
       [Function(Map?)? handler,
       String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
-      String apiURL = kDefaultSpeechSynthesisAPI]) async {
+      String apiURL = "$kDefaultServer$kSpeechSynthesisEndpoint"]) async {
     Map<String, String> qargs = {
       'text': text,
       'api_key': apiKey,

@@ -30,13 +30,10 @@ const int kAudioBitRate = 16;
 const int kAudioNumChannels = 1;
 
 // Server communication
-const String kDefaultServer = "brandur.mideind.is:8080";
-// TODO: This should be wss and https once we roll out into production
-const String kDefaultWebSocketSchema = "ws";
-const String kDefaultHTTPSchema = "http";
-const String kDefaultSocketEndpoint = '$kDefaultWebSocketSchema://$kDefaultServer/v1/socket';
-const String kDefaultTokenEndpoint = '$kDefaultHTTPSchema://$kDefaultServer/v1/token';
-const String kDefaultSpeechSynthesisAPI = '$kDefaultHTTPSchema://$kDefaultServer/v1/tts';
+const String kDefaultServer = "http://192.168.1.41:8080";
+const String kTokenEndpoint = "/v1/token";
+const String kSocketEndpoint = "/v1/socket";
+const String kSpeechSynthesisEndpoint = "/v1/tts";
 const String kDefaultQueryAPI = 'https://greynir.is/query.api';
 
 const kRequestTimeout = Duration(seconds: 10); // Seconds

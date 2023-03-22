@@ -24,24 +24,20 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
-import 'package:http/http.dart' show Response;
-import 'package:http/http.dart' as http;
 
 import './common.dart';
 import './audio.dart' show AudioPlayer;
 import './recorder.dart' show EmblaAudioRecorder;
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
-import './token.dart' show WebSocketToken;
 
 // Session state
 enum EmblaSessionState { idle, starting, listening, answering, done }
 
 class EmblaSession {
   var state = EmblaSessionState.idle; // Current state of session object
-  late EmblaSessionConfig config;
+  late final EmblaSessionConfig config;
   WebSocketChannel? channel;
-  static WebSocketToken? wsToken;
 
   /// Constructor, should always be called with a session config object
   EmblaSession(EmblaSessionConfig cfg) {
@@ -69,8 +65,6 @@ class EmblaSession {
     }
 
     state = EmblaSessionState.starting;
-
-    refreshToken(); // Get a new token if required
 
     openWebSocketConnection();
   }
@@ -138,7 +132,7 @@ class EmblaSession {
       }, cancelOnError: true);
 
       // Create greetings message
-      final greetings = GreetingsOutputMessage.fromConfig(config, wsToken!.token);
+      final greetings = GreetingsOutputMessage.fromConfig(config, "");
 
       // Send message to server
       final String json = greetings.toJSON();
@@ -280,27 +274,5 @@ class EmblaSession {
     }, (String errMsg) {
       error(errMsg);
     });
-  }
-
-  // Fetch token for WebSocket communication if needed
-  Future<void> refreshToken() async {
-    if (wsToken != null && wsToken!.expiresAt.isBefore(DateTime.now())) {
-      // Token is still valid
-      return;
-    }
-    // We either haven't gotten a token yet, or the one we
-    // have has expired, so we fetch a new one.
-    late Response response;
-    try {
-      String key = config.apiKey ?? "";
-      response = await http.get(Uri.parse(config.socketTokenURL),
-          headers: {"X-API-Key": key}).timeout(kRequestTimeout, onTimeout: () {
-        error("Timed out while fetching token");
-        return Response("Timed out", 408);
-      });
-    } catch (e) {
-      error("Error while fetching WebSocket token: $e");
-    }
-    wsToken = WebSocketToken.fromJson(response.body);
   }
 }

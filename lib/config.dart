@@ -19,14 +19,32 @@
 
 // Embla configuration object
 
+import 'package:http/http.dart' show get, Response;
+
+import './token.dart';
 import './common.dart';
 
 /// EmblaSession configuration object
 class EmblaSessionConfig {
-  // WebSocket URL for the ASR + Query + TTS pipeline
-  String socketURL = kDefaultSocketEndpoint;
+  EmblaSessionConfig({String server = kDefaultServer}) {
+    dlog("Creating EmblaSessionConfig object");
+    tokenURL = "$server$kTokenEndpoint";
+
+    String webSocketURL = server;
+    if (webSocketURL.startsWith("https")) {
+      // We're using SSL, so we need to use wss://
+      webSocketURL = webSocketURL.replaceFirst("https", "wss");
+    } else {
+      webSocketURL = webSocketURL.replaceFirst("http", "ws");
+    }
+    socketURL = "$webSocketURL$kSocketEndpoint";
+  }
+
   // URL for receiving a token for WebSocket communication
-  String socketTokenURL = kDefaultTokenEndpoint;
+  String tokenURL = "";
+
+  // WebSocket URL for the ASR + Query + TTS pipeline
+  String socketURL = "";
 
   // Ratatoskur API key
   String? apiKey;
@@ -67,6 +85,49 @@ class EmblaSessionConfig {
   // TODO: Implement this
   bool audio = true;
 
+  WebSocketToken? _token;
+
+  /// WebSocket token for authenticated
+  /// communication with the server
+  get token {
+    refreshToken();
+    if (_token == null) {
+      return "";
+    }
+    return _token?.tokenString;
+  }
+
+  // Fetch token for WebSocket communication if needed
+  Future<void> refreshToken() async {
+    if (_token != null &&
+        _token!.expiresAt.isAfter(DateTime.now().subtract(const Duration(seconds: 15)))) {
+      dlog("Token is still valid, not fetching a new one");
+      return;
+    }
+    // We either haven't gotten a token yet, or the one we
+    // have has expired, so we fetch a new one.
+    late final Response response;
+    try {
+      String key = apiKey ?? "";
+      dlog("Fetching token from $tokenURL (API key: $key)");
+      response = await get(Uri.parse(tokenURL), headers: {"X-API-Key": key})
+          .timeout(kRequestTimeout, onTimeout: () {
+        dlog("Timed out while fetching token");
+        return Response("Timed out", 408);
+      });
+    } catch (e) {
+      dlog("Error while fetching WebSocket token: $e");
+      _token = null;
+      return;
+    }
+    _token = WebSocketToken.fromJson(response.body);
+    dlog("Received $_token");
+  }
+
+  // Optional callback that provides the user's current
+  // location as WGS84 coordinates (latitude, longitude).
+  List<double> Function()? getLocation;
+
   //// Handlers for session events ////
 
   // Called when the session has received a greeting from the server
@@ -91,8 +152,4 @@ class EmblaSessionConfig {
 
   // Called when the session has encountered an error and ended.
   Function(String)? onError;
-
-  // Optional callback that provides the user's current location as
-  // WGS84 coordinates (latitude, longitude).
-  List<double> Function()? getLocation;
 }

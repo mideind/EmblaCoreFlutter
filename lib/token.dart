@@ -19,13 +19,26 @@
 
 import 'dart:convert';
 
+import './common.dart';
+
 class WebSocketToken {
-  late String token;
-  late DateTime expiresAt;
+  late final String tokenString;
+  late final DateTime expiresAt;
 
   WebSocketToken.fromJson(String data) {
-    final parsed = jsonDecode(data);
-    token = parsed['token'];
-    expiresAt = parsed['expires_at'];
+    try {
+      final parsed = jsonDecode(data);
+      tokenString = parsed['token'];
+      expiresAt = DateTime.parse(parsed['expires_at']);
+    } catch (e) {
+      dlog("Failed to parse token JSON: $e");
+      tokenString = "";
+      expiresAt = DateTime.now();
+    }
+  }
+
+  @override
+  String toString() {
+    return "Token: '$tokenString' (expires at $expiresAt)";
   }
 }
