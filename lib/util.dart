@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Utility functions and custom class extensions
+/// Utility functions and custom class extensions
 
 /// String extensions
 extension StringExtension on String {

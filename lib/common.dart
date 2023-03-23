@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Global constants and debug logging
+/// Global constants
 
 import 'package:flutter/foundation.dart' show kDebugMode;
 
@@ -46,7 +46,7 @@ const List<String> kSupportedSpeechSynthesisVoices = [
   "Gunnar",
 ];
 
-// Debug logging
+/// Debug logging
 void dlog(dynamic msg) {
   if (kDebugMode == true) {
     // ignore: avoid_print

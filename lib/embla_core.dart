@@ -17,6 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// EmblaCore library
+
 library embla_core;
 
 export 'package:embla_core/session.dart' show EmblaSession, EmblaSessionState;

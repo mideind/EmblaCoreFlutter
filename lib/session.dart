@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Main session object encapsulating Embla's core functionality
+/// Main session object encapsulating Embla's core functionality
 
 import 'dart:convert';
 

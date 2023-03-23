@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Audio playback handling
+/// Audio playback handling
 
 import 'dart:typed_data';
 import 'dart:math' show Random;
@@ -189,7 +189,7 @@ class AudioPlayer {
 
   /// Play a preloaded audio file bundled with the app.
   /// Some of these audio files are voice-dependent, and will be played with
-  /// the specified voice ID, e.g. ```playSound('conn', 'Gunnar')``` will play
+  /// the specified voice ID, e.g. `playSound('conn', 'Gunnar')` will play
   /// the Gunnar voice version of the "conn" audio recording, etc.
   ///
   /// @param soundName Name of the audio file to play

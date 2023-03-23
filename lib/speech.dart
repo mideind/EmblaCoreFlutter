@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Code relating to speech synthesis
+/// Speech synthesis
 
 import 'dart:convert' show json;
 

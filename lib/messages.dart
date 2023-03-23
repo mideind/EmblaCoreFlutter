@@ -17,14 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// JSON messages sent to and received from the Ratatoskur server
+/// JSON messages sent to and received from the Ratatoskur server
 
 import 'dart:convert' show json;
 
 import './common.dart' show dlog;
 import './config.dart' show EmblaSessionConfig;
 
-/// Class representing a ```greetings``` JSON message sent to the server
+/// Class representing a `greetings` JSON message sent to the server
 class GreetingsOutputMessage {
   static const String type = "greetings";
   String token = "";

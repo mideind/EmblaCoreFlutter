@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Embla configuration object
+/// Embla session configuration
 
 import 'package:http/http.dart' show get, Response;
 
