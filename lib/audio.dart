@@ -109,8 +109,8 @@ class AudioPlayer {
 
   /// Play remote audio file at URL.
   ///
-  /// @param url URL of audio file
-  /// @param completionHandler Completion handler invoked when playback is finished
+  /// [url] URL of audio file
+  /// [completionHandler] Completion handler invoked when playback is finished
   Future<void> playURL(String url, [void Function(bool err)? completionHandler]) async {
     //stop();
     // If the URL is too long (maybe a Data URI?), truncate it for logging purposes
@@ -149,9 +149,9 @@ class AudioPlayer {
 
   /// Play a random "don't know" audio recording.
   ///
-  /// @param voiceID Voice ID to use
-  /// @param completionHandler Callback invoked when playback is finished
-  /// @param playbackSpeed Playback speed
+  /// [voiceID] Voice ID to use
+  /// [completionHandler] Callback invoked when playback is finished
+  /// [playbackSpeed] Playback speed
   String? playDunno(String voiceID,
       [void Function()? completionHandler, double playbackSpeed = 1.0]) {
     final int rand = Random().nextInt(7) + 1;
@@ -192,10 +192,10 @@ class AudioPlayer {
   /// the specified voice ID, e.g. `playSound('conn', 'Gunnar')` will play
   /// the Gunnar voice version of the "conn" audio recording, etc.
   ///
-  /// @param soundName Name of the audio file to play
-  /// @param voiceID Voice ID to use for the audio file (only applies to voice-dependent files)
-  /// @param completionHandler Completion handler to call when playback is finished
-  /// @param playbackSpeed Playback speed (1.0 = normal speed)
+  /// [soundName] Name of the audio file to play
+  /// [voiceID] Voice ID to use for the audio file (only applies to voice-dependent files)
+  /// [completionHandler] Completion handler to call when playback is finished
+  /// [playbackSpeed] Playback speed (1.0 = normal speed)
   void playSound(String soundName,
       [String voiceID = kDefaultSpeechSynthesisVoice,
       void Function()? completionHandler,

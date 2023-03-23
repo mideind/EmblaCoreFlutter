@@ -275,4 +275,9 @@ class EmblaSession {
       _error(errMsg);
     });
   }
+
+  @override
+  String toString() {
+    return "EmblaSession { state: $state (${(isActive() ? "active" : "inactive")}) }";
+  }
 }
