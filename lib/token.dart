@@ -21,6 +21,7 @@ import 'dart:convert';
 
 import './common.dart';
 
+/// Authentication token object required to start a session
 class AuthenticationToken {
   late final String tokenString;
   late final DateTime expiresAt;
@@ -39,6 +40,6 @@ class AuthenticationToken {
 
   @override
   String toString() {
-    return "AuthToken: '$tokenString' (expires at $expiresAt)";
+    return "AuthToken: $tokenString (expires at $expiresAt)";
   }
 }

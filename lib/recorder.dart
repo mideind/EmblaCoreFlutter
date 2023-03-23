@@ -17,12 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Audio recording wrapper class
-//
-// This code assumes that microphone access has already been granted
-// by the user. Clients are responsible for requesting access prior
-// to instantiation and should not use this class if access has not
-// been granted. Caveat emptor.
+/// Audio recording wrapper class
+///
+/// This code assumes that microphone access has already been granted
+/// by the user. Clients are responsible for requesting access prior
+/// to instantiation and should not use this class if access has not
+/// been granted. Caveat emptor.
 
 import 'dart:async';
 import 'dart:math' show pow;
@@ -35,7 +35,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 
 import './common.dart';
 
-/// Audio recording wrapper class
+/// Audio recording singleton class
 class EmblaAudioRecorder {
   final FlutterSoundRecorder _micRecorder = FlutterSoundRecorder(logLevel: Level.error);
   StreamSubscription? _recordingDataSubscription;
@@ -47,35 +47,34 @@ class EmblaAudioRecorder {
   int _totalAudioDataSize = 0; // Accumulated byte size of audio recording
   double _totalAudioDuration = 0.0; // Accumulated duration of audio recording, in seconds
 
-  /// Singleton pattern
-  EmblaAudioRecorder._internal();
-  static final EmblaAudioRecorder _instance = EmblaAudioRecorder._internal();
+  EmblaAudioRecorder._constructor();
+  static final EmblaAudioRecorder _instance = EmblaAudioRecorder._constructor();
   factory EmblaAudioRecorder() {
     return _instance;
   }
 
-  /// Returns the duration of the recorded audio in seconds
+  /// Returns the duration of the recorded audio in seconds.
   double duration() {
     return _totalAudioDuration;
   }
 
-  /// Returns the size of the recorded audio in bytes
+  /// Returns the size of the recorded audio in bytes.
   int audioSize() {
     return _totalAudioDataSize;
   }
 
   /// Returns the normalized signal strength of the last
-  /// recorded audio samples (on a scale of 0.0 to 1.0)
+  /// recorded audio samples (on a scale of 0.0 to 1.0).
   double signalStrength() {
     return _lastSignal;
   }
 
-  /// Returns true if we are currently recording
+  /// Returns true if we are currently recording.
   bool isRecording() {
     return _isRecording;
   }
 
-  /// Start recording audio from microphone
+  /// Start recording audio from microphone.
   Future<void> start(void Function(Uint8List) dataHandler, Function errHandler) async {
     if (_isRecording == true) {
       const errMsg = 'EmblaRecorder already recording!';
@@ -83,6 +82,7 @@ class EmblaAudioRecorder {
       errHandler(errMsg);
       return;
     }
+
     dlog('Starting recording');
     _isRecording = true;
 
@@ -92,8 +92,8 @@ class EmblaAudioRecorder {
       if (buffer is FoodData && buffer.data != null) {
         final data = buffer.data as Uint8List;
         _totalAudioDataSize += data.lengthInBytes;
-        _totalAudioDuration = _totalAudioDataSize / 32000.0;
-        dataHandler(data); // invoke callback
+        _totalAudioDuration = _totalAudioDataSize / (kAudioSampleRate * 2);
+        dataHandler(data); // Invoke callback
       } else {
         final errMsg = 'Got null data in recording stream: $buffer';
         dlog(errMsg);
@@ -129,7 +129,7 @@ class EmblaAudioRecorder {
         return; // Hack to work around a bug in flutter_sound
       }
       dlog(e);
-      double decibels = e.decibels! - 70.0; // This number is arbitrary but works
+      final double decibels = e.decibels! - 70.0; // This number is arbitrary but works
       _lastSignal = _normalizedSignalStrengthFromDecibels(decibels);
     });
 
@@ -141,15 +141,15 @@ class EmblaAudioRecorder {
         sampleRate: kAudioSampleRate);
   }
 
-  /// Stop recording and clean up
+  /// Stop recording and clean up.
   Future<void> stop() async {
     if (_isRecording == false) {
       return;
     }
 
     dlog('Stopping audio recording');
-    dlog(
-        "Total audio length: ${_totalAudioDuration.toStringAsFixed(1)} seconds ($_totalAudioDataSize bytes)");
+    dlog("Total audio length: ${_totalAudioDuration.toStringAsFixed(1)}"
+        " seconds ($_totalAudioDataSize bytes)");
 
     _isRecording = false;
     _lastSignal = 0.0;

@@ -40,57 +40,59 @@ class EmblaSessionConfig {
     socketURL = "$webSocketURL$kSocketEndpoint";
   }
 
-  // URL for receiving a token for WebSocket communication
-  String tokenURL = "";
+  /// URL to API that provides authentication token for WebSocket communication.
+  late String tokenURL;
 
-  // WebSocket URL for the ASR + Query + TTS pipeline
-  String socketURL = "";
+  /// WebSocket URL for the Ratatoskur ASR + Query + TTS pipeline.
+  late String socketURL;
 
-  // Ratatoskur API key
+  /// Ratatoskur API key.
   String? apiKey;
 
-  // Speech-to-text language (e.g. "is-IS")
-  // Currently ignored as only is-IS is supported.
+  /// Speech-to-text language (e.g. `is-IS`).
+  /// Currently ignored as only `is-IS` is supported.
   String language = kSpeechToTextLanguage;
 
-  // Override default engine
+  /// Override default ASR engine.
   String? engine;
 
-  // Speech synthesis settings
+  /// Voice ID to use when synthesizing speech.
   String voiceID = kDefaultSpeechSynthesisVoice;
+
+  /// Voice speed to use when synthesizing speech.
   double voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
-  // We don't send client info to server in private mode
+  /// Don't send client info to server.
   bool private = false;
 
-  // Client info. Should be set by client app.
-  // Ideally, a unique app-specific client ID should
-  // be provided via e.g. the platform_device_id package.
+  /// Client info. Should be set by client app.
+  /// Ideally, a unique app-specific client ID should
+  /// be provided via e.g. the `platform_device_id` package.
   String? clientID;
 
-  // Client type string (e.g. "ios", "android")
-  // Third-party clients should use their own name
-  // here, e.g. myappname_ios, myappname_android.
+  /// Client type string (e.g. `ios`, `android`).
+  /// Third-party clients should use their own name
+  /// here, e.g. `myappname_ios`, `myappname_android`.
   String? clientType;
 
-  // Client version string (e.g. "1.3.1")
-  // Can be fetched via e.g. the package_info_plus package.
+  /// Client version string (e.g. `1.3.1`).
+  /// Can be fetched via e.g. the `package_info_plus` package.
   String? clientVersion;
 
-  // Whether Ratatoskur should send ASR text to the query server
-  // and subsequently forward the query response to the client.
+  /// Whether Ratatoskur should send ASR text to the query server
+  /// and subsequently forward the query response to the client.
   bool query = true;
 
-  // Whether to play session sounds
+  /// Whether to play session sounds (NOT IMPLEMENTED).
   // TODO: Implement this
   bool audio = true;
 
   AuthenticationToken? _token;
 
   /// WebSocket token for authenticated
-  /// communication with the server
+  /// communication with the server.
   get token {
-    refreshToken();
+    _refreshToken();
     if (_token == null) {
       return "";
     }
@@ -98,7 +100,7 @@ class EmblaSessionConfig {
   }
 
   // Fetch token for WebSocket communication if needed
-  Future<void> refreshToken() async {
+  Future<void> _refreshToken() async {
     if (_token != null &&
         _token!.expiresAt.isAfter(DateTime.now().subtract(const Duration(seconds: 15)))) {
       dlog("Token still valid, not fetching a new one");
@@ -125,32 +127,32 @@ class EmblaSessionConfig {
     dlog("Received $_token");
   }
 
-  // Optional callback that provides the user's current
-  // location as WGS84 coordinates (latitude, longitude).
+  /// Optional callback that provides the user's current
+  /// location as WGS84 coordinates (latitude, longitude).
   List<double> Function()? getLocation;
 
-  //// Handlers for session events ////
+  // Handlers for session events
 
-  // Called when the session has received a greeting from the server
+  /// Called when the session has received a greeting from the server.
   Function? onStartListening;
 
-  // Called when the session has received speech text from the server
+  /// Called when the session has received speech text from the server.
   Function(String, bool)? onSpeechTextReceived;
 
-  // Called when the session has received *final* speech text from
-  // the server and is waiting for a query answer.
+  /// Called when the session has received *final* speech text from
+  /// the server and is waiting for a query answer.
   Function? onStartQuerying;
 
-  // Called when the session has received a query answer from the server
+  /// Called when the session has received a query answer from the server.
   Function(Map<String, dynamic>)? onQueryAnswerReceived;
 
-  // Called when the session is playing the answer as audio
+  /// Called when the session is playing the answer as audio.
   Function? onStartAnswering;
 
-  // Called when the session has finished playing the audio answer
-  // or has been manually ended.
+  /// Called when the session has finished playing the audio answer
+  /// or has been manually ended.
   Function? onDone;
 
-  // Called when the session has encountered an error and ended.
+  /// Called when the session has encountered an error and ended.
   Function(String)? onError;
 }

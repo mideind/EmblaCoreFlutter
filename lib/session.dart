@@ -34,12 +34,13 @@ import './messages.dart' show GreetingsOutputMessage;
 // Session state
 enum EmblaSessionState { idle, starting, listening, answering, done }
 
+/// Main session object encapsulating Embla's core functionality
 class EmblaSession {
   var state = EmblaSessionState.idle; // Current state of session object
   late final EmblaSessionConfig config;
   WebSocketChannel? channel;
 
-  /// Constructor, should always be called with a session config object
+  /// Constructor, should always be called with an [EmblaSessionConfig] object as arg
   EmblaSession(EmblaSessionConfig cfg) {
     config = cfg;
   }
@@ -165,7 +166,7 @@ class EmblaSession {
           break;
 
         case "error":
-          throw Exception("${msg["message"]}");
+          throw Exception(msg["message"]);
 
         default:
           throw Exception("Invalid message type: $type");
@@ -179,7 +180,7 @@ class EmblaSession {
   // Once we receive the greetings message from the server,
   // we can start listening for speech and stream the audio.
   void handleGreetingsMessage(Map<String, dynamic> msg) {
-    dlog("Greetings message received. Starting listening");
+    dlog("Greetings message received. Starting listening...");
 
     if (state != EmblaSessionState.starting) {
       throw Exception("Session is not starting!");
@@ -234,8 +235,8 @@ class EmblaSession {
 
     final Map<String, dynamic> data = msg["data"];
 
-    // The query result did not contain an answer
     if (data["audio"] == null || data["answer"] == null) {
+      // The query result did not contain an answer
       String? dunnoMsg = AudioPlayer().playDunno(config.voiceID, () {
         stop();
       }, config.voiceSpeed);

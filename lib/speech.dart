@@ -26,8 +26,9 @@ import 'package:http/http.dart' as http;
 
 import './common.dart';
 
+/// Speech synthesizer class
 class EmblaSpeechSynthesizer {
-  /// Send request to speech synthesis API
+  /// Send request to speech synthesis API.
   Future<void> synthesize(String text, String apiKey,
       [Function(Map?)? handler,
       String voiceID = kDefaultSpeechSynthesisVoice,

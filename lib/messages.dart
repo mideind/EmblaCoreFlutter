@@ -24,13 +24,13 @@ import 'dart:convert' show json;
 import './common.dart' show dlog;
 import './config.dart' show EmblaSessionConfig;
 
-/// Class representing a "greetings" JSON message sent to the server
+/// Class representing a ```greetings``` JSON message sent to the server
 class GreetingsOutputMessage {
   static const String type = "greetings";
   String token = "";
   final Map<String, dynamic> data = {};
 
-  /// Create a greetings message from a session config object and a WebSocket token
+  /// Create a greetings message from a session config object.
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
     // Engine options
     if (config.engine != null) {
@@ -63,7 +63,7 @@ class GreetingsOutputMessage {
           qOpts["latitude"] = loc[0];
           qOpts["longitude"] = loc[1];
         } else {
-          dlog("WARNING: Config getLocation() function returned invalid location!");
+          dlog("Warning! Config getLocation() function returned invalid location.");
         }
       }
     }
@@ -79,7 +79,7 @@ class GreetingsOutputMessage {
     token = config.token ?? "";
   }
 
-  /// Convert this message object to a JSON representation
+  /// Convert this message object to a JSON representation.
   String toJSON() {
     final Map<String, dynamic> msg = {"type": type, "token": token, "data": data};
     return json.encode(msg);

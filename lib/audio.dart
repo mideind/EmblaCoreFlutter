@@ -70,9 +70,9 @@ const List<String> sessionSounds = [
   'rec_confirm',
 ];
 
-/// Singleton class that handles all audio playback
+/// Singleton class that handles all audio playback.
 class AudioPlayer {
-  final FlutterSoundPlayer player = FlutterSoundPlayer(logLevel: Level.error);
+  final FlutterSoundPlayer _player = FlutterSoundPlayer(logLevel: Level.error);
   final Map<String, Uint8List> _audioFileCache = <String, Uint8List>{};
 
   // Singleton pattern
@@ -80,7 +80,7 @@ class AudioPlayer {
     return _instance;
   }
   AudioPlayer._constructor() {
-    // Initialization, which only happens once
+    // Initialization only happens once
     _init();
   }
   static final AudioPlayer _instance = AudioPlayer._constructor();
@@ -89,29 +89,29 @@ class AudioPlayer {
   Future<void> _init() async {
     dlog('Initing audio player');
     await _preloadAudioFiles();
-    await player.openPlayer();
+    await _player.openPlayer();
   }
 
   // Load all asset-bundled audio files into memory
   Future<void> _preloadAudioFiles() async {
     dlog("Preloading audio assets (${audioFiles.length} files)");
     for (String fn in audioFiles) {
-      ByteData bytes = await rootBundle.load("$kAudioFilePath$fn.$kAudioFileSuffix");
+      final ByteData bytes = await rootBundle.load("$kAudioFilePath$fn.$kAudioFileSuffix");
       _audioFileCache[fn] = bytes.buffer.asUint8List();
     }
   }
 
-  /// Stop all playback
+  /// Stop all playback.
   void stop() {
     dlog('Stopping audio playback');
-    player.stopPlayer();
+    _player.stopPlayer();
   }
 
-  /// Play remote audio file at URL
+  /// Play remote audio file at URL.
   ///
   /// @param url URL of audio file
   /// @param completionHandler Completion handler invoked when playback is finished
-  Future<void> playURL(String url, [Function(bool err)? completionHandler]) async {
+  Future<void> playURL(String url, [void Function(bool err)? completionHandler]) async {
     //stop();
     // If the URL is too long (maybe a Data URI?), truncate it for logging purposes
     String displayURL = url;
@@ -121,12 +121,12 @@ class AudioPlayer {
 
     dlog("Playing audio file at URL '$displayURL'");
     try {
-      Uint8List data;
+      late Uint8List data;
       final Uri uri = Uri.parse(url);
 
       if (uri.scheme == 'data') {
-        // We support data URIs
-        UriData dataURI = UriData.fromUri(uri);
+        // We support data URIs (RFC 2397)
+        final UriData dataURI = UriData.fromUri(uri);
         data = dataURI.contentAsBytes();
       } else {
         // Otherwise, we download the file
@@ -134,8 +134,8 @@ class AudioPlayer {
       }
       dlog("Audio file is ${data.lengthInBytes} bytes");
 
-      player.setSpeed(1.0);
-      player.startPlayer(
+      _player.setSpeed(1.0);
+      _player.startPlayer(
           fromDataBuffer: data,
           codec: Codec.mp3,
           whenFinished: () {
@@ -152,7 +152,8 @@ class AudioPlayer {
   /// @param voiceID Voice ID to use
   /// @param completionHandler Callback invoked when playback is finished
   /// @param playbackSpeed Playback speed
-  String? playDunno(String voiceID, [Function()? completionHandler, double playbackSpeed = 1.0]) {
+  String? playDunno(String voiceID,
+      [void Function()? completionHandler, double playbackSpeed = 1.0]) {
     final int rand = Random().nextInt(7) + 1;
     final String num = rand.toString().padLeft(2, '0');
     final String fn = "dunno$num";
@@ -171,25 +172,25 @@ class AudioPlayer {
     return dunnoStrings[fn];
   }
 
-  /// Play the UI sound for starting a new session
+  /// Play the UI sound for starting a new session.
   void playSessionStart() {
     playSound('rec_begin');
   }
 
-  /// Play the UI sound for when an answer is confirmed
+  /// Play the UI sound for when an answer is confirmed.
   void playSessionConfirm() {
     playSound('rec_confirm');
   }
 
-  /// Play the UI sound for when a session is canceled or fails
+  /// Play the UI sound for when a session is canceled or fails.
   void playSessionCancel() {
     playSound('rec_cancel');
   }
 
-  /// Play a preloaded audio file bundled with the app
-  /// Some of these audio files are voice-dependent, and will be played with the voice ID
-  /// specified, e.g. playSound('conn', 'Gunnar') will play the Gunnar voice version of the
-  /// "conn" audio recording, etc.
+  /// Play a preloaded audio file bundled with the app.
+  /// Some of these audio files are voice-dependent, and will be played with
+  /// the specified voice ID, e.g. ```playSound('conn', 'Gunnar')``` will play
+  /// the Gunnar voice version of the "conn" audio recording, etc.
   ///
   /// @param soundName Name of the audio file to play
   /// @param voiceID Voice ID to use for the audio file (only applies to voice-dependent files)
@@ -197,7 +198,7 @@ class AudioPlayer {
   /// @param playbackSpeed Playback speed (1.0 = normal speed)
   void playSound(String soundName,
       [String voiceID = kDefaultSpeechSynthesisVoice,
-      Function()? completionHandler,
+      void Function()? completionHandler,
       double playbackSpeed = 1.0]) {
     stop();
 
@@ -211,13 +212,13 @@ class AudioPlayer {
 
     // Make sure the file is in the cache
     if (_audioFileCache.containsKey(fileName) == false) {
-      dlog("Audio file '$fileName' not found in cache!");
+      dlog("Warning! Audio file '$fileName' not found in cache.");
       return;
     }
 
     dlog("Playing audio file '$fileName.wav'");
-    player.setSpeed(playbackSpeed);
-    player.startPlayer(
+    _player.setSpeed(playbackSpeed);
+    _player.startPlayer(
         fromDataBuffer: _audioFileCache[fileName],
         sampleRate: kAudioSampleRate,
         whenFinished: completionHandler);
