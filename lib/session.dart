@@ -37,12 +37,12 @@ enum EmblaSessionState { idle, starting, listening, answering, done }
 /// Main session object encapsulating Embla's core functionality
 class EmblaSession {
   var state = EmblaSessionState.idle; // Current state of session object
-  late final EmblaSessionConfig config;
-  WebSocketChannel? channel;
+  late final EmblaSessionConfig _config;
+  WebSocketChannel? _channel;
 
   /// Constructor, should always be called with an [EmblaSessionConfig] object as arg
   EmblaSession(EmblaSessionConfig cfg) {
-    config = cfg;
+    _config = cfg;
   }
 
   // PUBLIC METHODS
@@ -78,8 +78,8 @@ class EmblaSession {
     state = EmblaSessionState.done;
 
     // Invoke done handler
-    if (config.onDone != null) {
-      config.onDone!();
+    if (_config.onDone != null) {
+      _config.onDone!();
     }
   }
 
@@ -100,7 +100,7 @@ class EmblaSession {
     EmblaAudioRecorder().stop();
     AudioPlayer().stop();
     // Close WebSocket connection
-    channel?.sink.close(status.goingAway);
+    _channel?.sink.close(status.goingAway);
   }
 
   // Terminate session with error message
@@ -112,32 +112,32 @@ class EmblaSession {
     state = EmblaSessionState.done;
 
     // Invoke error handler
-    if (config.onError != null) {
-      config.onError!(errMsg);
+    if (_config.onError != null) {
+      _config.onError!(errMsg);
     }
 
-    AudioPlayer().playSound("err", config.voiceID, null, config.voiceSpeed);
+    AudioPlayer().playSound("err", _config.voiceID, null, _config.voiceSpeed);
   }
 
   // Open WebSocket connection to server
   void _openWebSocketConnection() {
     try {
       // Connect to server
-      final wsUri = Uri.parse(config.socketURL);
-      channel = WebSocketChannel.connect(wsUri);
+      final wsUri = Uri.parse(_config.socketURL);
+      _channel = WebSocketChannel.connect(wsUri);
 
       // Start listening for messages
-      channel?.stream.listen(_socketMessageReceived, onError: (e) {
+      _channel?.stream.listen(_socketMessageReceived, onError: (e) {
         _error("Error listening on WebSocket connection: $e");
       }, cancelOnError: true);
 
       // Create greetings message
-      final greetings = GreetingsOutputMessage.fromConfig(config);
+      final greetings = GreetingsOutputMessage.fromConfig(_config);
 
       // Send message to server
       final String json = greetings.toJSON();
       dlog("Sending initial greetings message: $json");
-      channel?.sink.add(json);
+      _channel?.sink.add(json);
     } catch (e) {
       _error("Error connecting to server: $e");
     }
@@ -187,8 +187,8 @@ class EmblaSession {
 
     _startListening();
 
-    if (config.onStartListening != null) {
-      config.onStartListening!();
+    if (_config.onStartListening != null) {
+      _config.onStartListening!();
     }
   }
 
@@ -207,18 +207,18 @@ class EmblaSession {
 
     if (isFinal) {
       EmblaAudioRecorder().stop();
-      if (config.query) {
+      if (_config.query) {
         state = EmblaSessionState.answering;
       }
     }
 
-    if (config.onSpeechTextReceived != null) {
-      config.onSpeechTextReceived!(transcript, isFinal);
+    if (_config.onSpeechTextReceived != null) {
+      _config.onSpeechTextReceived!(transcript, isFinal);
     }
 
     // If this is the final ASR result and config has
     // disabled querying, we end the session.
-    if (isFinal && config.query == false) {
+    if (isFinal && _config.query == false) {
       stop();
     }
   }
@@ -236,22 +236,22 @@ class EmblaSession {
 
     if (data["audio"] == null || data["answer"] == null) {
       // The query result did not contain an answer
-      String? dunnoMsg = AudioPlayer().playDunno(config.voiceID, () {
+      String? dunnoMsg = AudioPlayer().playDunno(_config.voiceID, () {
         stop();
-      }, config.voiceSpeed);
+      }, _config.voiceSpeed);
 
-      if (config.onQueryAnswerReceived != null) {
+      if (_config.onQueryAnswerReceived != null) {
         // This is a bit of a hack, but we need to pass
         // the dunno message text to the callback function
         // so that it can be displayed in the UI.
         data["message"] = dunnoMsg;
-        config.onQueryAnswerReceived!(data);
+        _config.onQueryAnswerReceived!(data);
       }
       return;
     }
 
-    if (config.onQueryAnswerReceived != null) {
-      config.onQueryAnswerReceived!(data);
+    if (_config.onQueryAnswerReceived != null) {
+      _config.onQueryAnswerReceived!(data);
     }
 
     // Play remote audio file
@@ -270,7 +270,7 @@ class EmblaSession {
   void _startListening() {
     state = EmblaSessionState.listening;
     EmblaAudioRecorder().start((Uint8List data) {
-      channel?.sink.add(data);
+      _channel?.sink.add(data);
     }, (String errMsg) {
       _error(errMsg);
     });
