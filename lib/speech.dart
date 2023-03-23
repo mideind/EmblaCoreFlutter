@@ -30,7 +30,7 @@ import './common.dart';
 class EmblaSpeechSynthesizer {
   /// Send request to speech synthesis API.
   Future<void> synthesize(String text, String apiKey,
-      [Function(Map?)? handler,
+      [void Function(Map?)? handler,
       String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
       String apiURL = "$kDefaultServer$kSpeechSynthesisEndpoint"]) async {
@@ -45,7 +45,7 @@ class EmblaSpeechSynthesizer {
   }
 
   Future<Response?> _makeRequest(String apiURL, Map<String, dynamic> qargs,
-      [Function(Map?)? handler]) async {
+      [void Function(Map?)? handler]) async {
     dlog("Sending POST request to $apiURL: ${qargs.toString()}");
     Response? response;
     try {

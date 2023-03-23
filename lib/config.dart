@@ -134,25 +134,25 @@ class EmblaSessionConfig {
   // Handlers for session events
 
   /// Called when the session has received a greeting from the server.
-  Function? onStartListening;
+  void Function()? onStartListening;
 
   /// Called when the session has received speech text from the server.
-  Function(String, bool)? onSpeechTextReceived;
+  void Function(String, bool)? onSpeechTextReceived;
 
   /// Called when the session has received *final* speech text from
   /// the server and is waiting for a query answer.
-  Function? onStartQuerying;
+  void Function()? onStartQuerying;
 
   /// Called when the session has received a query answer from the server.
-  Function(Map<String, dynamic>)? onQueryAnswerReceived;
+  void Function(Map<String, dynamic>)? onQueryAnswerReceived;
 
   /// Called when the session is playing the answer as audio.
-  Function? onStartAnswering;
+  void Function()? onStartAnswering;
 
   /// Called when the session has finished playing the audio answer
   /// or has been manually ended.
-  Function? onDone;
+  void Function()? onDone;
 
   /// Called when the session has encountered an error and ended.
-  Function(String)? onError;
+  void Function(String)? onError;
 }
