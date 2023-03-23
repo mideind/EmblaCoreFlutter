@@ -47,10 +47,9 @@ class EmblaSession {
 
   // PUBLIC METHODS
 
-  /// Static method to preload all required assets
-  /// and initialize audio subsystems.
-  /// This is not strictly necessary, but it will
-  /// reduce the delay when starting a session.
+  /// Static method to preload all required assets and initialize
+  /// audio subsystems. This is not strictly necessary, but it will
+  /// reduce the delay when starting a session for the first time.
   static void prepare() {
     // Initialize these singletons
     AudioPlayer();
@@ -67,7 +66,7 @@ class EmblaSession {
 
     state = EmblaSessionState.starting;
 
-    openWebSocketConnection();
+    _openWebSocketConnection();
   }
 
   /// Stop session
@@ -105,7 +104,7 @@ class EmblaSession {
   }
 
   // Terminate session with error message
-  void error(String errMsg) {
+  void _error(String errMsg) {
     dlog("Error in session: $errMsg");
     _stop();
 
@@ -121,15 +120,15 @@ class EmblaSession {
   }
 
   // Open WebSocket connection to server
-  void openWebSocketConnection() {
+  void _openWebSocketConnection() {
     try {
       // Connect to server
       final wsUri = Uri.parse(config.socketURL);
       channel = WebSocketChannel.connect(wsUri);
 
       // Start listening for messages
-      channel?.stream.listen(socketMessageReceived, onError: (e) {
-        error("Error listening on WebSocket connection: $e");
+      channel?.stream.listen(_socketMessageReceived, onError: (e) {
+        _error("Error listening on WebSocket connection: $e");
       }, cancelOnError: true);
 
       // Create greetings message
@@ -140,12 +139,12 @@ class EmblaSession {
       dlog("Sending initial greetings message: $json");
       channel?.sink.add(json);
     } catch (e) {
-      error("Error connecting to server: $e");
+      _error("Error connecting to server: $e");
     }
   }
 
   // Handle all incoming WebSocket messages
-  void socketMessageReceived(dynamic data) {
+  void _socketMessageReceived(dynamic data) {
     dlog("Received message: $data");
     // Decode JSON message and handle it according to type
     try {
@@ -154,15 +153,15 @@ class EmblaSession {
 
       switch (type) {
         case "greetings":
-          handleGreetingsMessage(msg);
+          _handleGreetingsMessage(msg);
           break;
 
         case "asr_result":
-          handleASRResultMessage(msg);
+          _handleASRResultMessage(msg);
           break;
 
         case "query_result":
-          handleQueryResultMessage(msg);
+          _handleQueryResultMessage(msg);
           break;
 
         case "error":
@@ -172,21 +171,21 @@ class EmblaSession {
           throw Exception("Invalid message type: $type");
       }
     } catch (e) {
-      error("Error handling message: $e");
+      _error("Error handling message: $e");
       return;
     }
   }
 
   // Once we receive the greetings message from the server,
   // we can start listening for speech and stream the audio.
-  void handleGreetingsMessage(Map<String, dynamic> msg) {
+  void _handleGreetingsMessage(Map<String, dynamic> msg) {
     dlog("Greetings message received. Starting listening...");
 
     if (state != EmblaSessionState.starting) {
       throw Exception("Session is not starting!");
     }
 
-    startListening();
+    _startListening();
 
     if (config.onStartListening != null) {
       config.onStartListening!();
@@ -196,7 +195,7 @@ class EmblaSession {
   // We have received a speech recognition result from the server.
   // If it's the final result, we stop recording audio and wait
   // for the query server response.
-  void handleASRResultMessage(Map<String, dynamic> msg) {
+  void _handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
 
     if (state != EmblaSessionState.listening) {
@@ -226,7 +225,7 @@ class EmblaSession {
 
   // We have received a query result from the server.
   // We play the audio and then end the session.
-  void handleQueryResultMessage(Map<String, dynamic> msg) {
+  void _handleQueryResultMessage(Map<String, dynamic> msg) {
     dlog("Query result message received");
 
     if (state != EmblaSessionState.answering) {
@@ -259,7 +258,7 @@ class EmblaSession {
     final String audioURL = data["audio"];
     AudioPlayer().playURL(audioURL, (err) {
       if (err) {
-        error("Error playing audio at $audioURL");
+        _error("Error playing audio at $audioURL");
         return;
       }
       // End session after audio has finished playing
@@ -268,12 +267,12 @@ class EmblaSession {
   }
 
   // Start recording via microphone and streaming audio to server
-  void startListening() {
+  void _startListening() {
     state = EmblaSessionState.listening;
     EmblaAudioRecorder().start((Uint8List data) {
       channel?.sink.add(data);
     }, (String errMsg) {
-      error(errMsg);
+      _error(errMsg);
     });
   }
 }

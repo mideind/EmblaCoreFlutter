@@ -19,7 +19,6 @@
 
 /// Utility functions and custom class extensions
 
-/// String extensions
 extension StringExtension on String {
   /// Convert Icelandic characters to their ASCII equivalent.
   String asciify() {
