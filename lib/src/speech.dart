@@ -29,11 +29,10 @@ import './common.dart';
 /// Speech synthesizer class
 class EmblaSpeechSynthesizer {
   /// Send request to speech synthesis API (static method).
-  static Future<void> synthesize(String text, String apiKey,
-      [void Function(Map?)? handler,
-      String voiceID = kDefaultSpeechSynthesisVoice,
+  static Future<void> synthesize(String text, String apiKey, void Function(Map?) handler,
+      {String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
-      String apiURL = "$kDefaultServer$kSpeechSynthesisEndpoint"]) async {
+      String apiURL = "$kDefaultServer$kSpeechSynthesisEndpoint"}) async {
     Map<String, String> qargs = {
       'text': text,
       'api_key': apiKey,
