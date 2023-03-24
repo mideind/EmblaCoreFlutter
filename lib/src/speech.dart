@@ -26,8 +26,11 @@ import 'package:http/http.dart' as http;
 
 import './common.dart';
 
-/// Speech synthesizer class
+/// Speech synthesizer static class
 class EmblaSpeechSynthesizer {
+  // Disable instantiation
+  EmblaSpeechSynthesizer._();
+
   /// Send request to speech synthesis API (static method).
   static Future<void> synthesize(String text, String apiKey, void Function(Map?) handler,
       {String voiceID = kDefaultSpeechSynthesisVoice,

@@ -23,7 +23,7 @@ import 'dart:convert';
 
 import './common.dart';
 
-/// Authentication token object required to start a session
+/// Authentication token object required to start a session.
 class AuthenticationToken {
   late final String tokenString;
   late final DateTime expiresAt;
@@ -38,6 +38,11 @@ class AuthenticationToken {
       tokenString = "";
       expiresAt = DateTime.now();
     }
+  }
+
+  bool isExpired() {
+    // If token expires in less than 30 seconds, consider it expired.
+    return expiresAt.isAfter(DateTime.now().subtract(const Duration(seconds: 30))) == true;
   }
 
   @override

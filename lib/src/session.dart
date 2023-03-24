@@ -43,6 +43,7 @@ class EmblaSession {
   /// Constructor, should always be called with an [EmblaSessionConfig] object as arg
   EmblaSession(EmblaSessionConfig cfg) {
     _config = cfg;
+    dlog("Session created with config: ${cfg.toString()}");
   }
 
   // PUBLIC METHODS
@@ -64,9 +65,18 @@ class EmblaSession {
       throw Exception("Session is not idle!");
     }
 
-    state = EmblaSessionState.starting;
+    _config.fetchToken().then((val) {
+      state = EmblaSessionState.starting;
 
-    _openWebSocketConnection();
+      if (_config.hasToken() == false) {
+        _error("Missing session token!");
+        return;
+      }
+
+      _openWebSocketConnection();
+    }).catchError((_) {
+      _error("Error fetching session token!");
+    });
   }
 
   /// Stop session

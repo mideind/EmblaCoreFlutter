@@ -26,9 +26,10 @@ import './common.dart';
 
 /// EmblaSession configuration object
 class EmblaSessionConfig {
+  // Constructor
   EmblaSessionConfig({String server = kDefaultServer}) {
     dlog("Creating EmblaSessionConfig object");
-    tokenURL = "$server$kTokenEndpoint";
+    _tokenURL = "$server$kTokenEndpoint";
 
     String webSocketURL = server;
     if (webSocketURL.startsWith("https")) {
@@ -41,12 +42,12 @@ class EmblaSessionConfig {
   }
 
   /// URL to API that provides authentication token for WebSocket communication.
-  late String tokenURL;
+  late String _tokenURL;
 
   /// WebSocket URL for the Ratatoskur ASR + Query + TTS pipeline.
   late String socketURL;
 
-  /// Ratatoskur API key.
+  /// Server API key.
   String? apiKey;
 
   /// Speech-to-text language (e.g. `is-IS`).
@@ -59,13 +60,13 @@ class EmblaSessionConfig {
   /// Voice ID to use when synthesizing speech.
   String voiceID = kDefaultSpeechSynthesisVoice;
 
-  /// Voice speed to use when synthesizing speech.
+  /// Voice speed to use when synthesizing speech. Default is `1.0`.
   double voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
-  /// Don't send client info to server.
+  /// Don't send client info to server. Default is `false`.
   bool private = false;
 
-  /// Client info. Should be set by client app.
+  /// Client ID should be set by client app.
   /// Ideally, a unique app-specific client ID should
   /// be provided via e.g. the `platform_device_id` package.
   String? clientID;
@@ -81,6 +82,7 @@ class EmblaSessionConfig {
 
   /// Whether Ratatoskur should send ASR text to the query server
   /// and subsequently forward the query response to the client.
+  /// Defaults to `true`.
   bool query = true;
 
   /// Whether to play session sounds (NOT IMPLEMENTED).
@@ -92,17 +94,20 @@ class EmblaSessionConfig {
   /// WebSocket token for authenticated
   /// communication with the server.
   get token {
-    _refreshToken();
     if (_token == null) {
       return "";
     }
     return _token?.tokenString;
   }
 
+  bool hasToken() {
+    final t = _token;
+    return t != null && t.tokenString.isNotEmpty;
+  }
+
   // Fetch token for WebSocket communication if needed
-  Future<void> _refreshToken() async {
-    if (_token != null &&
-        _token!.expiresAt.isAfter(DateTime.now().subtract(const Duration(seconds: 15)))) {
+  Future<void> fetchToken() async {
+    if (_token != null && _token?.isExpired() == false) {
       dlog("Token still valid, not fetching a new one");
       return;
     }
@@ -112,8 +117,8 @@ class EmblaSessionConfig {
     const timeout = Duration(seconds: 5);
     try {
       String key = apiKey ?? "";
-      dlog("Fetching token from $tokenURL (API key: $key)");
-      response = await get(Uri.parse(tokenURL), headers: {"X-API-Key": key}).timeout(timeout,
+      dlog("Fetching token from $_tokenURL (API key: $key)");
+      response = await get(Uri.parse(_tokenURL), headers: {"X-API-Key": key}).timeout(timeout,
           onTimeout: () {
         dlog("Timed out while fetching token");
         return Response("Timed out", 408);
@@ -155,4 +160,26 @@ class EmblaSessionConfig {
 
   /// Called when the session has encountered an error and ended.
   void Function(String)? onError;
+
+  @override
+  String toString() {
+    // Why no introspection in Dart?
+    final Map d = {
+      "_tokenURL": _tokenURL,
+      "socketURL": socketURL,
+      "apiKey": apiKey,
+      "language": language,
+      "engine": engine,
+      "voiceID": voiceID,
+      "voiceSpeed": voiceSpeed,
+      "private": private,
+      "clientID": clientID,
+      "clientType": clientType,
+      "clientVersion": clientVersion,
+      "query": query,
+      "audio": audio,
+      "_token": _token,
+    };
+    return d.toString();
+  }
 }
