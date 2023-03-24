@@ -65,9 +65,15 @@ class EmblaSession {
       throw Exception("Session is not idle!");
     }
 
-    _config.fetchToken().then((val) {
-      state = EmblaSessionState.starting;
+    state = EmblaSessionState.starting;
 
+    _config.fetchToken().then((val) {
+      if (state == EmblaSessionState.done) {
+        // User canceled session before token was fetched
+        return;
+      }
+
+      // Make sure we have a token
       if (_config.hasToken() == false) {
         _error("Missing session token!");
         return;

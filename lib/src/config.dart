@@ -102,7 +102,7 @@ class EmblaSessionConfig {
 
   bool hasToken() {
     final t = _token;
-    return t != null && t.tokenString.isNotEmpty;
+    return t != null && t.tokenString.isNotEmpty && t.isExpired() == false;
   }
 
   // Fetch token for WebSocket communication if needed
