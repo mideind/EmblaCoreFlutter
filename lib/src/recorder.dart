@@ -30,13 +30,12 @@ import 'dart:math' show pow;
 import 'package:flutter/foundation.dart' show Uint8List;
 
 import 'package:logger/logger.dart' show Level;
-import 'package:audio_session/audio_session.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 import './common.dart';
 
 /// Audio recording singleton class
-class EmblaAudioRecorder {
+class AudioRecorder {
   final FlutterSoundRecorder _micRecorder = FlutterSoundRecorder(logLevel: Level.error);
   StreamSubscription? _recordingDataSubscription;
   StreamSubscription? _recordingProgressSubscription;
@@ -47,9 +46,9 @@ class EmblaAudioRecorder {
   int _totalAudioDataSize = 0; // Accumulated byte size of audio recording
   double _totalAudioDuration = 0.0; // Accumulated duration of audio recording, in seconds
 
-  EmblaAudioRecorder._constructor();
-  static final EmblaAudioRecorder _instance = EmblaAudioRecorder._constructor();
-  factory EmblaAudioRecorder() {
+  AudioRecorder._constructor();
+  static final AudioRecorder _instance = AudioRecorder._constructor();
+  factory AudioRecorder() {
     return _instance;
   }
 

@@ -29,12 +29,11 @@ import 'package:audio_session/audio_session.dart';
 
 import './common.dart';
 import './audio.dart' show AudioPlayer;
-import './recorder.dart' show EmblaAudioRecorder;
+import './recorder.dart' show AudioRecorder;
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
 
-void configureAudioSession() async {
-  // Configure audio session
+void _configureAudioSession() async {
   dlog("Configuring audio session");
   final session = await AudioSession.instance;
   await session.configure(AudioSessionConfiguration(
@@ -77,8 +76,8 @@ class EmblaSession {
   static void prepare() {
     // Initialize these singletons
     AudioPlayer();
-    EmblaAudioRecorder();
-    configureAudioSession();
+    AudioRecorder();
+    _configureAudioSession();
   }
 
   /// Start session
@@ -149,7 +148,7 @@ class EmblaSession {
 
   void _stop() {
     // Terminate all audio recording and playback
-    EmblaAudioRecorder().stop();
+    AudioRecorder().stop();
     AudioPlayer().stop();
     // Close WebSocket connection
     _channel?.sink.close(status.goingAway);
@@ -258,7 +257,7 @@ class EmblaSession {
     final bool isFinal = msg["is_final"];
 
     if (isFinal) {
-      EmblaAudioRecorder().stop();
+      AudioRecorder().stop();
       if (_config.query) {
         state = EmblaSessionState.answering;
       }
@@ -325,7 +324,7 @@ class EmblaSession {
   // Start recording via microphone and streaming audio to server
   void _startListening() {
     state = EmblaSessionState.listening;
-    EmblaAudioRecorder().start((Uint8List data) {
+    AudioRecorder().start((Uint8List data) {
       _channel?.sink.add(data);
     }, (String errMsg) {
       _error(errMsg);
