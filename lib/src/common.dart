@@ -30,7 +30,7 @@ const int kAudioBitRate = 16;
 const int kAudioNumChannels = 1;
 
 // Server communication
-const String kDefaultServer = "http://192.168.1.41:8080";
+const String kDefaultServer = "http://brandur.mideind.is:8080";
 const String kTokenEndpoint = "/v1/token";
 const String kSocketEndpoint = "/v1/socket";
 const String kSpeechSynthesisEndpoint = "/v1/tts";

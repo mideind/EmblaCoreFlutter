@@ -65,7 +65,7 @@ class _SessionPageState extends State<SessionPage> {
   Icon buttonIcon = const Icon(Icons.play_arrow);
 
   void _stopSession() {
-    session!.stop();
+    session!.cancel();
     setState(() {
       buttonIcon = playIcon;
       msg = kDefaultPrompt;

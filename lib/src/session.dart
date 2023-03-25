@@ -103,6 +103,14 @@ class EmblaSession {
     }
   }
 
+  /// User-intitated cancellation of session
+  void cancel() {
+    stop();
+    if (_config.audio) {
+      AudioPlayer().playSessionCancel();
+    }
+  }
+
   /// Returns true if session is active
   bool isActive() {
     return (state != EmblaSessionState.idle && state != EmblaSessionState.done);
@@ -130,10 +138,6 @@ class EmblaSession {
 
     // Set state to done
     state = EmblaSessionState.done;
-
-    if (_config.audio) {
-      AudioPlayer().playSessionCancel();
-    }
 
     // Invoke error handler
     if (_config.onError != null) {
