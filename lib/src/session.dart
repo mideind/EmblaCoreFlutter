@@ -24,12 +24,34 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
+import 'package:audio_session/audio_session.dart';
 
 import './common.dart';
 import './audio.dart' show AudioPlayer;
 import './recorder.dart' show EmblaAudioRecorder;
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
+
+void configureAudioSession() async {
+  // Configure audio session
+  dlog("Configuring audio session");
+  final session = await AudioSession.instance;
+  await session.configure(AudioSessionConfiguration(
+    avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+    avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth |
+        AVAudioSessionCategoryOptions.defaultToSpeaker,
+    // avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+    avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+    avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+    androidAudioAttributes: const AndroidAudioAttributes(
+      contentType: AndroidAudioContentType.speech,
+      flags: AndroidAudioFlags.none,
+      usage: AndroidAudioUsage.voiceCommunication,
+    ),
+    androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+    androidWillPauseWhenDucked: true,
+  ));
+}
 
 // Session state
 enum EmblaSessionState { idle, starting, listening, answering, done }
@@ -55,6 +77,7 @@ class EmblaSession {
     // Initialize these singletons
     AudioPlayer();
     EmblaAudioRecorder();
+    configureAudioSession();
   }
 
   /// Start session
@@ -260,9 +283,9 @@ class EmblaSession {
       throw Exception("Session is not answering query!");
     }
 
-    if (_config.audio) {
-      AudioPlayer().playSessionConfirm();
-    }
+    // if (_config.audio) {
+    //   AudioPlayer().playSessionConfirm();
+    // }
 
     final Map<String, dynamic> data = msg["data"];
 
