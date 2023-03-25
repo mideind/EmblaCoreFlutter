@@ -67,6 +67,10 @@ class EmblaSession {
 
     state = EmblaSessionState.starting;
 
+    if (_config.audio) {
+      AudioPlayer().playSessionStart();
+    }
+
     _config.fetchToken().then((val) {
       if (state == EmblaSessionState.done) {
         // User canceled session before token was fetched
@@ -126,6 +130,10 @@ class EmblaSession {
 
     // Set state to done
     state = EmblaSessionState.done;
+
+    if (_config.audio) {
+      AudioPlayer().playSessionCancel();
+    }
 
     // Invoke error handler
     if (_config.onError != null) {
@@ -246,6 +254,10 @@ class EmblaSession {
 
     if (state != EmblaSessionState.answering) {
       throw Exception("Session is not answering query!");
+    }
+
+    if (_config.audio) {
+      AudioPlayer().playSessionConfirm();
     }
 
     final Map<String, dynamic> data = msg["data"];

@@ -85,8 +85,7 @@ class EmblaSessionConfig {
   /// Defaults to `true`.
   bool query = true;
 
-  /// Whether to play session sounds (NOT IMPLEMENTED).
-  // TODO: Implement this
+  /// Whether to play session UI sounds.
   bool audio = true;
 
   AuthenticationToken? _token;
