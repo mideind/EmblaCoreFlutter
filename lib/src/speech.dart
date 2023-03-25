@@ -21,8 +21,7 @@
 
 import 'dart:convert' show json;
 
-import 'package:http/http.dart' show Response;
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show Response, post;
 
 import './common.dart';
 
@@ -51,8 +50,7 @@ class EmblaSpeechSynthesizer {
     dlog("Sending POST request to $apiURL: ${qargs.toString()}");
     Response? response;
     try {
-      response =
-          await http.post(Uri.parse(apiURL), body: qargs).timeout(kRequestTimeout, onTimeout: () {
+      response = await post(Uri.parse(apiURL), body: qargs).timeout(kRequestTimeout, onTimeout: () {
         handler!(null);
         return Response("Request timed out", 408);
       });
