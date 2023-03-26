@@ -19,14 +19,15 @@
 
 /// Audio playback handling
 
-import 'dart:typed_data';
 import 'dart:math' show Random;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart' show Level;
 import 'package:flutter_sound/flutter_sound.dart' show FlutterSoundPlayer, Codec;
+import 'package:mp3_info/mp3_info.dart' show MP3Processor if (kDebugMode) "";
 
 import './util.dart';
 import './common.dart';
@@ -133,7 +134,11 @@ class AudioPlayer {
         // Otherwise, we download the file
         data = await http.readBytes(Uri.parse(url));
       }
-      dlog("Audio file is ${data.lengthInBytes} bytes");
+
+      if (kDebugMode) {
+        final mp3 = MP3Processor.fromBytes(data);
+        dlog("Audio file is ${data.lengthInBytes} bytes (${mp3.duration.inSeconds} seconds)");
+      }
 
       _player.setSpeed(1.0);
       _player.startPlayer(

@@ -15,6 +15,7 @@ dependencies:
   audio_session: '>=0.1.13'
   web_socket_channel: '>=2.3.0'
   http: '>=0.13.5'
+  mp3_info: '^0.2.0'
 
 
 dev_dependencies:
