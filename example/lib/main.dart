@@ -96,7 +96,7 @@ class _SessionPageState extends State<SessionPage> {
     config?.onQueryAnswerReceived = (dynamic answer) {
       setState(() {
         if (answer is Map && answer.containsKey('answer')) {
-          msg = answer['answer'];
+          msg = "$msg\n\n${answer['answer']}";
         }
       });
     };

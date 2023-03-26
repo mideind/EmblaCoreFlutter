@@ -101,7 +101,7 @@ class EmblaSession {
       }
 
       // Make sure we have a token
-      if (_config.hasToken() == false) {
+      if (_config.hasValidToken() == false) {
         _error("Missing session token!");
         return;
       }

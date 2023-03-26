@@ -99,7 +99,7 @@ class EmblaSessionConfig {
     return _token?.tokenString;
   }
 
-  bool hasToken() {
+  bool hasValidToken() {
     final t = _token;
     return t != null && t.tokenString.isNotEmpty && t.isExpired() == false;
   }
