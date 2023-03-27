@@ -1,7 +1,12 @@
 name: embla_core
 description: EmblaCore - a library containing Embla session functionality
-version: "0.1.0+1"
-publish_to: 'none'
+version: "1.0.0+1"
+homepage: https://github.com/mideind/EmblaCoreFlutter
+documentation: https://embla.is/embla_core/
+
+platforms:
+  android:
+  ios:
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -16,7 +21,6 @@ dependencies:
   web_socket_channel: '>=2.3.0'
   http: '>=0.13.5'
   mp3_info: '^0.2.0'
-
 
 dev_dependencies:
   flutter_test:
