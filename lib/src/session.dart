@@ -216,6 +216,10 @@ class EmblaSession {
           break;
 
         case "error":
+          if (msg["name"] == "timeout_error") {
+            cancel();
+            return;
+          }
           throw Exception(msg["message"]);
 
         default:

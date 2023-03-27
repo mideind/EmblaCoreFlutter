@@ -1,5 +1,5 @@
 [![Language](https://img.shields.io/badge/language-dart-lightblue)]()
-[![Build](https://github.com/mideind/embla_core/actions/workflows/tests.yml/badge.svg)]()
+[![Build](https://github.com/mideind/EmblaCoreFlutter/actions/workflows/tests.yml/badge.svg)]()
 
 # EmblaCore
 
@@ -25,9 +25,9 @@ flutter pub get
 ## Demo App
 
 A simple demo app that demonstrates how to use EmblaCore can viewed at
-[`example/lib/main.dart`](https://github.com/mideind/EmblaCoreFlutter/blob/master/lib/embla_core.dart).
+[`example/lib/main.dart`](https://github.com/mideind/EmblaCoreFlutter/blob/master/example/lib/main.dart).
 
-To run the app on a device of your choice:
+To run the demo app on a device of your choice:
 
 ```bash
 cd example

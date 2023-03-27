@@ -27,6 +27,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart' show Level;
 import 'package:flutter_sound/flutter_sound.dart' show FlutterSoundPlayer, Codec;
+// We only need this library if we're in debug mode
 import 'package:mp3_info/mp3_info.dart' show MP3Processor if (kDebugMode) "";
 
 import './util.dart';
