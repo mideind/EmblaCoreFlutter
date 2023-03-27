@@ -6,14 +6,14 @@
 EmblaCore is a Dart library containing the core session functionality in
 [Embla](https://github.com/mideind/EmblaFlutterApp), a mobile Icelandic-language
 voice assistant client implemented in [Flutter](https://flutter.dev/).
-Requires Flutter >= 2.12.
+Requires Flutter >= 2.12 with null safety.
 
-## How to use
+## Installation
 
 Add this to the dependencies list in your `pubspec.yaml` file:
 
 ```yaml
-  embla_core: ">=0.1.0"
+  embla_core: ">=1.0.0"
 ```
 
 and then run the following command from the project root:
@@ -25,7 +25,7 @@ flutter pub get
 ## Demo App
 
 A simple demo app that demonstrates how to use EmblaCore can viewed at
-[`example/lib/main.dart`](example/lib/main.dart).
+[`example/lib/main.dart`](https://github.com/mideind/EmblaCoreFlutter/blob/master/lib/embla_core.dart).
 
 To run the app on a device of your choice:
 
@@ -36,6 +36,8 @@ flutter run -d [device_id]
 
 ## API
 
+Full `dartdoc` documentation is available [here](https://embla.is/embla_core).
+
 ### Create and use session object
 
 ```dart
@@ -44,14 +46,21 @@ import 'package:embla_core/embla_core.dart';
 ...
 
 var config = EmblaConfig();
+
+/* Set properties of config object... */
+
 var session = EmblaSession(config=config);
 
 session.start();
+
+...
+
+session.cancel();
 ```
 
 ## License
 
-Greynir is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
+EmblaCoreFlutter is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
 
 This set of programs is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
