@@ -25,3 +25,4 @@ export 'package:embla_core/src/session.dart' show EmblaSession, EmblaSessionStat
 export 'package:embla_core/src/config.dart' show EmblaSessionConfig;
 export 'package:embla_core/src/speech.dart' show EmblaSpeechSynthesizer;
 export 'package:embla_core/src/audio.dart' show AudioPlayer;
+export 'package:embla_core/src/recorder.dart' show AudioRecorder;
