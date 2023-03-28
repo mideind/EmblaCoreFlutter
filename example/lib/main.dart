@@ -21,6 +21,7 @@ import 'package:embla_core/embla_core.dart';
 
 const String kSoftwareTitle = 'EmblaCore Demo';
 const String kDefaultPrompt = 'Smelltu á hnappinn til að byrja';
+const String kListeningPrompt = 'Hlustandi...';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,11 +80,12 @@ class _SessionPageState extends State<SessionPage> {
 
     // Create new session config
     config = EmblaSessionConfig();
+    config!.apiKey = "YOUR_API_KEY_HERE";
 
     config?.onStartListening = () {
       setState(() {
         buttonIcon = stopIcon;
-        msg = 'Hlustandi...';
+        msg = kListeningPrompt;
       });
     };
 
@@ -96,7 +98,7 @@ class _SessionPageState extends State<SessionPage> {
     config?.onQueryAnswerReceived = (dynamic answer) {
       setState(() {
         if (answer is Map && answer.containsKey('answer')) {
-          msg = "$msg\n\n${answer['answer']}";
+          msg = "$answer['q']\n\n${answer['answer']}";
         }
       });
     };
@@ -111,7 +113,9 @@ class _SessionPageState extends State<SessionPage> {
     config?.onDone = () {
       setState(() {
         buttonIcon = playIcon;
-        //msg = '';
+        if (msg == kListeningPrompt) {
+          msg = kDefaultPrompt;
+        }
       });
     };
 

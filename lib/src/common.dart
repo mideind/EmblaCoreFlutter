@@ -30,9 +30,9 @@ const int kAudioBitRate = 16;
 const int kAudioNumChannels = 1;
 
 // Server communication
-const String kDefaultServer = "http://brandur.mideind.is:8080";
-const String kTokenEndpoint = "/v1/token";
-const String kSocketEndpoint = "/v1/socket";
+const String kDefaultServer = "https://staging.api.greynir.is:443";
+const String kTokenEndpoint = "/asr/v1/token";
+const String kSocketEndpoint = "/asr/v1/socket";
 const String kSpeechSynthesisEndpoint = "/v1/tts";
 const String kDefaultQueryAPI = 'https://greynir.is/query.api';
 

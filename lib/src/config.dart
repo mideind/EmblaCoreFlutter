@@ -38,6 +38,7 @@ class EmblaSessionConfig {
     } else {
       webSocketURL = webSocketURL.replaceFirst("http", "ws");
     }
+    dlog("Using socket URL $webSocketURL");
     socketURL = "$webSocketURL$kSocketEndpoint";
   }
 
@@ -116,7 +117,7 @@ class EmblaSessionConfig {
     const timeout = Duration(seconds: 5);
     try {
       String key = apiKey ?? "";
-      dlog("Fetching token from $_tokenURL (API key: $key)");
+      dlog("Fetching token from $_tokenURL (X-API-Key: $key)");
       response = await get(Uri.parse(_tokenURL), headers: {"X-API-Key": key}).timeout(timeout,
           onTimeout: () {
         dlog("Timed out while fetching token");
