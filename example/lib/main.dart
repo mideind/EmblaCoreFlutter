@@ -78,8 +78,10 @@ class _SessionPageState extends State<SessionPage> {
       return;
     }
 
+    const String serverURL = "https://staging.api.greynir.is"; // http://localhost:8080
+
     // Create new session config
-    config = EmblaSessionConfig();
+    config = EmblaSessionConfig(server: serverURL);
     config!.apiKey = "YOUR_API_KEY_HERE";
 
     config?.onStartListening = () {

@@ -58,12 +58,10 @@ class GreetingsOutputMessage {
         qOpts["client_version"] = config.clientVersion;
       }
       if (config.getLocation != null) {
-        List<double> loc = config.getLocation!();
-        if (loc.length == 2) {
+        List<double>? loc = config.getLocation!();
+        if (loc != null && loc.length == 2) {
           qOpts["latitude"] = loc[0];
           qOpts["longitude"] = loc[1];
-        } else {
-          dlog("Warning! Config getLocation() function returned invalid location.");
         }
       }
     }

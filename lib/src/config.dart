@@ -58,7 +58,7 @@ class EmblaSessionConfig {
   /// Override default ASR engine.
   String? engine;
 
-  /// Voice ID to use when synthesizing speech.
+  /// Voice ID to use when synthesizing speech. Defaults is [kDefaultSpeechSynthesisVoice].
   String voiceID = kDefaultSpeechSynthesisVoice;
 
   /// Voice speed to use when synthesizing speech. Default is `1.0`.
@@ -118,8 +118,8 @@ class EmblaSessionConfig {
     try {
       String key = apiKey ?? "";
       dlog("Fetching token from $_tokenURL (X-API-Key: $key)");
-      response = await get(Uri.parse(_tokenURL), headers: {"X-API-Key": key}).timeout(timeout,
-          onTimeout: () {
+      response = await get(Uri.parse(_tokenURL), headers: /*{"X-API-Key": key}*/ {})
+          .timeout(timeout, onTimeout: () {
         dlog("Timed out while fetching token");
         return Response("Timed out", 408);
       });
@@ -134,7 +134,7 @@ class EmblaSessionConfig {
 
   /// Optional callback that provides the user's current
   /// location as WGS84 coordinates (latitude, longitude).
-  List<double> Function()? getLocation;
+  List<double>? Function()? getLocation;
 
   // Handlers for session events
 
@@ -144,8 +144,8 @@ class EmblaSessionConfig {
   /// Called when the session has received speech text from the server.
   void Function(String, bool)? onSpeechTextReceived;
 
-  /// Called when the session has received *final* speech text from
-  /// the server and is waiting for a query answer.
+  /// Called when the session has received *final* speech text
+  /// from the server and is waiting for a query answer.
   void Function()? onStartQuerying;
 
   /// Called when the session has received a query answer from the server.
@@ -154,8 +154,8 @@ class EmblaSessionConfig {
   /// Called when the session is playing the answer as audio.
   void Function()? onStartAnswering;
 
-  /// Called when the session has finished playing the audio answer
-  /// or has been manually ended.
+  /// Called when the session has finished playing the audio
+  /// answer or has been manually ended.
   void Function()? onDone;
 
   /// Called when the session has encountered an error and ended.
@@ -164,7 +164,7 @@ class EmblaSessionConfig {
   @override
   String toString() {
     // Why no introspection in Dart?
-    final Map d = {
+    final Map<String, dynamic> d = {
       "_tokenURL": _tokenURL,
       "socketURL": socketURL,
       "apiKey": apiKey,
