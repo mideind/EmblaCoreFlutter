@@ -180,6 +180,8 @@ class EmblaSession {
       // Start listening for messages
       _channel?.stream.listen(_socketMessageReceived, onError: (e) {
         _error("Error listening on WebSocket connection: $e");
+      }, onDone: () {
+        dlog("WebSocket connection closed");
       }, cancelOnError: true);
 
       // Create greetings message
@@ -261,6 +263,7 @@ class EmblaSession {
     final bool isFinal = msg["is_final"];
 
     if (isFinal) {
+      dlog("Received final answer");
       AudioRecorder().stop();
       if (_config.query) {
         state = EmblaSessionState.answering;
@@ -294,6 +297,7 @@ class EmblaSession {
     final Map<String, dynamic> data = msg["data"];
 
     if (data["audio"] == null || data["answer"] == null) {
+      dlog("Query result did not contain an answer");
       // The query result did not contain an answer
       String? dunnoMsg = AudioPlayer().playDunno(_config.voiceID, () {
         stop();

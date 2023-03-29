@@ -118,11 +118,14 @@ class EmblaSessionConfig {
     try {
       String key = apiKey ?? "";
       dlog("Fetching token from $_tokenURL (X-API-Key: $key)");
-      response = await get(Uri.parse(_tokenURL), headers: /*{"X-API-Key": key}*/ {})
-          .timeout(timeout, onTimeout: () {
+      response = await get(Uri.parse(_tokenURL), headers: {"X-API-Key": key}).timeout(timeout,
+          onTimeout: () {
         dlog("Timed out while fetching token");
         return Response("Timed out", 408);
       });
+      if (response.statusCode != 200) {
+        throw ("Server response: ${response.statusCode} ${response.body}");
+      }
     } catch (e) {
       dlog("Error while fetching WebSocket token: $e");
       _token = null;

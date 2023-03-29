@@ -21,7 +21,6 @@
 
 import 'dart:convert' show json;
 
-import './common.dart' show dlog;
 import './config.dart' show EmblaSessionConfig;
 
 /// Class representing a `greetings` JSON message sent to the server
@@ -37,12 +36,13 @@ class GreetingsOutputMessage {
       data["engine"] = config.engine;
     }
     final Map<String, dynamic> engineOpts = {};
-    engineOpts["language"] = config.language;
+    // engineOpts["language"] = config.language;  // Unused
     data["engine_options"] = engineOpts;
 
     // Other options
     data["private"] = config.private;
     data["query"] = config.query;
+    // data["query_url"] = "https://siminn.greynir.is/query.api";
 
     // Query options, which includes client details.
     // Those are only sent if the session is not private.
