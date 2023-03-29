@@ -86,6 +86,9 @@ class EmblaSessionConfig {
   /// Defaults to `true`.
   bool query = true;
 
+  /// Query server URL. Defaults to [kDefaultQueryServer].
+  String queryServer = kDefaultQueryServer;
+
   /// Whether to play session UI sounds.
   bool audio = true;
 

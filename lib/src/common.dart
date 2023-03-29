@@ -35,7 +35,7 @@ const String kTokenEndpoint = "/asr/v1/token";
 const String kSocketEndpoint = "/asr/v1/socket";
 const String kSpeechSynthesisEndpoint = "/asr/v1/tts";
 const String kClearHistoryEndpoint = "/asr/v1/clear_history";
-const String kDefaultQueryAPI = 'https://greynir.is/query.api';
+const String kDefaultQueryServer = 'https://greynir.is';
 
 const kRequestTimeout = Duration(seconds: 10); // Seconds
 

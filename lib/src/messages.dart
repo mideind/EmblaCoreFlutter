@@ -41,11 +41,11 @@ class GreetingsOutputMessage {
 
     // Other options
     data["private"] = config.private;
-    data["query"] = config.query;
-    // data["query_url"] = "https://siminn.greynir.is/query.api";
 
     // Query options, which includes client details.
-    // Those are only sent if the session is not private.
+    data["query"] = config.query;
+    data["query_url"] = "${config.queryServer}/query.api";
+    // Client details are only sent if the session is not private.
     final Map<String, dynamic> qOpts = {};
     if (config.private == false) {
       if (config.clientID != null) {
