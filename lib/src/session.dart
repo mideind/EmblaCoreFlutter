@@ -294,37 +294,45 @@ class EmblaSession {
     //   AudioPlayer().playSessionConfirm();
     // }
 
-    final Map<String, dynamic>? data = msg["data"];
+    try {
+      final Map<String, dynamic>? data = msg["data"];
+      if (data == null ||
+          data["valid"] == false ||
+          data["audio"] == null ||
+          data["answer"] == null) {
+        // Handle no answer scenario
+        dlog("Query result did not contain an answer, playing dunno answer");
+        String? dunnoMsg = AudioPlayer().playDunno(_config.voiceID, stop, _config.voiceSpeed);
 
-    if (data == null || data["valid"] == false || data["audio"] == null || data["answer"] == null) {
-      dlog("Query result did not contain an answer, playing dunno answer");
-      String? dunnoMsg = AudioPlayer().playDunno(_config.voiceID, stop, _config.voiceSpeed);
+        if (_config.onQueryAnswerReceived != null) {
+          // This is a bit of a hack, but we need to pass
+          // the dunno message text to the callback function
+          // so that it can be displayed in the UI.
+          data!["answer"] = dunnoMsg;
+          _config.onQueryAnswerReceived!(data);
+        }
+        return;
+      }
 
+      // OK, we got an answer, notify via handler
       if (_config.onQueryAnswerReceived != null) {
-        // This is a bit of a hack, but we need to pass
-        // the dunno message text to the callback function
-        // so that it can be displayed in the UI.
-        data!["answer"] = dunnoMsg;
         _config.onQueryAnswerReceived!(data);
       }
 
+      // Play remote audio file
+      final String audioURL = data["audio"];
+      AudioPlayer().playURL(audioURL, (err) {
+        if (err) {
+          _error("Error playing audio at URL $audioURL");
+          return;
+        }
+        // End session after audio answer has finished playing
+        stop();
+      });
+    } catch (e) {
+      _error("Error handling query result: $e");
       return;
     }
-
-    if (_config.onQueryAnswerReceived != null) {
-      _config.onQueryAnswerReceived!(data);
-    }
-
-    // Play remote audio file
-    final String audioURL = data["audio"];
-    AudioPlayer().playURL(audioURL, (err) {
-      if (err) {
-        _error("Error playing audio at URL $audioURL");
-        return;
-      }
-      // End session after audio answer has finished playing
-      stop();
-    });
   }
 
   // Start recording via microphone and streaming audio to server
