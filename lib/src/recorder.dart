@@ -109,7 +109,7 @@ class AudioRecorder {
       if (e.decibels == 0.0) {
         return; // Hack to work around a bug in flutter_sound
       }
-      dlog(e);
+      // dlog(e);
       final double decibels = e.decibels! - 70.0; // This number is arbitrary but works
       _lastSignal = _normalizedSignalStrengthFromDecibels(decibels);
     });

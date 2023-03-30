@@ -294,9 +294,9 @@ class EmblaSession {
     //   AudioPlayer().playSessionConfirm();
     // }
 
-    final Map<String, dynamic> data = msg["data"];
+    final Map<String, dynamic>? data = msg["data"];
 
-    if (data["audio"] == null || data["answer"] == null) {
+    if (data == null || data["valid"] == false || data["audio"] == null || data["answer"] == null) {
       dlog("Query result did not contain an answer");
       // The query result did not contain an answer
       String? dunnoMsg = AudioPlayer().playDunno(_config.voiceID, () {
@@ -307,7 +307,7 @@ class EmblaSession {
         // This is a bit of a hack, but we need to pass
         // the dunno message text to the callback function
         // so that it can be displayed in the UI.
-        data["answer"] = dunnoMsg;
+        data!["answer"] = dunnoMsg;
         _config.onQueryAnswerReceived!(data);
       }
       return;

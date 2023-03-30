@@ -92,7 +92,7 @@ class EmblaSessionConfig {
   /// Whether to play session UI sounds.
   bool audio = true;
 
-  AuthenticationToken? _token;
+  static AuthenticationToken? _token;
 
   /// WebSocket token for authenticated
   /// communication with the server.
@@ -105,7 +105,7 @@ class EmblaSessionConfig {
 
   bool hasValidToken() {
     final t = _token;
-    return t != null && t.tokenString.isNotEmpty && t.isExpired() == false;
+    return (t != null && t.tokenString.isNotEmpty && t.isExpired() == false);
   }
 
   // Fetch token for WebSocket communication if needed
