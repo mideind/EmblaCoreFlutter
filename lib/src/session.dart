@@ -54,7 +54,7 @@ void _configureAudioSession() async {
 }
 
 // Session state
-enum EmblaSessionState { idle, starting, listening, answering, done }
+enum EmblaSessionState { idle, starting, streaming, answering, done }
 
 /// Main session object encapsulating Embla's core functionality
 class EmblaSession {
@@ -255,7 +255,7 @@ class EmblaSession {
   void _handleASRResultMessage(Map<String, dynamic> msg) {
     dlog("ASR result message received");
 
-    if (state != EmblaSessionState.listening) {
+    if (state != EmblaSessionState.streaming) {
       throw Exception("Session is not listening!");
     }
 
@@ -297,11 +297,8 @@ class EmblaSession {
     final Map<String, dynamic>? data = msg["data"];
 
     if (data == null || data["valid"] == false || data["audio"] == null || data["answer"] == null) {
-      dlog("Query result did not contain an answer");
-      // The query result did not contain an answer
-      String? dunnoMsg = AudioPlayer().playDunno(_config.voiceID, () {
-        stop();
-      }, _config.voiceSpeed);
+      dlog("Query result did not contain an answer, playing dunno answer");
+      String? dunnoMsg = AudioPlayer().playDunno(_config.voiceID, stop, _config.voiceSpeed);
 
       if (_config.onQueryAnswerReceived != null) {
         // This is a bit of a hack, but we need to pass
@@ -310,6 +307,7 @@ class EmblaSession {
         data!["answer"] = dunnoMsg;
         _config.onQueryAnswerReceived!(data);
       }
+
       return;
     }
 
@@ -321,17 +319,17 @@ class EmblaSession {
     final String audioURL = data["audio"];
     AudioPlayer().playURL(audioURL, (err) {
       if (err) {
-        _error("Error playing audio at $audioURL");
+        _error("Error playing audio at URL $audioURL");
         return;
       }
-      // End session after audio has finished playing
+      // End session after audio answer has finished playing
       stop();
     });
   }
 
   // Start recording via microphone and streaming audio to server
   void _startListening() {
-    state = EmblaSessionState.listening;
+    state = EmblaSessionState.streaming;
     AudioRecorder().start((Uint8List data) {
       _channel?.sink.add(data);
     }, (String errMsg) {
