@@ -307,7 +307,7 @@ class EmblaSession {
         // This is a bit of a hack, but we need to pass
         // the dunno message text to the callback function
         // so that it can be displayed in the UI.
-        data["message"] = dunnoMsg;
+        data["answer"] = dunnoMsg;
         _config.onQueryAnswerReceived!(data);
       }
       return;
