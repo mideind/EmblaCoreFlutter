@@ -48,6 +48,8 @@ const List<String> audioFiles = [
   'mynameis-gunnar',
   'voicespeed-gudrun',
   'voicespeed-gunnar',
+  'nomic-gudrun',
+  'nomic-gunnar',
   'dunno01-gudrun',
   'dunno02-gudrun',
   'dunno03-gudrun',
@@ -192,6 +194,11 @@ class AudioPlayer {
   /// Play the UI sound for when a session is canceled or fails.
   void playSessionCancel() {
     playSound('rec_cancel');
+  }
+
+  /// Play the sound for when the app does not have microphone recording permissions.
+  void playNoMic(String voiceID) {
+    playSound('no_mic', voiceID);
   }
 
   /// Play a preloaded audio file bundled with the app.
