@@ -236,16 +236,16 @@ class EmblaSession {
   // Once we receive the greetings message from the server,
   // we can start listening for speech and stream the audio.
   void _handleGreetingsMessage(Map<String, dynamic> msg) {
-    dlog("Greetings message received. Starting listening...");
+    dlog("Greetings message received. Starting streaming...");
 
     if (state != EmblaSessionState.starting) {
       throw Exception("Session is not starting!");
     }
 
-    _startListening();
+    _startStreaming();
 
-    if (_config.onStartListening != null) {
-      _config.onStartListening!();
+    if (_config.onStartStreaming != null) {
+      _config.onStartStreaming!();
     }
   }
 
@@ -256,7 +256,7 @@ class EmblaSession {
     dlog("ASR result message received");
 
     if (state != EmblaSessionState.streaming) {
-      throw Exception("Session is not listening!");
+      throw Exception("Session is not streaming!");
     }
 
     final String transcript = msg["transcript"];
@@ -336,7 +336,7 @@ class EmblaSession {
   }
 
   // Start recording via microphone and streaming audio to server
-  void _startListening() {
+  void _startStreaming() {
     state = EmblaSessionState.streaming;
     AudioRecorder().start((Uint8List data) {
       _channel?.sink.add(data);

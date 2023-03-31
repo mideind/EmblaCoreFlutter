@@ -144,8 +144,9 @@ class EmblaSessionConfig {
 
   // Handlers for session events
 
-  /// Called when the session has received a greeting from the server.
-  void Function()? onStartListening;
+  /// Called when the session has received a greeting from
+  /// the server and has begun streaming audio.
+  void Function()? onStartStreaming;
 
   /// Called when the session has received speech text from the server.
   void Function(String, bool)? onSpeechTextReceived;

@@ -84,7 +84,7 @@ class _SessionPageState extends State<SessionPage> {
     config = EmblaSessionConfig(server: serverURL);
     config!.apiKey = "YOUR_API_KEY_HERE";
 
-    config?.onStartListening = () {
+    config?.onStartStreaming = () {
       setState(() {
         buttonIcon = stopIcon;
         msg = kListeningPrompt;
