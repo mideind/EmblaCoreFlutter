@@ -115,13 +115,14 @@ class AudioPlayer {
   /// Play remote audio file at URL.
   ///
   /// [url] URL of audio file
-  /// [completionHandler] Completion handler invoked when playback is finished
+  /// [completionHandler] Completion handler invoked when playback is finished.
+  /// The bool parameter is true if an error occurred.
   Future<void> playURL(String url, [void Function(bool err)? completionHandler]) async {
     //stop();
     // If the URL is too long (maybe a Data URI?), truncate it for logging purposes
     String displayURL = url;
-    if (url.length > 300) {
-      displayURL = "${url.substring(0, 300)}...";
+    if (url.length > 200) {
+      displayURL = "${url.substring(0, 200)}...";
     }
 
     dlog("Playing audio file at URL '$displayURL'");
@@ -138,9 +139,11 @@ class AudioPlayer {
         data = await http.readBytes(Uri.parse(url));
       }
 
+      // We expect the file to be an MP3
       if (kDebugMode) {
         final mp3 = MP3Processor.fromBytes(data);
-        dlog("Audio file is ${data.lengthInBytes} bytes (${mp3.duration.inSeconds} seconds)");
+        final double sec = mp3.duration.inMilliseconds / 1000.0;
+        dlog("Audio file is ${data.lengthInBytes} bytes (${sec.toStringAsFixed(1)} seconds)");
       }
 
       _player.setSpeed(1.0);

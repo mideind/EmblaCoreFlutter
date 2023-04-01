@@ -39,7 +39,8 @@ void _configureAudioSession() async {
   await session.configure(AudioSessionConfiguration(
     avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
     avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth |
-        AVAudioSessionCategoryOptions.defaultToSpeaker,
+        AVAudioSessionCategoryOptions.defaultToSpeaker |
+        AVAudioSessionCategoryOptions.duckOthers,
     // avAudioSessionMode: AVAudioSessionMode.spokenAudio,
     avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
     avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
