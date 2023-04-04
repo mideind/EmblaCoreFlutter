@@ -16,14 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:embla_core/embla_core.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   test("Instantiated session in idle state", () {
+    // Create and verify config object
     var cfg = EmblaSessionConfig();
+    expect(cfg, isNotNull);
+    expect((cfg.socketURL != ''), true);
+    expect(cfg.apiKey == null, true);
+    expect(cfg.queryServer != '', true);
+
+    // Create and verify session object
     var session = EmblaSession(cfg);
     expect(session.state == EmblaSessionState.idle, true);
+    expect(session.isActive() == false, true);
+  });
+
+  test("Verify that singletons are singletons", () {
+    expect(AudioPlayer() == AudioPlayer(), true);
+    expect(AudioRecorder() == AudioRecorder(), true);
   });
 }
