@@ -108,6 +108,9 @@ class AudioPlayer {
 
   /// Stop all playback.
   void stop() {
+    if (_player.isPlaying) {
+      return;
+    }
     dlog('Stopping audio playback');
     _player.stopPlayer();
   }

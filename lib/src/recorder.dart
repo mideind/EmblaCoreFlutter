@@ -93,6 +93,7 @@ class AudioRecorder {
         _totalAudioDataSize += data.lengthInBytes;
         _totalAudioDuration = _totalAudioDataSize / (kAudioSampleRate * 2);
         dataHandler(data); // Invoke callback
+        dlog(_totalAudioDuration);
       } else {
         final errMsg = 'Got null data in recording stream: $buffer';
         dlog(errMsg);
@@ -104,7 +105,7 @@ class AudioRecorder {
     await _micRecorder.openRecorder();
 
     // Listen for audio status (duration, decibel) at fixed interval
-    _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));
+    await _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));
     _recordingProgressSubscription = _micRecorder.onProgress?.listen((e) {
       if (e.decibels == 0.0) {
         return; // Hack to work around a bug in flutter_sound
@@ -128,20 +129,22 @@ class AudioRecorder {
       return;
     }
 
+    _isRecording = false;
+
     dlog('Stopping audio recording');
     dlog("Total audio length: ${_totalAudioDuration.toStringAsFixed(1)}"
         " seconds ($_totalAudioDataSize bytes)");
 
-    _isRecording = false;
     _lastSignal = 0.0;
     _totalAudioDataSize = 0;
     _totalAudioDuration = 0.0;
 
-    await _micRecorder.stopRecorder();
-    await _micRecorder.closeRecorder();
     await _recordingDataSubscription?.cancel();
     await _recordingProgressSubscription?.cancel();
     await _recordingDataController?.close();
+
+    await _micRecorder.stopRecorder();
+    // await _micRecorder.closeRecorder();
   }
 
   // Normalize decibel level to a number between 0.0 and 1.0

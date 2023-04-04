@@ -95,7 +95,7 @@ class EmblaSession {
       AudioPlayer().playSessionStart();
     }
 
-    _config.fetchToken().then((val) {
+    _config.fetchToken().then((val) async {
       if (state == EmblaSessionState.done) {
         // User canceled session before token was fetched
         return;
@@ -103,20 +103,20 @@ class EmblaSession {
 
       // Make sure we have a token
       if (_config.hasValidToken() == false) {
-        _error("Missing session token!");
+        await _error("Missing session token!");
         return;
       }
 
       _openWebSocketConnection();
-    }).catchError((_) {
-      _error("Error fetching session token!");
+    }).catchError((_) async {
+      await _error("Error fetching session token!");
     });
   }
 
   /// Stop session
-  void stop() {
+  Future<void> stop() async {
     dlog("Ending session...");
-    _stop();
+    await _stop();
 
     // Set state to done
     state = EmblaSessionState.done;
@@ -128,8 +128,8 @@ class EmblaSession {
   }
 
   /// User-intitated cancellation of session
-  void cancel() {
-    stop();
+  Future<void> cancel() async {
+    await stop();
     if (_config.audio) {
       AudioPlayer().playSessionCancel();
     }
@@ -147,18 +147,18 @@ class EmblaSession {
 
   // PRIVATE METHODS
 
-  void _stop() {
+  Future<void> _stop() async {
     // Terminate all audio recording and playback
-    AudioRecorder().stop();
+    await AudioRecorder().stop();
     AudioPlayer().stop();
     // Close WebSocket connection
     _channel?.sink.close(status.goingAway);
   }
 
   // Terminate session with error message
-  void _error(String errMsg) {
+  Future<void> _error(String errMsg) async {
     dlog("Error in session: $errMsg");
-    _stop();
+    await _stop();
 
     // Set state to done
     state = EmblaSessionState.done;
@@ -253,7 +253,7 @@ class EmblaSession {
   // We have received a speech recognition result from the server.
   // If it's the final result, we stop recording audio and wait
   // for the query server response.
-  void _handleASRResultMessage(Map<String, dynamic> msg) {
+  void _handleASRResultMessage(Map<String, dynamic> msg) async {
     dlog("ASR result message received");
 
     if (state != EmblaSessionState.streaming) {
@@ -265,7 +265,7 @@ class EmblaSession {
 
     if (isFinal) {
       dlog("Received final answer");
-      AudioRecorder().stop();
+      await AudioRecorder().stop();
       if (_config.query) {
         state = EmblaSessionState.answering;
       }
@@ -278,13 +278,13 @@ class EmblaSession {
     // If this is the final ASR result and config has
     // disabled querying, we end the session.
     if (isFinal && _config.query == false) {
-      stop();
+      await stop();
     }
   }
 
   // We have received a query result from the server.
   // We play the audio and then end the session.
-  void _handleQueryResultMessage(Map<String, dynamic> msg) {
+  void _handleQueryResultMessage(Map<String, dynamic> msg) async {
     dlog("Query result message received");
 
     if (state != EmblaSessionState.answering) {
@@ -322,13 +322,13 @@ class EmblaSession {
 
       // Play remote audio file
       final String audioURL = data["audio"];
-      AudioPlayer().playURL(audioURL, (err) {
+      AudioPlayer().playURL(audioURL, (err) async {
         if (err) {
           _error("Error playing audio at URL $audioURL");
           return;
         }
         // End session after audio answer has finished playing
-        stop();
+        await stop();
       });
     } catch (e) {
       _error("Error handling query result: $e");
@@ -337,9 +337,9 @@ class EmblaSession {
   }
 
   // Start recording via microphone and streaming audio to server
-  void _startStreaming() {
+  void _startStreaming() async {
     state = EmblaSessionState.streaming;
-    AudioRecorder().start((Uint8List data) {
+    await AudioRecorder().start((Uint8List data) {
       _channel?.sink.add(data);
     }, (String errMsg) {
       _error(errMsg);
