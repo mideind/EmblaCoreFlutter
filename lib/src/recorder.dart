@@ -49,6 +49,7 @@ class AudioRecorder {
   AudioRecorder._constructor();
   static final AudioRecorder _instance = AudioRecorder._constructor();
   factory AudioRecorder() {
+    _instance._micRecorder.openRecorder();
     return _instance;
   }
 
@@ -102,7 +103,7 @@ class AudioRecorder {
     });
 
     // Open microphone recording session
-    await _micRecorder.openRecorder();
+    // await _micRecorder.openRecorder();
 
     // Listen for audio status (duration, decibel) at fixed interval
     await _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));

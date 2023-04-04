@@ -30,7 +30,7 @@ const int kAudioBitRate = 16;
 const int kAudioNumChannels = 1;
 
 // Server communication
-const String kDefaultServer = "http://staging.api.greynir.is";
+const String kDefaultServer = "https://staging.api.greynir.is";
 const String kTokenEndpoint = "/asr/v1/token";
 const String kSocketEndpoint = "/asr/v1/socket";
 const String kSpeechSynthesisEndpoint = "/asr/v1/tts";
