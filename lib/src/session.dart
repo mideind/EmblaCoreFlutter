@@ -33,15 +33,16 @@ import './recorder.dart' show AudioRecorder;
 import './config.dart' show EmblaSessionConfig;
 import './messages.dart' show GreetingsOutputMessage;
 
-void _configureAudioSession() async {
+Future<void> _configureAudioSession() async {
   dlog("Configuring audio session");
   final session = await AudioSession.instance;
   await session.configure(AudioSessionConfiguration(
     avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
-    avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth |
-        AVAudioSessionCategoryOptions.defaultToSpeaker |
-        AVAudioSessionCategoryOptions.duckOthers,
+    avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.defaultToSpeaker |
+        AVAudioSessionCategoryOptions.allowBluetooth,
+    //     AVAudioSessionCategoryOptions.duckOthers,
     // avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+    avAudioSessionMode: AVAudioSessionMode.defaultMode,
     avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
     avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
     androidAudioAttributes: const AndroidAudioAttributes(
@@ -52,6 +53,7 @@ void _configureAudioSession() async {
     androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
     androidWillPauseWhenDucked: true,
   ));
+  await session.setActive(true);
 }
 
 // Session state
@@ -74,11 +76,11 @@ class EmblaSession {
   /// Static method to preload all required assets and initialize
   /// audio subsystems. This is not strictly necessary, but it will
   /// reduce the delay when starting a session for the first time.
-  static void prepare() {
+  static Future<void> prepare() async {
     // Initialize these singletons
+    await _configureAudioSession();
     AudioPlayer();
     AudioRecorder();
-    _configureAudioSession();
   }
 
   /// Start session
