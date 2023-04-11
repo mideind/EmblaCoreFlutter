@@ -32,11 +32,11 @@ class GreetingsOutputMessage {
   /// Create a greetings message from a session config object.
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
     // Engine options
-    if (config.engine != null) {
-      data["engine"] = config.engine;
-    }
     final Map<String, dynamic> engineOpts = {};
     // engineOpts["language"] = config.language;  // Unused
+    if (config.engine != null) {
+      engineOpts["engine"] = config.engine;
+    }
     data["engine_options"] = engineOpts;
 
     // Other options

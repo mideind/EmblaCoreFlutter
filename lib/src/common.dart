@@ -49,7 +49,7 @@ const List<String> kSupportedSpeechSynthesisVoices = [
 
 /// Debug logging
 void dlog(dynamic msg) {
-  if (kDebugMode == true) {
+  if (kDebugMode) {
     // ignore: avoid_print
     print(msg.toString());
   }

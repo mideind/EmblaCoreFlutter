@@ -42,7 +42,7 @@ class AuthenticationToken {
 
   bool isExpired() {
     // If token expires in less than 30 seconds, consider it expired.
-    return expiresAt.isBefore(DateTime.now().subtract(const Duration(seconds: 30))) == true;
+    return expiresAt.isBefore(DateTime.now().subtract(const Duration(seconds: 30)));
   }
 
   @override

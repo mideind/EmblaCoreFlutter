@@ -76,7 +76,7 @@ class AudioRecorder {
 
   /// Start recording audio from microphone.
   Future<void> start(void Function(Uint8List) dataHandler, void Function(String) errHandler) async {
-    if (_isRecording == true) {
+    if (_isRecording) {
       const errMsg = 'EmblaRecorder already recording!';
       dlog(errMsg);
       errHandler(errMsg);
