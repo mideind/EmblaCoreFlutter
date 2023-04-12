@@ -31,13 +31,13 @@ class GreetingsOutputMessage {
 
   /// Create a greetings message from a session config object.
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
-    // Engine options
+    // ASR options
+    final Map<String, dynamic> asrOpts = {};
+    // asrOpts["language"] = config.language;  // Unused
     if (config.engine != null) {
-      data["engine"] = config.engine;
+      asrOpts["engine"] = config.engine;
     }
-    final Map<String, dynamic> engineOpts = {};
-    // engineOpts["language"] = config.language;  // Unused
-    data["engine_options"] = engineOpts;
+    data["asr_options"] = asrOpts;
 
     // Other options
     data["private"] = config.private;
