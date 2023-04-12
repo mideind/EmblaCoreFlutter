@@ -76,9 +76,10 @@ class EmblaSession {
   /// Static method to preload all required assets and initialize
   /// audio subsystems. This is not strictly necessary, but it will
   /// reduce the delay when starting a session for the first time.
+  /// Call this method as early as possible in your app's lifecycle.
   static Future<void> prepare() async {
-    // Initialize these singletons
     await _configureAudioSession();
+    // Initialize these singletons
     AudioPlayer();
     AudioRecorder();
   }
@@ -326,14 +327,14 @@ class EmblaSession {
       final String audioURL = data["audio"];
       AudioPlayer().playURL(audioURL, (err) async {
         if (err) {
-          _error("Error playing audio at URL $audioURL");
+          await _error("Error playing audio at URL $audioURL");
           return;
         }
         // End session after audio answer has finished playing
         await stop();
       });
     } catch (e) {
-      _error("Error handling query result: $e");
+      await _error("Error handling query result: $e");
       return;
     }
   }

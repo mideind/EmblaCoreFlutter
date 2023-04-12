@@ -106,7 +106,7 @@ class AudioRecorder {
     // await _micRecorder.openRecorder();
 
     // Listen for audio status (duration, decibel) at fixed interval
-    await _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 50));
+    await _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 80));
     _recordingProgressSubscription = _micRecorder.onProgress?.listen((e) {
       if (e.decibels == 0.0) {
         return; // Hack to work around a bug in flutter_sound
