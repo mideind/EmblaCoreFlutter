@@ -44,9 +44,9 @@ class GreetingsOutputMessage {
 
     // Query options, which includes client details.
     data["query"] = config.query;
-    data["query_url"] = "${config.queryServer}/query.api";
     // Client details are only sent if the session is not private.
     final Map<String, dynamic> qOpts = {};
+    qOpts["url"] = "${config.queryServer}/query.api";
     if (config.private == false) {
       if (config.clientID != null) {
         qOpts["client_id"] = config.clientID;
@@ -66,12 +66,15 @@ class GreetingsOutputMessage {
       }
     }
 
-    // Speech synthesis settings
-    qOpts["voice"] = true;
-    qOpts["voice_id"] = config.voiceID;
-    qOpts["voice_speed"] = config.voiceSpeed;
-
     data["query_options"] = qOpts;
+
+    // Speech synthesis settings
+    data["tts"] = config.tts;
+    final Map<String, dynamic> ttsOpts = {};
+    ttsOpts["voice_id"] = config.voiceID;
+    ttsOpts["voice_speed"] = config.voiceSpeed;
+
+    data["tts_options"] = ttsOpts;
 
     // Token
     token = config.token ?? "";
