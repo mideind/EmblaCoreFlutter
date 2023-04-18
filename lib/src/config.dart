@@ -86,6 +86,11 @@ class EmblaSessionConfig {
   /// Defaults to `true`.
   bool query = true;
 
+  /// Whether Ratatoskur should speech synthesize query server answer
+  /// and subsequently forward the audio to the client.
+  /// Defaults to `true`.
+  bool tts = true;
+
   /// Query server URL. Defaults to [kDefaultQueryServer].
   String queryServer = kDefaultQueryServer;
 
@@ -184,6 +189,7 @@ class EmblaSessionConfig {
       "clientType": clientType,
       "clientVersion": clientVersion,
       "query": query,
+      "tts": tts,
       "audio": audio,
       "_token": _token,
     };

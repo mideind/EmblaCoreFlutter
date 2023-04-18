@@ -18,6 +18,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:embla_core/embla_core.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 const String kSoftwareTitle = 'EmblaCore Demo';
 const String kDefaultPrompt = 'Smelltu á hnappinn til að byrja';
@@ -73,12 +74,18 @@ class _SessionPageState extends State<SessionPage> {
     });
   }
 
+  Future _askForPermissions() async {
+    if (await Permission.microphone.isGranted != true) {
+      await Permission.microphone.request();
+    }
+  }
+
   void _createConfigIfNeeded() {
     if (config != null) {
       return;
     }
 
-    const String serverURL = "https://staging.api.greynir.is"; // http://localhost:8080
+    const String serverURL = "https://staging.api.greynir.is"; // http://local-ip-address:8080
 
     // Create new session config
     config = EmblaSessionConfig(server: serverURL);
@@ -140,12 +147,13 @@ class _SessionPageState extends State<SessionPage> {
     });
   }
 
-  void _buttonClick() {
+  void _buttonClick() async {
     if (session != null && session!.isActive()) {
       // Session is active, so terminate it
       _stopSession();
       return;
     }
+    await _askForPermissions();
     _startSession();
   }
 
