@@ -61,8 +61,8 @@ class _SessionPageState extends State<SessionPage> {
   EmblaSession? session;
   EmblaSessionConfig? config;
   String msg = kDefaultPrompt;
-  Icon playIcon = const Icon(Icons.play_arrow);
-  Icon stopIcon = const Icon(Icons.stop);
+  final playIcon = const Icon(Icons.play_arrow);
+  final stopIcon = const Icon(Icons.stop);
   Icon buttonIcon = const Icon(Icons.play_arrow);
 
   void _stopSession() {

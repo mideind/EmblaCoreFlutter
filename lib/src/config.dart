@@ -65,7 +65,7 @@ class EmblaSessionConfig {
   double voiceSpeed = kDefaultSpeechSynthesisSpeed;
 
   /// Don't send client info to server. Default is `false`.
-  bool private = false;
+  bool privateMode = false;
 
   /// Client ID should be set by client app.
   /// Ideally, a unique app-specific client ID should
@@ -179,7 +179,7 @@ class EmblaSessionConfig {
       "engine": engine,
       "voiceID": voiceID,
       "voiceSpeed": voiceSpeed,
-      "private": private,
+      "private": privateMode,
       "clientID": clientID,
       "clientType": clientType,
       "clientVersion": clientVersion,

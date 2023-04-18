@@ -40,14 +40,14 @@ class GreetingsOutputMessage {
     data["asr_options"] = asrOpts;
 
     // Other options
-    data["private"] = config.private;
+    data["private"] = config.privateMode;
 
     // Query options, which includes client details.
     data["query"] = config.query;
     data["query_url"] = "${config.queryServer}/query.api";
     // Client details are only sent if the session is not private.
     final Map<String, dynamic> qOpts = {};
-    if (config.private == false) {
+    if (config.privateMode == false) {
       if (config.clientID != null) {
         qOpts["client_id"] = config.clientID;
       }
