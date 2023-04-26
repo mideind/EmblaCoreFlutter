@@ -31,10 +31,10 @@ const int kAudioNumChannels = 1;
 
 // Server communication
 const String kDefaultServer = "https://staging.api.greynir.is";
-const String kTokenEndpoint = "/asr/v1/token";
-const String kSocketEndpoint = "/asr/v1/socket";
-const String kSpeechSynthesisEndpoint = "/asr/v1/tts";
-const String kClearHistoryEndpoint = "/asr/v1/clear_history";
+const String kTokenEndpoint = "/rat/v1/token";
+const String kSocketEndpoint = "/rat/v1/socket";
+const String kSpeechSynthesisEndpoint = "/rat/v1/tts";
+const String kClearHistoryEndpoint = "/rat/v1/clear_history";
 const String kDefaultQueryServer = 'https://greynir.is';
 
 const kRequestTimeout = Duration(seconds: 10); // Seconds
