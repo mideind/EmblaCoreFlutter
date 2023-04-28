@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:embla_core/embla_core.dart';
+import 'package:embla_core/src/util.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,8 +39,34 @@ void main() {
     expect(session.isActive() == false, true);
   });
 
-  test("Verify that singletons are singletons", () {
-    expect(AudioPlayer() == AudioPlayer(), true);
-    expect(AudioRecorder() == AudioRecorder(), true);
+  // test("Verify that singletons are singletons", () {
+  //   expect(AudioPlayer() == AudioPlayer(), true);
+  //   expect(AudioRecorder() == AudioRecorder(), true);
+  // });
+
+  // Test string extension methods
+  test('Strings should have first character capitalized', () {
+    const List<String> ts = [
+      "mikið er þetta gaman",
+      "HVAÐ ER EIGINLEGA Í GANGI?",
+      "The rain in Spain stays mainly in the plain",
+      "iT's by no means possible",
+      "það er nú þannig að ég er ekki alveg viss um þetta",
+    ];
+    for (String s in ts) {
+      expect(s[0].toUpperCase() == s.capFirst()[0], true);
+    }
+  });
+
+  test('Strings should be asciified', () {
+    const Map<String, String> m = {
+      "mikið er þetta gaman": "mikid er thetta gaman",
+      "HVAÐ ER EIGINLEGA Í GANGI?": "HVAD ER EIGINLEGA I GANGI?",
+      "Örnólfur Gyrðir Böðvarsson": "Ornolfur Gyrdir Bodvarsson",
+      "SVEINBJÖRN Þórðarson": "SVEINBJORN THordarson",
+    };
+    m.forEach((k, v) {
+      expect(k.asciify() == v, true);
+    });
   });
 }

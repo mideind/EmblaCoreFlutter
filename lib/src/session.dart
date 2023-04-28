@@ -263,7 +263,7 @@ class EmblaSession {
       throw Exception("Session is not streaming!");
     }
 
-    final String transcript = msg["transcript"];
+    final String transcript = msg["transcript"].capFirst();
     final bool isFinal = msg["is_final"];
 
     if (isFinal) {

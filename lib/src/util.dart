@@ -22,7 +22,7 @@
 extension StringExtension on String {
   /// Convert Icelandic characters to their ASCII equivalent.
   String asciify() {
-    Map<String, String> icechar2ascii = {
+    const Map<String, String> icechar2ascii = {
       "ð": "d",
       "Ð": "D",
       "á": "a",
@@ -50,5 +50,17 @@ extension StringExtension on String {
       s = s.replaceAll(k, v);
     });
     return s;
+  }
+
+  /// Capitalize the first character of a string
+  String capFirst() {
+    final String s = this;
+    if (s.isEmpty) {
+      return s;
+    }
+    if (s.length == 1) {
+      return s.toUpperCase();
+    }
+    return "${s[0].toUpperCase()}${s.substring(1)}";
   }
 }
