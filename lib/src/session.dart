@@ -28,6 +28,7 @@ import 'package:web_socket_channel/status.dart' as status;
 import 'package:audio_session/audio_session.dart';
 
 import './common.dart';
+import './util.dart';
 import './audio.dart' show AudioPlayer;
 import './recorder.dart' show AudioRecorder;
 import './config.dart' show EmblaSessionConfig;
@@ -160,6 +161,11 @@ class EmblaSession {
 
   // Terminate session with error message
   Future<void> _error(String errMsg) async {
+    if (state == EmblaSessionState.done) {
+      // Session already done, ignore error
+      return;
+    }
+
     dlog("Error in session: $errMsg");
     await _stop();
 
@@ -175,15 +181,15 @@ class EmblaSession {
   }
 
   // Open WebSocket connection to server
-  void _openWebSocketConnection() {
+  void _openWebSocketConnection() async {
     try {
       // Connect to server
       final wsUri = Uri.parse(_config.socketURL);
       _channel = WebSocketChannel.connect(wsUri);
 
       // Start listening for messages
-      _channel?.stream.listen(_socketMessageReceived, onError: (e) {
-        _error("Error listening on WebSocket connection: $e");
+      _channel?.stream.listen(_socketMessageReceived, onError: (e) async {
+        await _error("Error listening on WebSocket connection: $e");
       }, onDone: () {
         dlog("WebSocket connection closed");
       }, cancelOnError: true);
@@ -195,13 +201,14 @@ class EmblaSession {
       final String json = greetings.toJSON();
       dlog("Sending initial greetings message: $json");
       _channel?.sink.add(json);
+      await _startStreaming();
     } catch (e) {
-      _error("Error connecting to server: $e");
+      await _error("Error connecting to server: $e");
     }
   }
 
   // Handle all incoming WebSocket messages
-  void _socketMessageReceived(dynamic data) {
+  void _socketMessageReceived(dynamic data) async {
     dlog("Received message: $data");
     // Decode JSON message and handle it according to type
     try {
@@ -223,7 +230,7 @@ class EmblaSession {
 
         case "error":
           if (msg["name"] == "timeout_error") {
-            cancel();
+            await cancel();
             return;
           }
           throw Exception(msg["message"]);
@@ -232,7 +239,7 @@ class EmblaSession {
           throw Exception("Invalid message type: $type");
       }
     } catch (e) {
-      _error("Error handling message: $e");
+      await _error("Error handling message: $e");
       return;
     }
   }
@@ -242,11 +249,11 @@ class EmblaSession {
   void _handleGreetingsMessage(Map<String, dynamic> msg) {
     dlog("Greetings message received. Starting streaming...");
 
-    if (state != EmblaSessionState.starting) {
-      throw Exception("Session is not starting!");
-    }
+    // if (state != EmblaSessionState.starting) {
+    //   throw Exception("Session is not starting!");
+    // }
 
-    _startStreaming();
+    // _startStreaming();
 
     if (_config.onStartStreaming != null) {
       _config.onStartStreaming!();
@@ -263,7 +270,7 @@ class EmblaSession {
       throw Exception("Session is not streaming!");
     }
 
-    final String transcript = msg["transcript"].capFirst();
+    final String transcript = msg["transcript"].toString().capFirst();
     final bool isFinal = msg["is_final"];
 
     if (isFinal) {
@@ -275,12 +282,17 @@ class EmblaSession {
     }
 
     if (_config.onSpeechTextReceived != null) {
-      _config.onSpeechTextReceived!(transcript, isFinal);
+      _config.onSpeechTextReceived!(transcript, isFinal, msg);
+    }
+
+    if (isFinal && transcript.isEmpty) {
+      await cancel();
+      return;
     }
 
     // If this is the final ASR result and config has
     // disabled querying, we end the session.
-    if (isFinal && _config.query == false) {
+    if (isFinal && (_config.query == false)) {
       await stop();
     }
   }
@@ -340,12 +352,12 @@ class EmblaSession {
   }
 
   // Start recording via microphone and streaming audio to server
-  void _startStreaming() async {
+  Future<void> _startStreaming() async {
     state = EmblaSessionState.streaming;
     await AudioRecorder().start((Uint8List data) {
       _channel?.sink.add(data);
-    }, (String errMsg) {
-      _error(errMsg);
+    }, (String errMsg) async {
+      await _error(errMsg);
     });
   }
 

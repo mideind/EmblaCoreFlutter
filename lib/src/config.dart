@@ -154,7 +154,7 @@ class EmblaSessionConfig {
   void Function()? onStartStreaming;
 
   /// Called when the session has received speech text from the server.
-  void Function(String, bool)? onSpeechTextReceived;
+  void Function(String, bool, Map<String, dynamic>)? onSpeechTextReceived;
 
   /// Called when the session has received *final* speech text
   /// from the server and is waiting for a query answer.

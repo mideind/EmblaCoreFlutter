@@ -98,7 +98,7 @@ class _SessionPageState extends State<SessionPage> {
       });
     };
 
-    config?.onSpeechTextReceived = (String transcript, bool isFinal) {
+    config?.onSpeechTextReceived = (String transcript, bool isFinal, Map<String, dynamic> data) {
       setState(() {
         msg = transcript;
       });
