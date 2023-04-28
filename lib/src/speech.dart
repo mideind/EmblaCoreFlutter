@@ -21,7 +21,7 @@
 
 import 'dart:convert' show json;
 
-import 'package:http/http.dart' show Response, post;
+import 'package:http/http.dart' show post;
 
 import './common.dart';
 
@@ -31,51 +31,55 @@ class EmblaSpeechSynthesizer {
   EmblaSpeechSynthesizer._();
 
   /// Send request to speech synthesis API (static method).
-  static Future<void> synthesize(String text, String apiKey, void Function(Map?) handler,
+  ///
+  /// [text] Text to be speech synthesized
+  /// [apiKey] Server API key
+  /// Returns the resulting audio file URL or null if an error occurred.
+  static Future<String?> synthesize(String text, String? apiKey,
       {String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
       String apiURL = "$kDefaultServer$kSpeechSynthesisEndpoint"}) async {
-    Map<String, String> qargs = {
-      'text': text,
-      'api_key': apiKey,
-      'voice_id': voiceID,
-      'voice_speed': voiceSpeed.toString(),
-    };
-
-    await _makeRequest(apiURL, qargs, handler);
-  }
-
-  static Future<Response?> _makeRequest(String apiURL, Map<String, dynamic> qargs,
-      [void Function(Map?)? handler]) async {
-    dlog("Sending POST request to $apiURL: ${qargs.toString()}");
-    Response? response;
+    // Set URI
+    Uri uri;
     try {
-      response = await post(Uri.parse(apiURL), body: qargs).timeout(kRequestTimeout, onTimeout: () {
-        handler!(null);
-        return Response("Request timed out", 408);
-      });
-    } catch (e) {
-      dlog("Error while making POST request: $e");
-      response = null;
-    }
-
-    // Handle null response
-    if (response == null) {
-      handler!(null);
+      uri = Uri.parse(apiURL);
+    } on FormatException {
+      dlog("Invalid URL specified for TTS synthesis.");
       return null;
     }
+    // Set request headers
+    Map<String, String> headers = {
+      "X-API-Key": apiKey ?? "",
+      "content-type": "application/json",
+      "accept": "application/json"
+    };
+    // Set request body
+    String body = json.encode({
+      'text': text,
+      'options': {'voice_id': voiceID, 'voice_speed': voiceSpeed.toString()}
+    });
 
-    // We have a valid response object
-    dlog("Response status: ${response.statusCode}");
-    dlog("Response body: ${response.body}");
-    if (handler != null) {
-      // Parse JSON body and feed ensuing data structure to handler function
-      dynamic arg = (response.statusCode == 200) ? json.decode(response.body) : null;
-      // JSON response should be a dict, otherwise something's gone horribly wrong
-      arg = (arg is Map) == false ? null : arg;
-      handler(arg);
-    }
+    dlog("Sending POST request to $apiURL: $body");
+    return await post(uri, headers: headers, body: body).timeout(kRequestTimeout).then((response) {
+      dlog("Response status: ${response.statusCode}");
+      dlog("Response body: ${response.body}");
+      if (response.statusCode != 200) {
+        dlog("Received invalid status code from TTS service.");
+        return null;
+      }
 
-    return response;
+      dynamic arg = json.decode(response.body);
+      if (arg is Map && arg.containsKey("audio_url")) {
+        // Valid response body
+        // Return the resulting audio file URL
+        return arg["audio_url"];
+      }
+      dlog("Invalid response body from TTS service.");
+      return null;
+    }, onError: (e) {
+      dlog("Error in speech synthesis: $e");
+      // Errors during request, return null
+      return null;
+    });
   }
 }
