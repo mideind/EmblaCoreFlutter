@@ -131,7 +131,7 @@ class EmblaSession {
     }
   }
 
-  /// User-intitated cancellation of session
+  /// User-initiated cancellation of session
   Future<void> cancel() async {
     await stop();
     if (_config.audio) {
