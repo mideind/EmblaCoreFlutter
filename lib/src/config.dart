@@ -29,6 +29,7 @@ class EmblaSessionConfig {
   // Constructor
   EmblaSessionConfig({String server = kDefaultServer}) {
     dlog("Creating EmblaSessionConfig object");
+    ratatoskurServer = server;
     _tokenURL = "$server$kTokenEndpoint";
 
     String webSocketURL = server;
@@ -41,6 +42,9 @@ class EmblaSessionConfig {
     dlog("Using socket URL $webSocketURL");
     socketURL = "$webSocketURL$kSocketEndpoint";
   }
+
+  /// Ratatoskur server URL.
+  late String ratatoskurServer = kDefaultServer;
 
   /// URL to API that provides authentication token for WebSocket communication.
   late String _tokenURL;
