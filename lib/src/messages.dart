@@ -45,7 +45,7 @@ class GreetingsOutputMessage {
     // Query options, which includes client details.
     data["query"] = config.query;
     final Map<String, dynamic> qOpts = {};
-    qOpts["url"] = "${config.queryServer}/query.api";
+    qOpts["url"] = config.queryServer;
     // Client details are only sent if the session is not private.
     if (config.privateMode == false) {
       if (config.clientID != null) {
