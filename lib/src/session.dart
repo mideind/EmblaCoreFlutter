@@ -74,10 +74,9 @@ class EmblaSession {
 
   // PUBLIC METHODS
 
-  /// Static method to preload all required assets and initialize
-  /// audio subsystems. This is not strictly necessary, but it will
-  /// reduce the delay when starting a session for the first time.
-  /// Call this method as early as possible in your app's lifecycle.
+  /// Static method to preload all required assets and initialize audio
+  /// subsystems. This will reduce the delay when starting a session for the
+  /// first time. Call this method as early as possible in your app's lifecycle.
   static Future<void> prepare() async {
     await _configureAudioSession();
     // Initialize these singletons
