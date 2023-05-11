@@ -204,7 +204,7 @@ class AudioPlayer {
 
   /// Play the sound for when the app does not have microphone recording permissions.
   void playNoMic(String voiceID) {
-    playSound('no_mic', voiceID);
+    playSound('nomic', voiceID);
   }
 
   /// Play a preloaded audio file bundled with the app.
