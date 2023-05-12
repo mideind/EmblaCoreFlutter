@@ -6,7 +6,7 @@
 EmblaCore is a Dart library containing the core session functionality in
 [Embla](https://github.com/mideind/EmblaFlutterApp), a mobile Icelandic-language
 voice assistant client implemented in [Flutter](https://flutter.dev/).
-Requires Flutter >= 2.12 with null safety.
+Requires Flutter >= 2.17 with null safety.
 
 ## Installation
 
