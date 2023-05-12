@@ -1,6 +1,8 @@
 [![Language](https://img.shields.io/badge/language-dart-lightblue)]()
 [![Build](https://github.com/mideind/EmblaCoreFlutter/actions/workflows/tests.yml/badge.svg)]()
 
+<img src="img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
+
 # EmblaCore
 
 EmblaCore is a Dart library containing the core session functionality in
