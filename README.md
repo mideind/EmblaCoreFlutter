@@ -1,4 +1,7 @@
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Language](https://img.shields.io/badge/language-dart-lightblue)]()
+![Release](https://shields.io/github/v/release/mideind/EmblaCoreFlutter?display_name=tag)
+![pub.dev](https://img.shields.io/pub/v/embla_core)
 [![Build](https://github.com/mideind/EmblaCoreFlutter/actions/workflows/tests.yml/badge.svg)]()
 
 <img src="img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
@@ -29,7 +32,8 @@ flutter pub get
 A simple demo app that demonstrates how to use EmblaCore can viewed at
 [`example/lib/main.dart`](https://github.com/mideind/EmblaCoreFlutter/blob/master/example/lib/main.dart).
 
-To run the demo app on a device of your choice:
+To run the demo app, you must acquire an API key from [Mideind](https://mideind.is) and add
+it in the file [`example/lib/main.dart`]. Then run the following command from the repo root:
 
 ```bash
 cd example
