@@ -18,6 +18,7 @@
  */
 
 /// Speech synthesis
+/// TODO: Move this to EmblaAPI
 
 import 'dart:convert' show json;
 
@@ -50,8 +51,8 @@ class EmblaSpeechSynthesizer {
     // Set request headers
     Map<String, String> headers = {
       "X-API-Key": apiKey ?? "",
-      "content-type": "application/json",
-      "accept": "application/json"
+      "Content-Type": "application/json",
+      "Accept": "application/json"
     };
     // Set request body
     String body = json.encode({
@@ -67,7 +68,6 @@ class EmblaSpeechSynthesizer {
         dlog("Received invalid status code from TTS service.");
         return null;
       }
-
       dynamic arg = json.decode(response.body);
       if (arg is Map && arg.containsKey("audio_url")) {
         // Valid response body
