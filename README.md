@@ -4,7 +4,7 @@
 ![pub.dev](https://img.shields.io/pub/v/embla_core)
 [![Build](https://github.com/mideind/EmblaCoreFlutter/actions/workflows/tests.yml/badge.svg)]()
 
-<img src="img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
+<img src="https://github.com/mideind/EmblaCoreFlutter/raw/master/img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
 
 # EmblaCore
 
