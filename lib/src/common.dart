@@ -21,6 +21,9 @@
 
 import 'package:flutter/foundation.dart' show kDebugMode;
 
+const String kEmblaCoreName = 'EmblaCore';
+const String kEmblaCoreVersion = '1.0.1';
+
 // Speech recognition settings
 const String kSpeechToTextLanguage = 'is-IS';
 
