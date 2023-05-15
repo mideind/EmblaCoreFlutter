@@ -14,10 +14,11 @@ mobile Icelandic-language voice assistant client. EmblaCore requires Flutter >= 
 
 ## Installation
 
+EmblaCore is available via [pub.dev](https://pub.dev/packages/embla_core).
 Add this to the dependencies list in your `pubspec.yaml` file:
 
 ```yaml
-  embla_core: ">=1.0.0"
+  embla_core: ">=1.0.1"
 ```
 
 and then run the following command from the project root:

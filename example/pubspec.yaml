@@ -1,6 +1,6 @@
 name: emblacore_example
 description: An example Flutter app making use of embla_core.
-version: 1.0.0+1
+version: 1.0.1+1
 publish_to: 'none'
 
 environment:
