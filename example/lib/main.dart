@@ -64,7 +64,7 @@ class _SessionPageState extends State<SessionPage> {
   String msg = kDefaultPrompt;
   final playIcon = const Icon(Icons.play_arrow);
   final stopIcon = const Icon(Icons.stop);
-  Icon buttonIcon = const Icon(Icons.play_arrow);
+  var buttonIcon = const Icon(Icons.play_arrow);
 
   void _stopSession() {
     session!.cancel();
@@ -85,11 +85,12 @@ class _SessionPageState extends State<SessionPage> {
       return;
     }
 
-    const String serverURL = "https://staging.api.greynir.is"; // http://local-ip-address:8080
+    // The URL of the EmblaCore server to talk to. This is the production server.
+    const String serverURL = "https://api.greynir.is";
 
     // Create new session config
     config = EmblaSessionConfig(server: serverURL);
-    config!.apiKey = "YOUR_API_KEY_HERE";
+    config!.apiKey = "YOUR_API_KEY_HERE"; // Replace with your API key
 
     config?.onStartStreaming = () {
       setState(() {

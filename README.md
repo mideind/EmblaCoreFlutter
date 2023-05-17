@@ -51,7 +51,7 @@ import 'package:embla_core/embla_core.dart';
 
 ...
 
-var config = EmblaConfig();
+var config = EmblaSessionConfig();
 
 /* Set properties of config object... */
 
