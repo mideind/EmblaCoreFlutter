@@ -23,12 +23,13 @@ jobs:
           java-version: '12.x'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.0'
+          flutter-version: '3.10.0'
           channel: 'stable'
       - name: Install dependencies
         run: |
           flutter config --no-analytics
-          flutter pub get
+          flutter --disable-telemetry
+          flutter pub get --suppress-analytics
       - name: Run tests
         run: |
           dart analyze lib example/lib
@@ -37,7 +38,7 @@ jobs:
         run: |
           cd example; flutter pub get; flutter build apk --release
       - name: Slack notification
-        uses: 8398a7/action-slack@v2
+        uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           author_name: Integration Testing
