@@ -91,7 +91,7 @@ class EmblaAPI {
   /// [text] Text to be speech synthesized
   /// [apiKey] Server API key
   /// Returns the resulting audio file URL or null if an error occurred.
-  static Future<String?> synthesize(String text, String? apiKey,
+  static Future<String?> synthesizeSpeech(String text, String? apiKey,
       {String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
       String apiURL = "$kDefaultServer$kSpeechSynthesisEndpoint"}) async {
