@@ -200,6 +200,7 @@ class EmblaSession {
       final String json = greetings.toJSON();
       dlog("Sending initial greetings message: $json");
       _channel?.sink.add(json);
+      // Immediately start streaming audio
       await _startStreaming();
     } catch (e) {
       await _error("Error connecting to server: $e");
