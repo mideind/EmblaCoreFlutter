@@ -18,7 +18,7 @@ EmblaCore is available via [pub.dev](https://pub.dev/packages/embla_core).
 Add this to the dependencies list in your `pubspec.yaml` file:
 
 ```yaml
-  embla_core: ">=1.0.1"
+  embla_core: ">=1.0.2"
 ```
 
 and then run the following command from the project root:
@@ -67,6 +67,9 @@ session.cancel();
 ## License
 
 EmblaCore is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
+
+<a href="https://mideind.is"><img src="https://github.com/mideind/EmblaCoreFlutter/raw/master/img/mideind_logo.png" alt="Miðeind ehf."
+width="214" height="66" align="right" style="margin-left:20px; margin-bottom: 20px;"></a>
 
 This set of programs is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
