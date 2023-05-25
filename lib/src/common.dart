@@ -34,11 +34,12 @@ const int kAudioNumChannels = 1;
 
 // Server communication
 const String kDefaultServer = "https://api.greynir.is";
+const String kDefaultQueryServer = 'https://greynir.is';
 const String kTokenEndpoint = "/rat/v1/token";
 const String kSocketEndpoint = "/rat/v1/short_asr";
+const String kQueryEndpoint = "/rat/v1/query";
 const String kSpeechSynthesisEndpoint = "/rat/v1/tts";
 const String kClearHistoryEndpoint = "/rat/v1/clear_history";
-const String kDefaultQueryServer = 'https://greynir.is';
 
 const kRequestTimeout = Duration(seconds: 10); // Seconds
 

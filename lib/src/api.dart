@@ -21,15 +21,26 @@
 
 import 'dart:convert' show json;
 
-import 'package:http/http.dart' show Response;
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show Response, post;
 
 import './common.dart';
 
 /// Static class wrapper for functions communicating
 /// directly with the Embla API.
 class EmblaAPI {
-  /// Send request to clear query history for a given device ID.
+  /// Send natural-language text query to API server
+  ///
+  /// [query] Text query, e.g. "Hvernig er veðrið í Reykjavík?"
+  /// [apiKey] Server API key
+  /// [clientInfo] Map of client info, e.g. {"client_id": "mydeviceid", "client_type": "ios"}
+  ///
+  /// Returns a map of the JSON response from the server.
+  static Future<Map> performQuery(String query, String apiKey, Map? clientInfo) async {
+    throw UnimplementedError();
+    // return {};
+  }
+
+  /// Send request to clear query history and/or client data for a given device ID.
   ///
   /// Boolean [allData] param determines whether all device-specific
   /// data or only query history should be deleted server-side.
@@ -46,7 +57,7 @@ class EmblaAPI {
     await _makePOSTRequest(apiURL, apiKey, qargs, completionHandler);
   }
 
-  /// Send request to speech synthesis API (static method).
+  /// Send request to speech synthesis API.
   ///
   /// [text] Text to be speech synthesized
   /// [apiKey] Server API key
@@ -77,8 +88,7 @@ class EmblaAPI {
     });
 
     dlog("Sending POST request to $apiURL: $body");
-    return await http.post(uri, headers: headers, body: body).timeout(kRequestTimeout).then(
-        (response) {
+    return await post(uri, headers: headers, body: body).timeout(kRequestTimeout).then((response) {
       dlog("Response status: ${response.statusCode}");
       dlog("Response body: ${response.body}");
       if (response.statusCode != 200) {
@@ -112,8 +122,7 @@ class EmblaAPI {
         "Content-Type": "application/json",
         "Accept": "application/json"
       };
-      response = await http
-          .post(Uri.parse(apiURL), body: json.encode(qargs), headers: headers)
+      response = await post(Uri.parse(apiURL), body: json.encode(qargs), headers: headers)
           .timeout(kRequestTimeout, onTimeout: () {
         handler!(null);
         return Response("Request timed out", 408);
