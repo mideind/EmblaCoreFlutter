@@ -85,7 +85,7 @@ class EmblaSession {
   }
 
   /// Start session
-  void start() {
+  void start() async {
     // Session can only be started in idle state
     // and cannot be restarted once it's done.
     if (state != EmblaSessionState.idle) {
@@ -193,17 +193,15 @@ class EmblaSession {
         dlog("WebSocket connection closed");
       }, cancelOnError: true);
 
-      // Create greetings message
+      // Create greetings message and send over socket
       final greetings = GreetingsOutputMessage.fromConfig(_config);
-
-      // Send message to server
       final String json = greetings.toJSON();
       dlog("Sending initial greetings message: $json");
       _channel?.sink.add(json);
-      // Immediately start streaming audio
+      // Then immediately start streaming audio data
       await _startStreaming();
     } catch (e) {
-      await _error("Error connecting to server: $e");
+      await _error("Error communicating with server: $e");
     }
   }
 
@@ -240,14 +238,11 @@ class EmblaSession {
       }
     } catch (e) {
       await _error("Error handling message: $e");
-      return;
     }
   }
 
-  // Once we receive the greetings message from the server,
-  // we can start listening for speech and stream the audio.
   void _handleGreetingsMessage(Map<String, dynamic> msg) {
-    dlog("Greetings message received. Starting streaming...");
+    dlog("Greetings message received.");
 
     // if (state != EmblaSessionState.starting) {
     //   throw Exception("Session is not starting!");
@@ -347,7 +342,6 @@ class EmblaSession {
       });
     } catch (e) {
       await _error("Error handling query result: $e");
-      return;
     }
   }
 

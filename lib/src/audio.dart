@@ -155,11 +155,15 @@ class AudioPlayer {
           fromDataBuffer: data,
           codec: Codec.mp3,
           whenFinished: () {
-            completionHandler!(false);
+            if (completionHandler != null) {
+              completionHandler(false);
+            }
           });
     } catch (e) {
       dlog('Error downloading remote file: $e');
-      completionHandler!(true);
+      if (completionHandler != null) {
+        completionHandler(true);
+      }
     }
   }
 
@@ -169,7 +173,7 @@ class AudioPlayer {
   /// [completionHandler] Callback invoked when playback is finished
   /// [playbackSpeed] Playback speed
   String? playDunno(String voiceID,
-      [void Function()? completionHandler, double playbackSpeed = 1.0]) {
+      [void Function()? completionHandler, double playbackSpeed = kDefaultSpeechSynthesisSpeed]) {
     final int rand = Random().nextInt(7) + 1;
     final String num = rand.toString().padLeft(2, '0');
     final String fn = "dunno$num";
@@ -211,7 +215,7 @@ class AudioPlayer {
   /// Play a preloaded audio file bundled with the app.
   /// Some of these audio files are voice-dependent, and will be played with
   /// the specified voice ID, e.g. `playSound('conn', 'Gunnar')` will play
-  /// the Gunnar voice version of the "conn" audio recording, etc.
+  /// the Gunnar voice version of the "conn" audio recording ('conn-gunnar'), etc.
   ///
   /// [soundName] Name of the audio file to play
   /// [voiceID] Voice ID to use for the audio file (only applies to voice-dependent files)
@@ -220,7 +224,7 @@ class AudioPlayer {
   void playSound(String soundName,
       [String voiceID = kDefaultSpeechSynthesisVoice,
       void Function()? completionHandler,
-      double playbackSpeed = 1.0]) {
+      double playbackSpeed = kDefaultSpeechSynthesisSpeed]) {
     stop();
 
     // Different filename depending on voice
@@ -245,7 +249,7 @@ class AudioPlayer {
         whenFinished: completionHandler);
   }
 
-  /// Synthesize speech and play it back.
+  /// Synthesize speech and play back the resulting audio file.
   /// If an error occurs, the completion handler is called with true.
   /// [text] The text to synthesize into speech
   /// [apiKey] Required API key

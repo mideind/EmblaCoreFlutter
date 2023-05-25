@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/// Communication with REST API
+/// Communication with the Embla API (Ratatoskur)
 
 import 'dart:convert' show json;
 
@@ -26,51 +26,11 @@ import 'package:http/http.dart' as http;
 
 import './common.dart';
 
-/// Send JSON POST request to API server.
-Future<Response?> _makePOSTRequest(String apiURL, String apiKey, Map<String, dynamic> qargs,
-    [void Function(Map? result)? handler]) async {
-  dlog("Sending query POST request to $apiURL: ${qargs.toString()}");
-  Response? response;
-  try {
-    final Map<String, String> headers = {
-      "X-API-Key": apiKey,
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    };
-    response = await http
-        .post(Uri.parse(apiURL), body: json.encode(qargs), headers: headers)
-        .timeout(kRequestTimeout, onTimeout: () {
-      handler!(null);
-      return Response("Request timed out", 408);
-    });
-  } catch (e) {
-    dlog("Error while making POST request: $e");
-    response = null;
-  }
-
-  // Handle null response
-  if (response == null) {
-    handler!(null);
-    return null;
-  }
-
-  // We have a valid response object
-  dlog("Response status: ${response.statusCode}");
-//   dlog("Response body: ${response.body}");
-  if (handler != null) {
-    // Parse JSON body and feed ensuing data structure to handler function
-    dynamic arg = (response.statusCode == 200) ? json.decode(response.body) : null;
-    // JSON response should be a dict, otherwise something's gone horribly wrong
-    arg = (arg is Map) == false ? null : arg;
-    handler(arg);
-  }
-
-  return response;
-}
-
-/// Static class wrapper for functions communicating directly with the Embla REST API.
+/// Static class wrapper for functions communicating
+/// directly with the Embla API.
 class EmblaAPI {
   /// Send request to clear query history for a given device ID.
+  ///
   /// Boolean [allData] param determines whether all device-specific
   /// data or only query history should be deleted server-side.
   static Future<void> clearUserData(String deviceID, String apiKey,
@@ -90,6 +50,7 @@ class EmblaAPI {
   ///
   /// [text] Text to be speech synthesized
   /// [apiKey] Server API key
+  ///
   /// Returns the resulting audio file URL or null if an error occurred.
   static Future<String?> synthesizeSpeech(String text, String? apiKey,
       {String voiceID = kDefaultSpeechSynthesisVoice,
@@ -137,5 +98,50 @@ class EmblaAPI {
       // Errors during request, return null
       return null;
     });
+  }
+
+  /// Send JSON POST request to API server.
+  static Future<Response?> _makePOSTRequest(
+      String apiURL, String apiKey, Map<String, dynamic> qargs,
+      [void Function(Map? result)? handler]) async {
+    dlog("Sending query POST request to $apiURL: ${qargs.toString()}");
+    Response? response;
+    try {
+      final Map<String, String> headers = {
+        "X-API-Key": apiKey,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      };
+      response = await http
+          .post(Uri.parse(apiURL), body: json.encode(qargs), headers: headers)
+          .timeout(kRequestTimeout, onTimeout: () {
+        handler!(null);
+        return Response("Request timed out", 408);
+      });
+    } catch (e) {
+      dlog("Error while making POST request: $e");
+      response = null;
+    }
+
+    // Handle null response
+    if (response == null) {
+      if (handler != null) {
+        handler(null);
+      }
+      return null;
+    }
+
+    // We have a valid response object
+    dlog("Response status: ${response.statusCode}");
+    dlog("Response body: ${response.body}");
+    if (handler != null) {
+      // Parse JSON body and feed ensuing data structure to handler function
+      dynamic arg = (response.statusCode == 200) ? json.decode(response.body) : null;
+      // JSON response should be a dict, otherwise something's gone horribly wrong
+      arg = (arg is Map) == false ? null : arg;
+      handler(arg);
+    }
+
+    return response;
   }
 }
