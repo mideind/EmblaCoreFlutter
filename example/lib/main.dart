@@ -17,8 +17,10 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:embla_core/embla_core.dart';
+
 import 'package:permission_handler/permission_handler.dart';
+
+import 'package:embla_core/embla_core.dart';
 
 const String kSoftwareTitle = 'EmblaCore Demo';
 const String kDefaultPrompt = 'Smelltu á hnappinn til að byrja';
@@ -90,7 +92,9 @@ class _SessionPageState extends State<SessionPage> {
 
     // Create new session config
     config = EmblaSessionConfig(server: serverURL);
-    config!.apiKey = "YOUR_API_KEY_HERE"; // Replace with your API key
+    // Replace with your API key. You can obtain a key from
+    // Miðeind ehf. (mideind@mideind.is)
+    config!.apiKey = "YOUR_API_KEY_HERE";
 
     config?.onStartStreaming = () {
       setState(() {

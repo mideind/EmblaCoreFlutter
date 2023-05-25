@@ -30,6 +30,7 @@ import 'package:flutter_sound/flutter_sound.dart' show FlutterSoundPlayer, Codec
 // We only need this library if we're in debug mode
 import 'package:mp3_info/mp3_info.dart' show MP3Processor if (kDebugMode) "";
 
+import './api.dart';
 import './util.dart';
 import './common.dart';
 
@@ -242,5 +243,30 @@ class AudioPlayer {
         fromDataBuffer: _audioFileCache[fileName],
         sampleRate: kAudioSampleRate,
         whenFinished: completionHandler);
+  }
+
+  /// Synthesize speech and play it back.
+  /// If an error occurs, the completion handler is called with true.
+  /// [text] The text to synthesize into speech
+  /// [apiKey] Required API key
+  /// [voiceID] Voice ID to use, e.g. "Gudrun", "Gunnar"
+  /// [voiceSpeed] Voice speed (1.0 = normal speed)
+  /// [completionHandler] Completion handler called when playback is finished
+  void playSpeech(String text, String apiKey,
+      [String voiceID = kDefaultSpeechSynthesisVoice,
+      double voiceSpeed = kDefaultSpeechSynthesisSpeed,
+      void Function(bool err)? completionHandler]) async {
+    stop();
+    await EmblaAPI.synthesizeSpeech(text, apiKey, voiceID: voiceID, voiceSpeed: voiceSpeed)
+        .then((dynamic url) {
+      if (url == null) {
+        // Something went wrong
+        if (completionHandler != null) {
+          completionHandler(true);
+        }
+      } else {
+        playURL(url, completionHandler);
+      }
+    });
   }
 }
