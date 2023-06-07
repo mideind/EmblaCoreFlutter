@@ -83,7 +83,7 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FO
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 The full text of the GNU General Public License v3 is
-[included here](https://github.com/mideind/Greynir/blob/master/LICENSE.txt)
+[included here](https://github.com/mideind/EmblaCoreFlutter/raw/master/LICENSE)
 and also available here:
 [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/licenses/gpl-3.0.html).
 
