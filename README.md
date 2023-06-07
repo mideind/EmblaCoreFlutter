@@ -10,9 +10,9 @@
 
 EmblaCore is a [Flutter](https://flutter.dev/) library containing the core session
 functionality in [Embla](https://github.com/mideind/EmblaFlutterApp), a cross-platform
-mobile Icelandic-language voice assistant client. EmblaCore requires Flutter >= 2.17.
+mobile Icelandic-language voice assistant app. EmblaCore requires Flutter >= 2.17.
 
-For the JavaScript library, see [EmblaCoreJS](https://github.com/mideind/EmblaCoreJS).
+For the corresponding JavaScript library, see [EmblaCoreJS](https://github.com/mideind/EmblaCoreJS).
 
 ## Installation
 
