@@ -150,7 +150,7 @@ class AudioPlayer {
         dlog("Audio file is ${data.lengthInBytes} bytes (${sec.toStringAsFixed(1)} seconds)");
       }
 
-      _player.setSpeed(1.0);
+      _player.setSpeed(kDefaultSpeechSynthesisSpeed);
       _player.startPlayer(
           fromDataBuffer: data,
           codec: Codec.mp3,
@@ -249,7 +249,8 @@ class AudioPlayer {
         whenFinished: completionHandler);
   }
 
-  /// Synthesize speech from text and play the resulting audio file.
+  /// Synthesize speech from text via API and play the
+  /// resulting audio file at the returned URL.
   /// If an error occurs, the completion handler is called with true.
   /// [text] The text to synthesize into speech
   /// [apiKey] Required API key
@@ -257,9 +258,9 @@ class AudioPlayer {
   /// [voiceSpeed] Voice speed (1.0 = normal speed)
   /// [completionHandler] Completion handler called when playback is finished
   void speak(String text, String apiKey,
-      [String voiceID = kDefaultSpeechSynthesisVoice,
+      {String voiceID = kDefaultSpeechSynthesisVoice,
       double voiceSpeed = kDefaultSpeechSynthesisSpeed,
-      void Function(bool err)? completionHandler]) async {
+      void Function(bool err)? completionHandler}) async {
     stop();
     await EmblaAPI.synthesizeSpeech(text, apiKey, voiceID: voiceID, voiceSpeed: voiceSpeed)
         .then((dynamic url) {
