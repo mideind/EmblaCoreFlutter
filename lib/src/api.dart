@@ -88,7 +88,9 @@ class EmblaAPI {
     });
 
     dlog("Sending POST request to $apiURL: $body");
-    return await post(uri, headers: headers, body: body).timeout(kRequestTimeout).then((response) {
+    return await post(uri, headers: headers, body: body).timeout(kRequestTimeout, onTimeout: () {
+      return Response("POST request timed out", 408);
+    }).then((response) {
       dlog("Response status: ${response.statusCode}");
       dlog("Response body: ${response.body}");
       if (response.statusCode != 200) {
