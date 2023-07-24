@@ -62,7 +62,7 @@ class EmblaSessionConfig {
   /// Override default ASR engine.
   String? engine;
 
-  /// Voice ID to use when synthesizing speech. Defaults is [kDefaultSpeechSynthesisVoice].
+  /// Voice ID to use when synthesizing speech. Default is 'Gudrun'.
   String voiceID = kDefaultSpeechSynthesisVoice;
 
   /// Voice speed to use when synthesizing speech. Default is `1.0`.
@@ -179,7 +179,6 @@ class EmblaSessionConfig {
 
   @override
   String toString() {
-    // Why no introspection in Dart?
     final Map<String, dynamic> d = {
       "_tokenURL": _tokenURL,
       "socketURL": socketURL,

@@ -20,7 +20,8 @@
 /// Utility functions and custom class extensions
 
 extension StringExtension on String {
-  /// Convert Icelandic characters to their ASCII equivalent.
+  /// Convert Icelandic characters to their ASCII equivalent
+  /// and remove all other non-ASCII characters.
   String asciify() {
     const Map<String, String> icechar2ascii = {
       "ð": "d",
@@ -45,11 +46,20 @@ extension StringExtension on String {
       "Æ": "AE",
     };
 
+    // Replace Icelandic characters
     String s = this;
     icechar2ascii.forEach((k, v) {
       s = s.replaceAll(k, v);
     });
-    return s;
+
+    // Remove all other non-ASCII characters
+    var f = '';
+    for (var c in s.runes) {
+      if (c < 128) {
+        f = f + String.fromCharCode(c);
+      }
+    }
+    return f;
   }
 
   /// Capitalize the first character of a string

@@ -252,6 +252,7 @@ class AudioPlayer {
   /// Synthesize speech from text via API and play the
   /// resulting audio file at the returned URL.
   /// If an error occurs, the completion handler is called with true.
+  ///
   /// [text] The text to synthesize into speech
   /// [apiKey] Required API key
   /// [voiceID] Voice ID to use, e.g. "Gudrun", "Gunnar"

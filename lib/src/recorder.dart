@@ -102,14 +102,14 @@ class AudioRecorder {
       }
     });
 
-    // Open microphone recording session
-    // await _micRecorder.openRecorder();
-
     // Listen for audio status (duration, decibel) at fixed interval
     await _micRecorder.setSubscriptionDuration(const Duration(milliseconds: 80));
     _recordingProgressSubscription = _micRecorder.onProgress?.listen((e) {
       if (e.decibels == 0.0) {
-        return; // Hack to work around a bug in flutter_sound
+        // Hack to work around a bug in flutter_sound
+        // On iOS, intermittent 0.0 decibel readings are received if
+        // if the volume level has not changed since the last reading.
+        return;
       }
       // dlog(e);
       final double decibels = e.decibels! - 70.0; // This number is arbitrary but works
