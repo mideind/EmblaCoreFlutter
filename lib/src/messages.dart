@@ -33,7 +33,7 @@ class GreetingsOutputMessage {
   GreetingsOutputMessage.fromConfig(EmblaSessionConfig config) {
     // ASR options
     final Map<String, dynamic> asrOpts = {};
-    // asrOpts["language"] = config.language;  // Unused
+    asrOpts["language"] = config.language;
     if (config.engine != null) {
       asrOpts["engine"] = config.engine;
     }

@@ -55,9 +55,8 @@ class EmblaSessionConfig {
   /// Server API key.
   String? apiKey;
 
-  /// Speech-to-text language (e.g. `is-IS`).
-  /// Currently ignored as only `is-IS` is supported.
-  String language = kSpeechToTextLanguage;
+  /// Speech-to-text language (e.g. `is-IS`, `en-US`).
+  String language = kDefaultSpeechToTextLanguage;
 
   /// Override default ASR engine.
   String? engine;

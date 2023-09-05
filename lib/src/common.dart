@@ -22,10 +22,10 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 const String kEmblaCoreName = 'EmblaCore';
-const String kEmblaCoreVersion = '1.0.3';
+const String kEmblaCoreVersion = '1.0.4';
 
 // Speech recognition settings
-const String kSpeechToTextLanguage = 'is-IS';
+const String kDefaultSpeechToTextLanguage = 'is-IS';
 
 // Audio recording settings
 const int kAudioSampleRate = 16000;
@@ -38,7 +38,7 @@ const String kDefaultQueryServer = 'https://greynir.is';
 const String kTokenEndpoint = "/rat/v1/token";
 const String kSocketEndpoint = "/rat/v1/short_asr";
 const String kQueryEndpoint = "/rat/v1/query";
-const String kSpeechSynthesisEndpoint = "/rat/v1/tts";
+const String kSpeechSynthesisEndpoint = "/rat/v2/tts";
 const String kClearHistoryEndpoint = "/rat/v1/clear_history";
 
 const kRequestTimeout = Duration(seconds: 10); // Seconds
@@ -50,11 +50,75 @@ const List<String> kSupportedSpeechSynthesisVoices = [
   "Guðrún",
   "Gunnar",
 ];
+const String kDefaultSpeechSynthesisTextFormat = "ssml";
+const String kDefaultSpeechSynthesisAudioFormat = "mp3";
 
 /// Debug logging
 void dlog(dynamic msg) {
   if (kDebugMode == true) {
     // ignore: avoid_print
     print(msg.toString());
+  }
+}
+
+class SpeechOptions {
+  String voice;
+  double speed;
+  String textFormat;
+  String audioFormat;
+
+  SpeechOptions(
+      {this.voice = kDefaultSpeechSynthesisVoice,
+      this.speed = kDefaultSpeechSynthesisSpeed,
+      this.textFormat = kDefaultSpeechSynthesisTextFormat,
+      this.audioFormat = kDefaultSpeechSynthesisAudioFormat});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'voice': voice,
+      'speed': speed,
+      'text_format': textFormat,
+      'audio_format': audioFormat,
+    };
+  }
+}
+
+class TranscriptionOptions {
+  bool emails;
+  bool dates;
+  bool years;
+  bool domains;
+  bool urls;
+  bool amounts;
+  bool measurements;
+  bool percentages;
+  bool numbers;
+  bool ordinals;
+
+  TranscriptionOptions(
+      {this.emails = true,
+      this.dates = true,
+      this.years = true,
+      this.domains = true,
+      this.urls = true,
+      this.amounts = true,
+      this.measurements = true,
+      this.percentages = true,
+      this.numbers = false,
+      this.ordinals = false});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'emails': emails,
+      'dates': dates,
+      'years': years,
+      'domains': domains,
+      'urls': urls,
+      'amounts': amounts,
+      'measurements': measurements,
+      'percentages': percentages,
+      'numbers': numbers,
+      'ordinals': ordinals,
+    };
   }
 }
