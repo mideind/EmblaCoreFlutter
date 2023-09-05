@@ -259,11 +259,11 @@ class AudioPlayer {
   /// [voiceSpeed] Voice speed (1.0 = normal speed)
   /// [completionHandler] Completion handler called when playback is finished
   void speak(String text, String apiKey,
-      {String voiceID = kDefaultSpeechSynthesisVoice,
-      double voiceSpeed = kDefaultSpeechSynthesisSpeed,
+      {SpeechOptions? ttsOptions,
+      TranscriptionOptions? transcriptionOptions,
       void Function(bool err)? completionHandler}) async {
     stop();
-    await EmblaAPI.synthesizeSpeech(text, apiKey, voiceID: voiceID, voiceSpeed: voiceSpeed)
+    await EmblaAPI.synthesizeSpeech(text, apiKey, ttsOptions: ttsOptions, transcriptionOptions: transcriptionOptions)
         .then((dynamic url) {
       if (url == null) {
         // Something went wrong

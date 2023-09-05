@@ -64,8 +64,9 @@ class EmblaAPI {
   ///
   /// Returns the resulting audio file URL or null if an error occurred.
   static Future<String?> synthesizeSpeech(String text, String? apiKey,
-      {String voiceID = kDefaultSpeechSynthesisVoice,
-      double voiceSpeed = kDefaultSpeechSynthesisSpeed,
+      {SpeechOptions? ttsOptions,
+      TranscriptionOptions? transcriptionOptions,
+      bool transcribe = true,
       String apiURL = "$kDefaultServer$kSpeechSynthesisEndpoint"}) async {
     // Set URI
     Uri uri;
@@ -82,10 +83,17 @@ class EmblaAPI {
       "Accept": "application/json"
     };
     // Set request body
-    String body = json.encode({
+    Map qargs = {
       'text': text,
-      'options': {'voice_id': voiceID, 'voice_speed': voiceSpeed.toString()}
-    });
+      'transcribe': transcribe,
+    };
+    if (ttsOptions != null) {
+      qargs['tts_options'] = ttsOptions.toJson();
+    }
+    if (transcriptionOptions != null) {
+      qargs['transcription_options'] = transcriptionOptions.toJson();
+    }
+    final String body = json.encode(qargs);
 
     dlog("Sending POST request to $apiURL: $body");
     return await post(uri, headers: headers, body: body).timeout(kRequestTimeout, onTimeout: () {
@@ -107,7 +115,6 @@ class EmblaAPI {
       return null;
     }, onError: (e) {
       dlog("Error in speech synthesis: $e");
-      // Errors during request, return null
       return null;
     });
   }
