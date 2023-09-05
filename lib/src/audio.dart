@@ -255,15 +255,16 @@ class AudioPlayer {
   ///
   /// [text] The text to synthesize into speech
   /// [apiKey] Required API key
-  /// [voiceID] Voice ID to use, e.g. "Gudrun", "Gunnar"
-  /// [voiceSpeed] Voice speed (1.0 = normal speed)
+  /// [ttsOptions] Text-to-speech options
+  /// [transcriptionOptions] Transcription options
   /// [completionHandler] Completion handler called when playback is finished
   void speak(String text, String apiKey,
       {SpeechOptions? ttsOptions,
       TranscriptionOptions? transcriptionOptions,
+      bool transcribe = true,
       void Function(bool err)? completionHandler}) async {
     stop();
-    await EmblaAPI.synthesizeSpeech(text, apiKey, ttsOptions: ttsOptions, transcriptionOptions: transcriptionOptions)
+    await EmblaAPI.synthesizeSpeech(text, apiKey, transcribe: transcribe, ttsOptions: ttsOptions, transcriptionOptions: transcriptionOptions)
         .then((dynamic url) {
       if (url == null) {
         // Something went wrong

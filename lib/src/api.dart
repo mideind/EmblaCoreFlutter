@@ -61,6 +61,10 @@ class EmblaAPI {
   ///
   /// [text] Text to be speech synthesized
   /// [apiKey] Server API key
+  /// [ttsOptions] Speech synthesis options
+  /// [transcriptionOptions] Transcription options
+  /// [transcribe] Whether to transcribe the speech
+  /// [apiURL] URL of API endpoint
   ///
   /// Returns the resulting audio file URL or null if an error occurred.
   static Future<String?> synthesizeSpeech(String text, String? apiKey,

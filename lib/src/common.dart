@@ -22,10 +22,10 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 const String kEmblaCoreName = 'EmblaCore';
-const String kEmblaCoreVersion = '1.0.3';
+const String kEmblaCoreVersion = '1.0.4';
 
 // Speech recognition settings
-const String kSpeechToTextLanguage = 'is-IS';
+const String kDefaultSpeechToTextLanguage = 'is-IS';
 
 // Audio recording settings
 const int kAudioSampleRate = 16000;
@@ -104,8 +104,8 @@ class TranscriptionOptions {
       this.amounts = true,
       this.measurements = true,
       this.percentages = true,
-      this.numbers = true,
-      this.ordinals = true});
+      this.numbers = false,
+      this.ordinals = false});
 
   Map<String, dynamic> toJson() {
     return {
