@@ -26,4 +26,5 @@ export 'package:embla_core/src/config.dart' show EmblaSessionConfig;
 export 'package:embla_core/src/api.dart' show EmblaAPI;
 export 'package:embla_core/src/audio.dart' show AudioPlayer;
 export 'package:embla_core/src/recorder.dart' show AudioRecorder;
-export 'package:embla_core/src/common.dart' show kEmblaCoreVersion;
+export 'package:embla_core/src/common.dart'
+    show kEmblaCoreVersion, SpeechOptions, TranscriptionOptions;

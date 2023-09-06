@@ -36,8 +36,16 @@ import './messages.dart' show GreetingsOutputMessage;
 
 Future<void> _configureAudioSession() async {
   dlog("Configuring audio session");
+
+  AndroidAudioManager().startBluetoothSco();
+  AndroidAudioManager().setBluetoothScoOn(true);
+  bool sco = await AndroidAudioManager().isBluetoothScoOn();
+
+  dlog("BLUETOOTH_SCO: " + sco.toString());
+
   final session = await AudioSession.instance;
-  await session.configure(AudioSessionConfiguration(
+  // await session.configure(AudioSessionConfiguration.speech());
+  var conf = AudioSessionConfiguration(
     avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
     avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.defaultToSpeaker |
         AVAudioSessionCategoryOptions.allowBluetooth,
@@ -53,8 +61,10 @@ Future<void> _configureAudioSession() async {
     ),
     androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
     androidWillPauseWhenDucked: true,
-  ));
+  );
+  await session.configure(conf);
   await session.setActive(true);
+  dlog(conf.toJson());
 }
 
 // Session state
