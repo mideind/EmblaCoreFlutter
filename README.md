@@ -29,6 +29,25 @@ and then run the following command from the project root:
 flutter pub get
 ```
 
+EmblaCore uses the [Flutter Sound](https://pub.dev/packages/flutter_sound)
+plugin to record audio. In order to work, iOS apps making use of this package
+must add the following to their `Info.plist` file:
+
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>Microphone permission is required for speech recognition.</string>
+```
+
+Android apps must have the following in their `AndroidManifest.xml` file:
+
+```xml
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+```
+
+The app must also request permission to record audio from the user. This can be
+done using the [permission_handler](https://pub.dev/packages/permission_handler)
+package, for instance.
+
 ## Documentation
 
 Extensive `dartdoc` documentation is [available here](https://embla.is/embla_core).
