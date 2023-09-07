@@ -20,7 +20,7 @@ EmblaCore is available via [pub.dev](https://pub.dev/packages/embla_core).
 Add this to the dependencies list in your `pubspec.yaml` file:
 
 ```yaml
-  embla_core: ">=1.0.2"
+  embla_core: ">=1.0.3"
 ```
 
 and then run the following command from the project root:
@@ -44,9 +44,17 @@ Android apps must have the following in their `AndroidManifest.xml` file:
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
 
-The app must also request permission to record audio from the user. This can be
-done using the [permission_handler](https://pub.dev/packages/permission_handler)
+The app must also explicitly request permission to record audio from the user. This can
+be done using the [permission_handler](https://pub.dev/packages/permission_handler)
 package, for instance.
+
+You should run the following code early in your app before starting an Embla session:
+
+```dart
+EmblaSession.prepare();
+```
+
+This preloads audio files into memory and configures the audio session appropriately.
 
 ## Documentation
 
