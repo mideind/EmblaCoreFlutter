@@ -1,3 +1,8 @@
+# 1.0.3+1 (2023-10-07)
+
+* Fixed issue with audio recording via Bluetooth on Android.
+* Support for new v2 TTS endpoint in Ratatoskur.
+
 # 1.0.2+1 (2023-05-22)
 
 * EmblaRESTAPI is now named EmblaAPI

@@ -22,7 +22,7 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 const String kEmblaCoreName = 'EmblaCore';
-const String kEmblaCoreVersion = '1.0.4';
+const String kEmblaCoreVersion = '1.0.3';
 
 // Speech recognition settings
 const String kDefaultSpeechToTextLanguage = 'is-IS';
