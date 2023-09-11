@@ -54,7 +54,7 @@ void main() {
       "það er nú þannig að ég er ekki alveg viss um þetta",
     ];
     for (String s in ts) {
-      expect(s[0].toUpperCase() == s.capFirst()[0], true);
+      expect(s[0].toUpperCase(), s.capFirst()[0]);
     }
   });
 
@@ -66,7 +66,7 @@ void main() {
       "SVEINBJÖRN Þórðarson": "SVEINBJORN THordarson",
     };
     m.forEach((k, v) {
-      expect(k.asciify() == v, true);
+      expect(k.asciify(), v);
     });
   });
 }
