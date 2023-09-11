@@ -84,31 +84,31 @@ class SpeechOptions {
 }
 
 class TranscriptionOptions {
-  bool emails;
-  bool dates;
-  bool years;
-  bool domains;
-  bool urls;
-  bool amounts;
-  bool measurements;
-  bool percentages;
-  bool numbers;
-  bool ordinals;
+  bool? emails;
+  bool? dates;
+  bool? years;
+  bool? domains;
+  bool? urls;
+  bool? amounts;
+  bool? measurements;
+  bool? percentages;
+  bool? numbers;
+  bool? ordinals;
 
   TranscriptionOptions(
-      {this.emails = true,
-      this.dates = true,
-      this.years = true,
-      this.domains = true,
-      this.urls = true,
-      this.amounts = true,
-      this.measurements = true,
-      this.percentages = true,
-      this.numbers = false,
-      this.ordinals = false});
+      {this.emails,
+      this.dates,
+      this.years,
+      this.domains,
+      this.urls,
+      this.amounts,
+      this.measurements,
+      this.percentages,
+      this.numbers,
+      this.ordinals});
 
   Map<String, dynamic> toJson() {
-    return {
+    final map = {
       'emails': emails,
       'dates': dates,
       'years': years,
@@ -120,5 +120,7 @@ class TranscriptionOptions {
       'numbers': numbers,
       'ordinals': ordinals,
     };
+    map.removeWhere((key, value) => value == null);
+    return map;
   }
 }
