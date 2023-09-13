@@ -1,4 +1,8 @@
-# 1.0.3+1 (2023-10-07)
+# 1.0.4+1 (2023-09-13)
+
+* Improved speech synthesis configurability.
+
+# 1.0.3+1 (2023-07-10)
 
 * Fixed issue with audio recording via Bluetooth on Android.
 * Support for new v2 TTS endpoint in Ratatoskur.
