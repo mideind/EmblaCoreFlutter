@@ -20,6 +20,7 @@
 /// Main session object encapsulating Embla's core functionality
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
@@ -37,14 +38,15 @@ import './messages.dart' show GreetingsOutputMessage;
 Future<void> _configureAudioSession() async {
   dlog("Configuring audio session");
 
-  AndroidAudioManager().startBluetoothSco();
-  AndroidAudioManager().setBluetoothScoOn(true);
-  bool sco = await AndroidAudioManager().isBluetoothScoOn();
-
-  dlog("BLUETOOTH_SCO: " + sco.toString());
+  if (Platform.isAndroid) {
+    // Configure support for Bluetooth headset on Android
+    AndroidAudioManager().startBluetoothSco();
+    AndroidAudioManager().setBluetoothScoOn(true);
+    bool sco = await AndroidAudioManager().isBluetoothScoOn();
+    dlog("BLUETOOTH_SCO: " + sco.toString());
+  }
 
   final session = await AudioSession.instance;
-  // await session.configure(AudioSessionConfiguration.speech());
   var conf = AudioSessionConfiguration(
     avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
     avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.defaultToSpeaker |
