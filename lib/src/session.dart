@@ -42,11 +42,9 @@ Future<void> _configureAudioSession() async {
     // Configure support for Bluetooth headset on Android
     AndroidAudioManager().startBluetoothSco();
     AndroidAudioManager().setBluetoothScoOn(true);
-    bool sco = await AndroidAudioManager().isBluetoothScoOn();
-    dlog("BLUETOOTH_SCO: " + sco.toString());
   }
 
-  final session = await AudioSession.instance;
+  final audioSession = await AudioSession.instance;
   var conf = AudioSessionConfiguration(
     avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
     avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.defaultToSpeaker |
@@ -64,9 +62,8 @@ Future<void> _configureAudioSession() async {
     androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
     androidWillPauseWhenDucked: true,
   );
-  await session.configure(conf);
-  await session.setActive(true);
-  dlog(conf.toJson());
+  await audioSession.configure(conf);
+  await audioSession.setActive(true);
 }
 
 // Session state
@@ -163,11 +160,10 @@ class EmblaSession {
   // PRIVATE METHODS
 
   Future<void> _stop() async {
-    // Terminate all audio recording and playback
+    // Terminate all audio recording and playback, close connection
     await AudioRecorder().stop();
     AudioPlayer().stop();
-    // Close WebSocket connection
-    _channel?.sink.close(status.goingAway);
+    _closeWebSocketConnection();
   }
 
   // Terminate session with error message
@@ -215,6 +211,10 @@ class EmblaSession {
     } catch (e) {
       await _error("Error communicating with server: $e");
     }
+  }
+
+  void _closeWebSocketConnection() {
+    _channel?.sink.close(status.goingAway);
   }
 
   // Handle all incoming WebSocket messages
@@ -312,6 +312,10 @@ class EmblaSession {
     if (state != EmblaSessionState.answering) {
       throw Exception("Session is not answering query!");
     }
+
+    // Close WebSocket connection since we have
+    // received the final answer from the server.
+    _closeWebSocketConnection();
 
     // if (_config.audio) {
     //   AudioPlayer().playSessionConfirm();
