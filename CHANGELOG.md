@@ -1,3 +1,7 @@
+# 1.0.5+1 (2023-09-15)
+
+* Bug fixes.
+
 # 1.0.4+1 (2023-09-13)
 
 * Improved speech synthesis configurability.

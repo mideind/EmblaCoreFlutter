@@ -1,6 +1,6 @@
 name: embla_core
 description: Flutter library containing the core session functionality in Embla, an Icelandic-language voice assistant.
-version: "1.0.4+1"
+version: "1.0.5+1"
 homepage: https://embla.is
 repository: https://github.com/mideind/EmblaCoreFlutter
 documentation: https://embla.is/embla_core/
