@@ -30,7 +30,7 @@ import 'dart:math' show pow;
 import 'package:flutter/foundation.dart' show Uint8List;
 
 import 'package:logger/logger.dart' show Level;
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:flutter_soundfork/flutter_soundfork.dart';
 
 import './common.dart';
 

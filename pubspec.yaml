@@ -4,6 +4,7 @@ version: "1.0.5+1"
 homepage: https://embla.is
 repository: https://github.com/mideind/EmblaCoreFlutter
 documentation: https://embla.is/embla_core/
+publish_to: 'none'
 
 platforms:
   android:
@@ -16,11 +17,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  logger: '^1.3.0'
-  flutter_sound: '^9.2.13'
-  audio_session: '^0.1.14'
+  logger: '^2.0.1'
+  flutter_soundfork:
+    path: ../flutter_soundfork/flutter_soundfork
+      # url: https://github.com/mideind/flutter_soundfork.git
+      # ref: master # branch name
+  audio_session: '^0.1.13'
   web_socket_channel: '^2.4.0'
-  http: '^0.13.6'
+  http: '^0.13.5'
   mp3_info: '^0.2.1'
 
 dev_dependencies:
