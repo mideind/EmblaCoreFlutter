@@ -104,16 +104,18 @@ packages:
   flutter_soundfork:
     dependency: transitive
     description:
-      path: "../../flutter_soundfork/flutter_soundfork"
-      relative: true
-    source: path
+      name: flutter_soundfork
+      sha256: "21aac754abf9e79baf753fe1458a80c9ddc74dc9e85718d84e111a4f4a085f89"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   flutter_soundfork_platform_interface:
     dependency: transitive
     description:
-      path: "../../flutter_soundfork/flutter_soundfork_platform_interface"
-      relative: true
-    source: path
+      name: flutter_soundfork_platform_interface
+      sha256: "9a497641d42926c0c198684dc1ca35f7993f926e515ce69df3443b9fb300e8e0"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   flutter_test:
     dependency: "direct dev"

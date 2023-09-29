@@ -18,8 +18,8 @@ dependencies:
   flutter:
     sdk: flutter
   logger: '^2.0.1'
-  flutter_soundfork:
-    path: ../flutter_soundfork/flutter_soundfork
+  flutter_soundfork: '^1.0.0'
+    # path: ../flutter_soundfork/flutter_soundfork
       # url: https://github.com/mideind/flutter_soundfork.git
       # ref: master # branch name
   audio_session: '^0.1.13'
