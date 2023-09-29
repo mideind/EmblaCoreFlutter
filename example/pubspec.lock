@@ -63,7 +63,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.4+1"
+    version: "1.0.6+1"
   fake_async:
     dependency: transitive
     description:
@@ -101,30 +101,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  flutter_sound:
+  flutter_soundfork:
     dependency: transitive
     description:
-      name: flutter_sound
-      sha256: "090a4694b11ecc744c2010621c4ffc5fe7c3079d304ea014961a72c7b72cfe6c"
+      name: flutter_soundfork
+      sha256: "21aac754abf9e79baf753fe1458a80c9ddc74dc9e85718d84e111a4f4a085f89"
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.13"
-  flutter_sound_platform_interface:
+    version: "1.0.0"
+  flutter_soundfork_platform_interface:
     dependency: transitive
     description:
-      name: flutter_sound_platform_interface
-      sha256: "4537eaeb58a32748c42b621ad6116f7f4c6ee0a8d6ffaa501b165fe1c9df4753"
+      name: flutter_soundfork_platform_interface
+      sha256: "9a497641d42926c0c198684dc1ca35f7993f926e515ce69df3443b9fb300e8e0"
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.13"
-  flutter_sound_web:
-    dependency: transitive
-    description:
-      name: flutter_sound_web
-      sha256: ad4ca92671a1879e1f613e900bbbdb8170b20d57d1e4e6363018fe56b055594f
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.2.13"
+    version: "1.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -151,14 +143,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  js:
-    dependency: transitive
-    description:
-      name: js
-      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.7"
   lints:
     dependency: transitive
     description:
@@ -171,10 +155,10 @@ packages:
     dependency: transitive
     description:
       name: logger
-      sha256: db2ff852ed77090ba9f62d3611e4208a3d11dfa35991a81ae724c113fcb3e3f7
+      sha256: "6bbb9d6f7056729537a4309bda2e74e18e5d9f14302489cc1e93f33b3fe32cac"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.0"
+    version: "2.0.2+1"
   matcher:
     dependency: transitive
     description:
