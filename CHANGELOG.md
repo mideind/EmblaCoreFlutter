@@ -1,3 +1,7 @@
+# 1.0.6+1 (2023-09-29)
+
+* Now uses flutter_soundfork instead of flutter_sound and logger 2+ instead of logger 1+.
+
 # 1.0.5+1 (2023-09-15)
 
 * Bug fixes.

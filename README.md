@@ -20,7 +20,7 @@ EmblaCore is available via [pub.dev](https://pub.dev/packages/embla_core).
 Add this to the dependencies list in your `pubspec.yaml` file:
 
 ```yaml
-  embla_core: ">=1.0.5"
+  embla_core: ">=1.0.6"
 ```
 
 and then run the following command from the project root:
