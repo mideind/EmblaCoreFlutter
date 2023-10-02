@@ -1,3 +1,7 @@
+# 1.0.7+1 (2023-10-02)
+
+* Now uses `http: ^1.0.0`.
+
 # 1.0.6+2 (2023-09-15)
 
 * Now uses `flutter_soundfork` and `logger>=2.0.1`.
