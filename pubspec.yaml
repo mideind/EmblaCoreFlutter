@@ -4,6 +4,7 @@ version: "1.0.7+1"
 homepage: https://embla.is
 repository: https://github.com/mideind/EmblaCoreFlutter
 documentation: https://embla.is/embla_core/
+publish_to: 'none'
 
 platforms:
   android:
@@ -17,7 +18,8 @@ dependencies:
   flutter:
     sdk: flutter
   logger: '^2.0.1'
-  flutter_soundfork: '^1.0.0'
+  flutter_soundfork: '^1.0.1'
+  #  path: ../flutter_soundfork/flutter_soundfork
   audio_session: '^0.1.14'
   web_socket_channel: '^2.4.0'
   http: '^1.0.0'
