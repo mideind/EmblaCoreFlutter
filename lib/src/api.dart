@@ -19,7 +19,7 @@
 
 /// Communication with the Embla API (Ratatoskur)
 
-import 'dart:convert' show json;
+import 'dart:convert' show json, utf8;
 
 import 'package:http/http.dart' show Response, post;
 
@@ -104,12 +104,14 @@ class EmblaAPI {
       return Response("POST request timed out", 408);
     }).then((response) {
       dlog("Response status: ${response.statusCode}");
-      dlog("Response body: ${response.body}");
       if (response.statusCode != 200) {
         dlog("Received invalid status code from TTS service.");
         return null;
       }
-      dynamic arg = json.decode(response.body);
+      String payload = utf8.decode(response.bodyBytes);
+      dlog("Response body: $payload");
+
+      dynamic arg = json.decode(payload);
       if (arg is Map && arg.containsKey("audio_url")) {
         // Valid response body
         // Return the resulting audio file URL
