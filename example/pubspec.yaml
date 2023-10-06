@@ -9,8 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  embla_core: '>=1.0.8 <2.0.0'
-  #  path: ../
+  embla_core: #'>=1.0.8 <2.0.0'
+    path: ../
   permission_handler: 11.0.0
 
 dev_dependencies:

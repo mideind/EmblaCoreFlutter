@@ -109,7 +109,7 @@ class EmblaAPI {
         return null;
       }
       String payload = utf8.decode(response.bodyBytes);
-      dlog("Response body: $payload");
+      dlog("Response body: $payload (${response.bodyBytes.length} bytes)");
 
       dynamic arg = json.decode(payload);
       if (arg is Map && arg.containsKey("audio_url")) {
