@@ -60,10 +60,9 @@ packages:
   embla_core:
     dependency: "direct main"
     description:
-      name: embla_core
-      sha256: "4c2eb52e4c270de74be62fe413b736bf5ee81588e865b64a421afa0b65cdff5b"
-      url: "https://pub.dev"
-    source: hosted
+      path: ".."
+      relative: true
+    source: path
     version: "1.0.8+1"
   fake_async:
     dependency: transitive
