@@ -11,7 +11,7 @@ platforms:
   ios:
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.0.5 <4.0.0'
   flutter: ">=3.0.0"
 
 dependencies:
@@ -21,8 +21,8 @@ dependencies:
   flutter_soundfork: '^1.0.1'
   #  path: ../flutter_soundfork/flutter_soundfork
   audio_session: '>=0.1.14'
-  web_socket_channel: '^2.4.4'
-  http: '>=1.1.1'
+  web_socket_channel: '^2.0.0'
+  http: '>=1.0.1'
   mp3_info: '>=0.2.1'
 
 dev_dependencies:

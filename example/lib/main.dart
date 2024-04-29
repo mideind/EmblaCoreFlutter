@@ -94,7 +94,7 @@ class _SessionPageState extends State<SessionPage> {
     config = EmblaSessionConfig(server: serverURL);
     // Replace with your API key. You can obtain a key from
     // Miðeind ehf. (mideind@mideind.is)
-    config!.apiKey = "YOUR_API_KEY_HERE";
+    config!.apiKey = "NZyP3yJS.PFep8hi3qFlIf7eEQZoyMSmmpAALrwm9";
 
     config?.onStartStreaming = () {
       setState(() {
