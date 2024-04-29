@@ -18,6 +18,7 @@
  */
 
 /// Communication with the Embla API (Ratatoskur)
+library;
 
 import 'dart:convert' show json, utf8;
 

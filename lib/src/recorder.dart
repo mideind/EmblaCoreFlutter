@@ -18,7 +18,7 @@
  */
 
 /// Audio recording wrapper class
-///
+
 /// This code assumes that microphone access has already been granted
 /// by the user. Clients are responsible for requesting access prior
 /// to instantiation and should not use this class if access has not
