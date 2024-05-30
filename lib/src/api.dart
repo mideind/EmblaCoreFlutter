@@ -81,12 +81,14 @@ class EmblaAPI {
       dlog("Invalid URL specified for TTS synthesis.");
       return null;
     }
+
     // Set request headers
     Map<String, String> headers = {
       "X-API-Key": apiKey ?? "",
       "Content-Type": "application/json",
       "Accept": "application/json"
     };
+
     // Set request body
     Map qargs = {
       'text': text,
@@ -109,6 +111,7 @@ class EmblaAPI {
         dlog("Received invalid status code from TTS service.");
         return null;
       }
+
       String payload = utf8.decode(response.bodyBytes);
       dlog("Response body: $payload (${response.bodyBytes.length} bytes)");
 
@@ -118,6 +121,7 @@ class EmblaAPI {
         // Return the resulting audio file URL
         return arg["audio_url"];
       }
+
       dlog("Invalid response body from TTS service.");
       return null;
     }, onError: (e) {
@@ -132,6 +136,7 @@ class EmblaAPI {
       [void Function(Map? result)? handler]) async {
     dlog("Sending query POST request to $apiURL: ${qargs.toString()}");
     Response? response;
+
     try {
       final Map<String, String> headers = {
         "X-API-Key": apiKey,

@@ -86,7 +86,6 @@ class AudioPlayer {
     return _instance;
   }
   AudioPlayer._constructor() {
-    // Initialization only happens once
     _init();
   }
   static final AudioPlayer _instance = AudioPlayer._constructor();
@@ -121,6 +120,7 @@ class AudioPlayer {
   /// [url] URL of audio file
   /// [completionHandler] Completion handler invoked when playback is finished.
   /// The bool parameter is true if an error occurred.
+  ///
   Future<void> playURL(String url, [void Function(bool err)? completionHandler]) async {
     //stop();
     // If the URL is too long (maybe a Data URI?), truncate it for logging purposes
@@ -172,6 +172,7 @@ class AudioPlayer {
   /// [voiceID] Voice ID to use
   /// [completionHandler] Callback invoked when playback is finished
   /// [playbackSpeed] Playback speed
+  ///
   String? playDunno(String voiceID,
       [void Function()? completionHandler, double playbackSpeed = kDefaultSpeechSynthesisSpeed]) {
     final int rand = Random().nextInt(7) + 1;
@@ -221,6 +222,7 @@ class AudioPlayer {
   /// [voiceID] Voice ID to use for the audio file (only applies to voice-dependent files)
   /// [completionHandler] Completion handler to call when playback is finished
   /// [playbackSpeed] Playback speed (1.0 = normal speed)
+  ///
   void playSound(String soundName,
       [String voiceID = kDefaultSpeechSynthesisVoice,
       void Function()? completionHandler,
@@ -258,6 +260,7 @@ class AudioPlayer {
   /// [ttsOptions] Text-to-speech options
   /// [transcriptionOptions] Transcription options
   /// [completionHandler] Completion handler called when playback is finished
+  ///
   void speak(String text, String apiKey,
       {SpeechOptions? ttsOptions,
       TranscriptionOptions? transcriptionOptions,
