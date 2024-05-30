@@ -22,7 +22,7 @@ dependencies:
   # flutter_soundfork: '^1.0.1'
   #  path: ../flutter_soundfork/flutter_soundfork
   audio_session: '>=0.1.19'
-  web_socket_channel: '^3.0.0'
+  web_socket_channel: '^2.4.5'
   http: '>=1.2.1'
   mp3_info: '>=0.2.1'
 
