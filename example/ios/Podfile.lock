@@ -36,12 +36,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
-  audio_session: 4f3e461722055d21515cf3261b64c973c062f345
+  audio_session: 088d2483ebd1dc43f51d253d4a1c517d9a2e7207
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_sound_core: 26c10e5832e76aaacfae252d8925232281c486ae
   flutter_soundfork: 10903f355acb692289131ddbdd3151ad61b73a99
-  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
-  permission_handler_apple: 036b856153a2b1f61f21030ff725f3e6fece2b78
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 

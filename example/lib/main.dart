@@ -88,13 +88,13 @@ class _SessionPageState extends State<SessionPage> {
     }
 
     // The URL of the EmblaCore server to talk to. This is the production server.
-    const String serverURL = "https://api.greynir.is";
+    const String serverURL = "https://api.mideind.is";
 
     // Create new session config
     config = EmblaSessionConfig(server: serverURL);
     // Replace with your API key. You can obtain a key from
     // Miðeind ehf. (mideind@mideind.is)
-    config!.apiKey = "NZyP3yJS.PFep8hi3qFlIf7eEQZoyMSmmpAALrwm9";
+    config!.apiKey = "";
 
     config?.onStartStreaming = () {
       setState(() {

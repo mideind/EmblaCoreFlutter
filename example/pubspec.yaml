@@ -1,22 +1,23 @@
 name: emblacore_example
 description: An example Flutter app making use of embla_core.
-version: 1.0.1+1
+version: 1.0.9+1
 publish_to: 'none'
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   embla_core: #'>=1.0.8 <2.0.0'
     path: ../
-  permission_handler: ^11.3.0
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
 
 flutter:
   uses-material-design: true

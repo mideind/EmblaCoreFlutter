@@ -22,7 +22,7 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 const String kEmblaCoreName = 'EmblaCore';
-const String kEmblaCoreVersion = '1.0.8';
+const String kEmblaCoreVersion = '1.0.9';
 
 // Speech recognition settings
 const String kDefaultSpeechToTextLanguage = 'is-IS';
@@ -33,7 +33,7 @@ const int kAudioBitRate = 16;
 const int kAudioNumChannels = 1;
 
 // Server communication
-const String kDefaultServer = "https://api.greynir.is";
+const String kDefaultServer = "https://api.mideind.is";
 const String kDefaultQueryServer = 'https://greynir.is';
 const String kTokenEndpoint = "/rat/v1/token";
 const String kSocketEndpoint = "/rat/v1/short_asr";

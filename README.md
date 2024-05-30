@@ -10,7 +10,7 @@
 
 EmblaCore is a [Flutter](https://flutter.dev/) library containing the core session
 functionality in [Embla](https://github.com/mideind/EmblaFlutterApp), a cross-platform
-mobile Icelandic-language voice assistant app. EmblaCore requires Flutter >= 2.17.
+mobile Icelandic-language voice assistant app. EmblaCore requires Flutter >= 3.0.0.
 
 For the corresponding JavaScript library, see [EmblaCoreJS](https://github.com/mideind/EmblaCoreJS).
 
@@ -20,7 +20,7 @@ EmblaCore is available via [pub.dev](https://pub.dev/packages/embla_core).
 Add this to the dependencies list in your `pubspec.yaml` file:
 
 ```yaml
-  embla_core: "^1.0.8"
+  embla_core: "^1.0.9"
 ```
 
 and then run the following command from the project root:
@@ -95,7 +95,7 @@ session.cancel();
 
 ## License
 
-EmblaCore is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
+EmblaCore is Copyright &copy; 2024 [Miðeind ehf.](https://mideind.is)
 
 <a href="https://mideind.is"><img src="https://github.com/mideind/EmblaCoreFlutter/raw/master/img/mideind_logo.png" alt="Miðeind ehf."
 width="214" height="66" align="right" style="margin-left:20px; margin-bottom: 20px;"></a>

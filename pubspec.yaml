@@ -1,6 +1,6 @@
 name: embla_core
 description: Flutter library containing the core session functionality in Embla, an Icelandic-language voice assistant.
-version: "1.0.8+1"
+version: "1.0.9+1"
 homepage: https://embla.is
 repository: https://github.com/mideind/EmblaCoreFlutter
 documentation: https://embla.is/embla_core/
@@ -11,24 +11,25 @@ platforms:
   ios:
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
   flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   logger: '>=2.0.1'
-  flutter_soundfork: '^1.0.1'
+  flutter_sound: '^9.4.12'
+  # flutter_soundfork: '^1.0.1'
   #  path: ../flutter_soundfork/flutter_soundfork
-  audio_session: '>=0.1.14'
-  web_socket_channel: '^2.0.0'
-  http: '>=1.0.1'
+  audio_session: '>=0.1.19'
+  web_socket_channel: '^3.0.0'
+  http: '>=1.2.1'
   mp3_info: '>=0.2.1'
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
 
 flutter:
   assets:

@@ -94,10 +94,10 @@ class EmblaSessionConfig {
   /// Defaults to `true`.
   bool tts = true;
 
-  /// Query server URL. Defaults to [kDefaultQueryServer].
+  /// Query server URL
   String queryServer = kDefaultQueryServer;
 
-  /// Whether to play session UI sounds.
+  /// Whether to play session UI sounds
   bool audio = true;
 
   static AuthenticationToken? _token;
@@ -122,8 +122,8 @@ class EmblaSessionConfig {
       dlog("Token still valid, not fetching a new one");
       return;
     }
-    // We either haven't gotten a token yet, or the one we
-    // have has expired, so we fetch a new one.
+    // We either haven't gotten a token yet, or the one
+    // we have has expired, so we fetch a new one.
     late final Response response;
     const timeout = Duration(seconds: 5);
     try {
