@@ -137,6 +137,7 @@ class EmblaSession {
     if (_config.onDone != null) {
       _config.onDone!();
     }
+    dlog("Session ended");
   }
 
   /// User-initiated cancellation of session
@@ -214,7 +215,7 @@ class EmblaSession {
   }
 
   void _closeWebSocketConnection() {
-    _channel?.sink.close(status.goingAway);
+    _channel?.sink.close(status.normalClosure);
   }
 
   // Handle all incoming WebSocket messages

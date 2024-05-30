@@ -21,14 +21,14 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '12.x'
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v3
         with:
-          flutter-version: '3.10.0'
-          channel: 'stable'
+          channel: stable
+          version: 3.22.0
       - name: Install dependencies
         run: |
           flutter config --no-analytics
-          flutter --disable-telemetry
           flutter pub get --suppress-analytics
       - name: Run tests
         run: |
