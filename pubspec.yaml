@@ -18,7 +18,7 @@ dependencies:
   flutter:
     sdk: flutter
   logger: '>=2.0.1'
-  flutter_sound: '^9.4.12'
+  flutter_sound: '^9.9.5'
   # flutter_soundfork: '^1.0.1'
   #  path: ../flutter_soundfork/flutter_soundfork
   audio_session: '>=0.1.19'

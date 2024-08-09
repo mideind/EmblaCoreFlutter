@@ -118,7 +118,7 @@ class AudioRecorder {
 
     // Start recording audio
     await _micRecorder.startRecorder(
-        toStream: _recordingDataController?.sink as StreamSink<Food>,
+        toStream: _recordingDataController?.sink as StreamSink<Uint8List>,
         codec: Codec.pcm16,
         numChannels: kAudioNumChannels,
         sampleRate: kAudioSampleRate);
