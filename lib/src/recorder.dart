@@ -87,16 +87,16 @@ class AudioRecorder {
     _isRecording = true;
 
     // Create recording stream
-    _recordingDataController = StreamController<Food>();
+    _recordingDataController = StreamController<Uint8List>();
     _recordingDataSubscription = _recordingDataController?.stream.listen((buffer) {
-      if (buffer is FoodData && buffer.data != null) {
-        final data = buffer.data as Uint8List;
+      if (buffer is Uint8List && buffer != null) {
+        final data = buffer;
         _totalAudioDataSize += data.lengthInBytes;
         _totalAudioDuration = _totalAudioDataSize / (kAudioSampleRate * 2);
         dataHandler(data); // Invoke callback
         dlog(_totalAudioDuration);
       } else {
-        final errMsg = 'Got null data in recording stream: $buffer';
+        const errMsg = 'Bad data in recording stream';
         dlog(errMsg);
         errHandler(errMsg);
       }
