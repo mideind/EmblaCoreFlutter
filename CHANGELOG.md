@@ -1,3 +1,11 @@
+# 1.0.10+1 (2024-03-07)
+
+* Updated dependencies for compatibility with modern projects.
+
+# 1.0.9+1 (2024-09-02)
+
+* Now uses `flutter_sound` again.
+
 # 1.0.8+1 (2023-10-02)
 
 * Now uses `flutter_soundfork: ^1.0.1`.
