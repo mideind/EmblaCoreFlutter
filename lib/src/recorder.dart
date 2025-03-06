@@ -89,7 +89,7 @@ class AudioRecorder {
     // Create recording stream
     _recordingDataController = StreamController<Uint8List>();
     _recordingDataSubscription = _recordingDataController?.stream.listen((buffer) {
-      if (buffer is Uint8List && buffer != null) {
+      if (buffer is Uint8List) {
         final data = buffer;
         _totalAudioDataSize += data.lengthInBytes;
         _totalAudioDuration = _totalAudioDataSize / (kAudioSampleRate * 2);

@@ -19,8 +19,6 @@
 
 /// EmblaCore library
 
-library embla_core;
-
 export 'package:embla_core/src/session.dart' show EmblaSession, EmblaSessionState;
 export 'package:embla_core/src/config.dart' show EmblaSessionConfig;
 export 'package:embla_core/src/api.dart' show EmblaAPI;
