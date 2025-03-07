@@ -1,6 +1,6 @@
 /*
  * This file is part of the EmblaCore Flutter package example
- * Copyright (c) 2024 Miðeind ehf. <mideind@mideind.is>
+ * Copyright (c) 2023-2025 Miðeind ehf. <mideind@mideind.is>
  * Original author: Sveinbjorn Thordarson
  *
  * This program is free software: you can redistribute it and/or modify

@@ -95,7 +95,7 @@ session.cancel();
 
 ## License
 
-EmblaCore is Copyright &copy; 2024 [Miðeind ehf.](https://mideind.is)
+EmblaCore is Copyright &copy; 2023-2025 [Miðeind ehf.](https://mideind.is)
 
 <a href="https://mideind.is"><img src="https://github.com/mideind/EmblaCoreFlutter/raw/master/img/mideind_logo.png" alt="Miðeind ehf."
 width="214" height="66" align="right" style="margin-left:20px; margin-bottom: 20px;"></a>
