@@ -20,12 +20,12 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '12.x'
+          java-version: '17.x'
       - name: Setup Flutter SDK
-        uses: flutter-actions/setup-flutter@v3
+        uses: flutter-actions/setup-flutter@v4
         with:
           channel: stable
-          version: 3.22.0
+          version: 3.29.1
       - name: Install dependencies
         run: |
           flutter config --no-analytics
@@ -36,12 +36,4 @@ jobs:
           flutter test
       - name: Build APK
         run: |
-          cd example; flutter pub get; flutter build apk --release
-      - name: Slack notification
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          author_name: Integration Testing
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: failure() # Pick up event if the job fails
+          cd example; flutter pub get; flutter build apk
